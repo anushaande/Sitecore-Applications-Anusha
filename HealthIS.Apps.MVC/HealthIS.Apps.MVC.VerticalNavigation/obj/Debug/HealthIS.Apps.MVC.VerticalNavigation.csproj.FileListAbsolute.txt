@@ -1,0 +1,61 @@
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\HealthIS.Apps.MVC.VerticalNavigation.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\HealthIS.Apps.MVC.VerticalNavigation.pdb
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\EntityFramework.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\HealthIS.Apps.MVC.Helpers.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\HealthIS.Apps.Util.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Sitecore.Kernel.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Sitecore.Mvc.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.Helpers.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.Mvc.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.Providers.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.Razor.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.WebPages.Deployment.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.WebPages.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.WebPages.Razor.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Sitecore.Client.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Oracle.DataAccess.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Lucene.Net.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\ITHit.WebDAV.Server.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\HtmlAgilityPack.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Mvp.Xml.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\ComponentArt.Web.UI.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Sitecore.Zip.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Sitecore.Logging.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Sitecore.NVelocity.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Newtonsoft.Json.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\RadEditor.Net2.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Telerik.Web.UI.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Sitecore.Analytics.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Stimulsoft.Report.WebDesign.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Stimulsoft.Report.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Stimulsoft.Report.Web.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Stimulsoft.Base.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Sitecore.Kernel.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\EntityFramework.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.Helpers.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.Mvc.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.Razor.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.WebPages.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.WebPages.Deployment.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.WebPages.Razor.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Sitecore.Client.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Lucene.Net.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\HtmlAgilityPack.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Newtonsoft.Json.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\Telerik.Web.UI.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\obj\Debug\HealthIS.Apps.MVC.VerticalNavigation.csprojResolveAssemblyReference.cache
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\obj\Debug\HealthIS.Apps.MVC.VerticalNavigation.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\obj\Debug\HealthIS.Apps.MVC.VerticalNavigation.pdb
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\HealthIS.Apps.MVC.VerticalNavigation.dll.config
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\HealthIS.Apps.MVC.VerticalNavigation.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\HealthIS.Apps.MVC.VerticalNavigation.pdb
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.WebPages.Deployment.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.WebPages.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.WebPages.Razor.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.WebPages.xml
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.WebPages.Deployment.xml
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\bin\System.Web.WebPages.Razor.xml
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\obj\Debug\HealthIS.Apps.MVC.VerticalNavigation.csprojResolveAssemblyReference.cache
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\obj\Debug\HealthIS.Apps.MVC.VerticalNavigation.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.VerticalNavigation\obj\Debug\HealthIS.Apps.MVC.VerticalNavigation.pdb

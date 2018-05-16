@@ -1,0 +1,31 @@
+﻿@model HealthIS.Apps.MVC.Models.AdvancedTab
+@using Sitecore.Mvc
+
+@{
+    string layoutType = this.ViewData["layoutType"].ToString();
+    string itemShortId = this.ViewData["itemShortId"].ToString();
+    string itemGuiId = this.ViewData["itemGuiId"].ToString();
+    bool isSelectedTab = (this.ViewData["checked"].ToString() == itemGuiId ? true : false);
+    string selectedTab = isSelectedTab ? "checked='checked'" : "";
+    if (layoutType != "default-oneColumn" || String.IsNullOrEmpty(itemShortId))
+    {
+        return;
+    }
+    Sitecore.Data.Items.Item tabItem = Model.Item.Database.GetItem(itemGuiId);
+    if (tabItem != null)
+    {
+        Model.tabTitle = tabItem.Fields["Tab Title"].Value;
+        Model.description = tabItem.Fields["Description"].Value;
+    }
+}
+<input type="radio" name="tabs" id="tab_@(itemShortId)" @(selectedTab)>
+<label for="tab_@(itemShortId)">@Model.tabTitle</label>
+<div class="tab">
+    <div class="tab-inner-content">
+        <div class="tab-right-content">
+            <div class="tab-right-inner">
+                @Html.Raw(Model.description)
+            </div>
+        </div>
+    </div>
+</div>

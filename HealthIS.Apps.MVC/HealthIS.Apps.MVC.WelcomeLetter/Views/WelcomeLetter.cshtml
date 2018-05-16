@@ -1,0 +1,143 @@
+﻿@if (Sitecore.Context.PageMode.IsPageEditor)
+{
+    if (Model.dsIsSet)
+    {
+        if (Model.Item != null)
+        {
+            <style>
+                .welcomeLetterTbl {
+                    width:100%;
+                }
+
+                .welcomeLetterTbl tr td {
+                    padding: 10px 15px;
+                    background-color: #fff;
+                    border: 1px solid #ddd;
+                }
+
+                .welcomeLetterTbl tr:first-child td:first-child {
+                    border-top-left-radius: 4px;
+                }
+
+                .welcomeLetterTbl tr:first-child td:last-child {
+                    border-top-right-radius: 4px;
+                }
+
+                .welcomeLetterTbl tr:last-child td:first-child {
+                    border-bottom-left-radius: 4px;
+                }
+
+                .welcomeLetterTbl tr:last-child td:last-child {
+                    border-bottom-right-radius: 4px;
+                }
+
+                .imgPlaceholder {   
+                    text-align: center;
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-bottom: 10px;
+                    border-radius: 4px;
+                    width:150px;
+                    height:150px;
+                    background-color:rgb(247, 247, 247);
+                    line-height:150px;
+                    border: 1px solid #ddd;
+                }
+            </style>
+            <h2>Welcome Letter Config</h2>  
+            <table class="welcomeLetterTbl">
+                <tr>
+                    <td style="text-align:center;width:33%;">
+                        @if (Model.image != null && Model.image.MediaItem != null)
+                        {
+                            <img src="@(Sitecore.Resources.Media.MediaManager.GetMediaUrl(Model.image.MediaItem))" alt="@(Model.image.Alt)" style="width:150px;height:auto"/><br />
+                            <input class="pe-button pe-yellow" type="button" value="Edit Image" onclick='Sitecore.PageModes.PageEditor.postRequest("webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=image, id=@(Model.dataSourceID))");' />
+                        }
+                        else
+                        {
+                            <div class="imgPlaceholder">Placeholder</div>
+                            <input class="pe-button pe-green" type="button" value="Add Image" onclick='Sitecore.PageModes.PageEditor.postRequest("webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=image, id=@(Model.dataSourceID))");' />
+                        }<br /><br />
+                        <b>Image Caption:</b><br />
+                        @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Caption Text"))<br /><br />
+                        <b>Caption URL:</b><br />
+                        @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Caption Link"))
+                    </td>
+                    <td style="width:66%;">
+                        <div style="height:25%;">
+                            <b>Headline:</b><br />
+                            <h3>@Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Heading"))</h3>
+                        </div>
+                        <div style="height:75%;">
+                            <b>Text Content:</b><br />
+                            @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Text Content"))
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        }
+        else
+        {
+            <span style="color:red;">Error: Cannot find Welcome Letter datasource item.</span>
+        }
+    }
+    else
+    {//datasource not created
+        string uid = "_" + Guid.NewGuid().ToString().Replace("-", "_");
+        <script>
+            function callSetDataSrc@(uid)() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                                              // itemID
+                    'User Defined2/Component Template/Welcome Letter',                                               // templatePath
+                    '_WEL',                                                                                  // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                           // renderingID
+                    '@Html.Raw(Model.PageItem.Database.Name)',                                              // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                                     // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',                                       // referenceID
+                    'btnDSSet@(uid)',                                                                       // btnID
+                    true                                                                                    // reload
+                );
+            }
+        </script>
+        <div style="text-align:center">
+            <h2>Welcome Letter</h2>     
+            <p>If you want to create a new Welcome Letter element click "Create New Welcome Letter".</p>
+            <input id="btnDSSet@(uid)" class="pe-button pe-green" type="button" value="Create New Welcome Letter" onclick="callSetDataSrc@(uid)    ()" />
+        </div>
+        <script>if(typeof(autoSave) != "undefined"){autoSave();}</script>
+    }
+}
+
+else
+{
+    if (Model.dsIsSet)
+    {
+        <div class="welcome-letter">
+            <figure>
+                @try {
+                    <img class="img-standard" src="@(Sitecore.Resources.Media.MediaManager.GetMediaUrl(Model.image.MediaItem))" alt="@(Model.image.Alt)" style="width:150px;height:auto"/>
+                } catch {
+                    <span class="imgPlaceholder">Please add image</span>
+                }
+                <figcaption style="text-align: center;">
+                    @if (!String.IsNullOrEmpty(Model.captionUrl))
+                    {
+                        <a href="@Html.Raw(Model.captionUrl)">@Html.Raw(Model.captionText)</a> 
+                    }
+                    else
+                    {
+                        @Html.Raw(Model.captionText)   
+                    }
+                </figcaption>
+            </figure>
+            <div>
+                <h3>@Html.Raw(Model.heading)</h3>
+                @Html.Raw(Model.textContent)
+            </div>
+        </div>
+    }
+    else
+    {
+        <span>No data source for image found.</span>
+    }
+}

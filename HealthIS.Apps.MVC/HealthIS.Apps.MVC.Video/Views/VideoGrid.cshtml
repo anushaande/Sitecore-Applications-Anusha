@@ -1,0 +1,368 @@
+﻿@using System.Text.RegularExpressions;
+
+@{
+    string uid = "_" + Guid.NewGuid().ToString().Replace("-", "_");
+    int sectNum = 0;
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditorEditing)
+{
+    if (Model.dsIsSet)
+    {
+        <h2> Video Config</h2>
+        <script>
+            function addSection@(uid)(){
+                addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/Video Grid/Video Grid Section', '_VGS', 'master', '@Html.Raw(Model.dataSourceFolder.ID)', true, null);
+            }
+        </script>
+        <ul class="list-group">
+            @foreach (HealthIS.Apps.MVC.Models.VideoGridSection section in Model.sections)
+            {
+                string id = uid + "_" + sectNum.ToString();
+                <li class="list-group-item">
+                    <div class="col-sm-11">
+                        <b>Column Count:</b> 
+                        <select id="selColCt@(id)" onchange="selOnChange('hidColCt@(id)','selColCt@(id)')">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                        <div id="hidColCt@(id)" style="display:none;">
+                            @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(section.SCItem, "Column Count"))
+                        </div>
+                        <br />
+                        <b>Section Header:</b>&nbsp;
+                        @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(section.SCItem, "Header"))
+                        <script>
+                            jQuery(document).ready(function(){
+                                jQuery("#selColCt@(id)").val('@(section.columnCount)');
+                            });
+                        </script>
+                    </div>
+                    <div class="col-sm-1">
+                        @if (sectNum > 0)
+                        {
+                            <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:moveup(id=@(section.SCItem.ID))",function(){location.reload(true);},false)' value="&#x25B2;" />
+                        }
+                        @if (sectNum < Model.sections.Count - 1)
+                        {
+                            <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:movedown(id=@(section.SCItem.ID))",function(){location.reload(true);},false)' value="&#x25BC;" />
+                        }
+                        <input class="pe-button pe-red" type="button" value="&#120;" onclick="deleteItem('@(section.SCItem.ID)    ')" />
+                        @{sectNum++;}
+                    </div>
+                    <div style="clear:both;"></div>
+                </li>
+                <li class="list-group-item">
+                    <ul class="list-group">
+                        @{int vidNum = 0;}
+                        @foreach (HealthIS.Apps.MVC.Models.VideoGridItem videoItem in section.videos)
+                        {
+                            <li class="list-group-item">
+                                <div class="col-sm-11">
+                                    <b>Youtube, Vimeo, or Panopto URL:</b><br />
+                                    @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(videoItem.SCItem, "URL"))<br />
+                                    <b>Description:</b><br />
+                                    @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(videoItem.SCItem, "Description"))<br />
+                                    @if (videoItem.image != null && videoItem.image.MediaItem != null)
+                                    {
+                                        <img src="@(Sitecore.Resources.Media.MediaManager.GetMediaUrl(videoItem.image.MediaItem))" alt="@(videoItem.image.Alt)" style="width=@(videoItem.image.Width)px;height=@(videoItem.image.Height)px"/><br />
+                                        <input class="pe-button pe-yellow" type="button" value="Edit Thumbnail Image" onclick='Sitecore.PageModes.PageEditor.postRequest("webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Thumbnail, id=@(videoItem.SCItem.ID.ToString()))");' />                                    
+                                    }
+                                    else
+                                    {
+                                        <input class="pe-button pe-yellow" type="button" value="Set Thumbnail Image" onclick='Sitecore.PageModes.PageEditor.postRequest("webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Thumbnail, id=@(videoItem.SCItem.ID.ToString()))");' />
+                                    }
+                                </div>
+                                <div class="col-sm-1">
+                                    @if (vidNum > 0)
+                                    {
+                                        <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:moveup(id=@(videoItem.SCItem.ID))",function(){location.reload(true);},false)' value="&#x25B2;" />
+                                    }
+                                    @if (vidNum < section.videos.Count - 1)
+                                    {
+                                        <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:movedown(id=@(videoItem.SCItem.ID))",function(){location.reload(true);},false)' value="&#x25BC;" />
+                                    }
+                                    <input class="pe-button pe-red" type="button" value="&#120;" onclick="deleteItem('@(videoItem.SCItem.ID)    ')" />
+                                    @{vidNum++;}
+                                </div>
+                                <div style="clear:both;"></div>
+                            </li>
+                        }
+                        <li class="list-group-item" style="text-align:right;">
+                            @{string addVidJS = "addItemToDataSrc('" + Model.PageItem.ID.ToString() + "', 'User Defined2/Component Template/Video Grid/Video Grid Section/Video', '_VID', 'master', '" + section.SCItem.ID + "', true, null)";}
+                            <input class="pe-button pe-green" type="button" value="&#43; Add Video" onclick="@Html.Raw(addVidJS)" />
+                        </li>
+                    </ul>
+                </li>
+            }
+            <li class="list-group-item" style="text-align:right;">
+                <input class="pe-button pe-green" type="button" value="&#43; Add Section" onclick="addSection@(uid)    ()" />
+            </li>
+        </ul>
+    }
+    else
+    {
+        <h2 style="text-align:center;">Video Config</h2>        
+        string UID = "_" + Model.Rendering.UniqueId.ToString().Replace('-', '_');
+        <script>
+            function callSetDataSrc@(UID)() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                                              // itemID
+                    'User Defined2/Component Template/Video Grid',                                               // templatePath
+                    '_VG',                                                                                 // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                           // renderingID
+                    '@Html.Raw(Model.Item.Database.Name)',                                                  // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                                     // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',                                       // referenceID
+                    'btnDSSet@(UID)',                                                                                     // btnID
+                    true                                                                                    // reload true
+                );
+            }
+        </script>
+        <div style="text-align:center" class="imgContainer">    
+            <p>If you want to create a new Video Grid, click 'Create New Video Grid'.</p>
+            <input id="btnDSSet@(UID)" class="pe-button pe-green" type="button" value="Create New Video Grid" onclick="callSetDataSrc@(UID)    ()" />
+            <script>if(typeof(autoSave) != "undefined"){ autoSave(); }</script>
+        </div>
+    }
+}
+
+else
+{
+    if (Model.dsIsSet)
+    {
+        <script>
+            function playVid(sender){
+                //jQuery(sender).parent().fadeOut(1000);
+                jQuery(sender).parent().animate(
+                    {
+                        opacity:0
+                    }
+                    ,1000
+                    ,function(){
+                        var ytp = jQuery(jQuery(sender).parent().parent().find("iframe")[0]);
+                        ytp.css("z-index",3);
+                    }
+                );
+                var ytp = jQuery(jQuery(sender).parent().parent().find("iframe")[0]);
+                ytp.attr("src",ytp.data("src"));
+            }
+
+            function fadeIn(){
+                jQuery('.iframeOverlay').fadeIn();
+            }
+
+            var ii,mm,tt;
+            function playModalVid(modal, iframe, thumbnail){
+                var m = jQuery('#'+modal)[0];
+                mm=m;
+                var i = jQuery('#'+iframe)[0];
+                ii = i;
+                var t = jQuery('#'+thumbnail)[0];
+                tt=t;
+                console.log("do the thing that makes the thing show...thing");
+                jQuery(m).on('shown.bs.modal', function(){
+                    console.log("at least im trying");
+                    console.log("iframe height: " + jQuery(i).width());
+                    var h = jQuery(i).width()*(t.height/t.width);
+                    console.log("h: " + h);
+                    i.height = h;
+                    jQuery(i).attr("src",jQuery(i).data("src"));
+                }).on('hidden.bs.modal', function(){
+                    jQuery(i).attr("src", jQuery(i).data("ogsrc"));
+                }).modal({show:true});
+            }
+        </script>
+    
+        if (Model.sections.Count > 0)
+        {
+            sectNum = 0;
+            foreach (HealthIS.Apps.MVC.Models.VideoGridSection section in Model.sections)
+            {
+                string id = uid + "_" + sectNum.ToString();
+                sectNum++;
+                if (!string.IsNullOrEmpty(section.header))
+                {<h3>@Html.Raw(section.header)</h3>}
+                int colFrac = (int)Math.Floor(12 / (double)section.columnCount);
+                string cssClass = "col-sm-" + colFrac.ToString();
+                int rowItemCt = 0;
+                int itemCt = 0;
+                <div class="row">
+                    @foreach(HealthIS.Apps.MVC.Models.VideoGridItem video in section.videos){
+                        string uVidID = id + itemCt;
+                        string src = video.URL;
+                        string autoPlay = string.Empty;
+                        Regex YoutubeRegex = new Regex(@"youtu(?:\.be|be\.com)/(?:.*v(?:/|=)|(?:.*/)?)([a-zA-Z0-9-_]+)");
+                        string vidID = string.Empty;
+                        Match youtubeMatch = YoutubeRegex.Match(src);
+                        string movType = "";
+                        if (youtubeMatch.Success)
+                        {
+                            vidID = youtubeMatch.Groups[1].Value;
+                            src = @"https://www.youtube.com/embed/" + vidID;
+                            autoPlay = src + "?autoplay=1";
+                            movType = "yt";
+                        }
+                        else
+                        {
+                            if (src.ToLower().Contains("vimeo"))
+                            {
+                                var srcSplit = src.Split('/');
+                                vidID = srcSplit[srcSplit.Length - 1];
+                                src = @"https://player.vimeo.com/video/" + vidID;
+                                autoPlay = src + "?autoplay=1";
+                                movType = "vim";
+                            }
+                            else
+                            {
+                                src = src.ToLower();
+                                if (src.Contains("/panopto/pages/"))
+                                {
+                                    if (src.Contains("/default.aspx?id="))
+                                    {
+                                        src = src.ToLower().Replace("/default", "");                                       
+                                    }
+                                    if (src.Contains("/viewer.aspx?id="))
+                                    {
+                                        src = src.ToLower().Replace("viewer", "embed");;
+                                    }
+                                    src = src.ToLower().Replace("viewer", "embed");
+                                    autoPlay = src + "&autoplay=true";
+                                    movType = "pan";
+                                }
+                            }
+                        }
+                        <div class="@(cssClass)">
+                            <div class="iframe-embed">
+                                @{
+                                    string imgSrc = "";
+                                    if(section.columnCount <= 1){imgSrc= "/images/videoPlaceholder.jpg";}
+                                    if (video.image != null && video.image.MediaItem != null)
+                                    {
+                                        imgSrc = Sitecore.Resources.Media.MediaManager.GetMediaUrl(video.image.MediaItem);                                   
+                                    }
+                                    else{
+                                        switch(movType){
+                                            case "yt":
+                                                imgSrc = "https://img.youtube.com/vi/" + vidID + "/maxresdefault.jpg";
+                                                // maxresdefault thumbnail is needed to remove black bars from 16:9 ratio videos
+                                                try
+                                                {
+                                                    // check to see if maxresdefault thumbnail exists for this YouTube video
+                                                    // if HttpWebResponse doesn't 404, use maxresdefault
+                                                    HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(imgSrc);
+                                                    request.Method = "HEAD";
+                                                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();                                                
+                                                }
+                                                catch (WebException ex)
+                                                {
+                                                    if (((HttpWebResponse)ex.Response).StatusCode == HttpStatusCode.NotFound)
+                                                    {
+                                                        // maxresdefault thumbnail DOES NOT exist for this YouTube video, use standard hqdefault thumbnail
+                                                        imgSrc = imgSrc.Replace("maxresdefault", "0");
+                                                    }
+                                                }
+                                                break;
+                                            case "vim":
+                                                imgSrc = "http://vimeo.com/api/v2/video/" + vidID + ".json?callback=showThumb";
+                                                try
+                                                {
+                                                    var webReq = (HttpWebRequest)WebRequest.Create("https://www.vimeo.com/api/v2/video/" + vidID + ".json?");
+                                                    webReq.ContentType = "text/json";
+                                                    webReq.Method = "GET";
+                                                    var webResp = (HttpWebResponse)webReq.GetResponse();
+                                                    string resp = "";
+                                                    using (var rdr = new StreamReader(webResp.GetResponseStream()))
+                                                    {
+                                                        resp = HttpUtility.HtmlDecode(rdr.ReadToEnd()).Replace("&lt;", "<").Replace("&amp;", "&").Replace("&gt;", ">").Replace("&quot;", "\"").Replace("&apos;", "'");
+                                                    }
+                                                    if (!string.IsNullOrEmpty(resp))
+                                                    {
+                                                        try
+                                                        {
+                                                            HealthIS.Apps.MVC.Models.VimeoVid v = Newtonsoft.Json.JsonConvert.DeserializeObject<List<HealthIS.Apps.MVC.Models.VimeoVid>>(resp)[0];
+                                                            imgSrc = v.thumbnail_large;
+                                                        }
+                                                        catch { }
+                                                    }
+                                                }
+                                                catch { }                                                
+                                                break;
+                                            case "pan":
+                                                imgSrc = "/images/panoptoPlaceholder.jpg";
+                                                break;
+                                            default:
+                                                break;
+                                        }                                        
+                                    }                                
+                                }
+                                @if(!string.IsNullOrEmpty(imgSrc)){
+                                    <div class="iframeOverlay">
+                                    @if (Model.IsValidVideoLink(src))
+                                    {
+                                        <img class="iframeThumbnail" id="vidThumbnail@(uVidID)" src="@(imgSrc)" alt="@(video.image.Alt)" />
+                                        if(section.columnCount <= 1){
+                                            <div class="playCir" onclick="playVid(this)">
+                                                <div class="playTri"></div>
+                                            </div>
+                                        }
+                                        else{
+                                            <a class="playCir" href="#modal@(uVidID)" onclick="playModalVid('modal@(uVidID)','iFrame@(uVidID)','vidThumbnail@(uVidID)')">
+                                                <div class="playTri"></div>
+                                            </a>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <img class="iframeThumbnail" id="vidThumbnail@(uVidID)" src="/images/videoPlaceholder.jpg"/>
+                                    }
+                                    </div>
+                                }
+                                @if (Model.IsValidVideoLink(src))
+                                {
+                                    if(section.columnCount <= 1){
+                                        <iframe src="@(src)" data-src="@(autoPlay)" frameborder="0" allowfullscreen style="width:100%;height:100%;"></iframe>
+                                    }
+                                    else{                                    
+                                        <div id="modal@(uVidID)" class="modal" style="padding:30px;display:none;">
+                                            <div style="width:50%;margin:0 auto;background-color:white;border-radius:10px;box-shadow:0 0 20px rgba(0,0,0,0.5);">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <iframe id="iFrame@(uVidID)" src="@(src)" data-src="@(autoPlay)" data-ogsrc="@(src)" style="position:relative;" class="col-sm-12" frameborder="0" marginwidth="0" marginheight="0" ></iframe>
+                                                    <div style="clear:both"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            @{
+                                string desc = HealthIS.Apps.MVC.Helpers.getStrField(video.SCItem, "Description");
+                            }
+                            @if(!string.IsNullOrEmpty(desc)){
+                                <p class="video-grid-description">@Html.Raw(desc)</p>
+                            }
+                        </div>                        
+                        rowItemCt++;
+                        itemCt++;
+                        string endRow = "";
+                        if (rowItemCt == section.columnCount && itemCt != section.videos.Count)
+                        {
+                            rowItemCt = 0;
+                            endRow = "</div><div class='row'>";
+                        }
+                        @Html.Raw(endRow)
+                    }
+                </div>
+            }
+        }
+    }
+    else
+    {
+        <span>No data source for video grid found.</span>
+    }
+}

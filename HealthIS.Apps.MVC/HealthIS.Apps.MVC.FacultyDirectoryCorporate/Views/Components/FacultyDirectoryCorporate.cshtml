@@ -1,0 +1,414 @@
+﻿@model HealthIS.Apps.MVC.Models.FacultyDirectoryCorporate
+@using Sitecore.Mvc
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor && Model.isDatasourceNull)
+{
+    <center>
+        <h2>Faculty Directory Corporate</h2><p>If you want to create a Faculty Direcotry Corporate, click 'Create Faculty Directory Corporate'.</p>
+        <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrcCB()" value="Create Faculty Directory Corporate" />
+    </center>
+    <script>
+        jQuery(document).ready(function () {
+            autoSave();
+        });
+        // Create new datasource regarding to this component
+        function callSetDataSrcCB() {
+            setDataSrc(
+                '@Html.Raw(Model.pageItem.ID.ToString())',                                  // itemID
+                'User Defined2/Component Template/Faculty Directory Corporate',             // templatePath
+                '_FD',                                                                      // suffix
+                '@Html.Raw(Model.rendering.Properties["RenderingItemPath"])',               // renderingID
+                '@Html.Raw(Model.pageItem.Database.Name)',                                  // dbName
+                '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                         // deviceID
+                '@Html.Raw(Model.rendering.UniqueId.ToString())',                           // renderingUID
+                ''                                                                          // btnID
+            );
+        }
+    </script>
+    return;
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    if (!Model.isDatasourceNull)
+    {
+        <script src="/resources/scripts/FacultyDirectoryAcademic.js"></script>
+        if (!Model.hasChildren)
+        {
+            <div style="height: 25px;">
+                <input type="button" id="btnAddListView" class="pe-button pe-green" style="float: right;" onclick='addBranch("@(Model.rendering.Item.ID.ToString())", "@(Model.pageItem.Name)", "Input Section")' value="+ Add New Manual Section" />
+                <input type="button" id="btnAddThumbnailView" class="pe-button pe-green" style="float: right; margin-right: 10px;" onclick='addBranch("@(Model.rendering.Item.ID.ToString())", "@(Model.pageItem.Name)", "DB Section")' value="+ Add New Database Section" />
+            </div>
+            return;
+        }
+        // For each section
+        foreach (Sitecore.Data.Items.Item s in Model.rendering.Item.GetChildren())
+        {
+            string sectionId = s.ID.Guid.ToString();
+            <h3>
+                <b>@(String.IsNullOrEmpty(s.Fields["Display as List View"].Value) ? "Thumbnail" : "List") Section Title:</b> @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(s, "Section Title")) 
+                <input class="pe-button pe-blue btnToggleFD_@sectionId" type="button" style="font-size: 0.6em; float: right;" value="▼ Collapse" onclick="toggleFD('@sectionId')" />
+                <input type="button" id="btnRemoveSection" class="pe-button pe-red" style="float: right; margin-right:5px; font-size: 0.6em;" onclick="javascript:Sitecore.PageModes.PageEditor.postRequest('webedit:delete(id=@(s.ID.ToString()))')" value="X Remove Section" /><br />
+                <input class="pe-button pe-yellow btnEditFD_@sectionId" type="button" style="font-size: 0.6em; float: right; margin-right: 5px;" value="☰ Edit Section" onclick="showEditDialog('@s.ID.ToString()','Section Title|Profile Page|Display as List View')" />&nbsp;&nbsp;
+                <input class="pe-button pe-gray1 btnSortFD_@sectionId" type="button" style="font-size: 0.6em; float: right; margin-right: 5px;" value="<> Sort Faculty" onclick="javascript:Sitecore.PageModes.PageEditor.postRequest('webedit:facdirsort(id=@(s.ID.ToString()))')" />
+            </h3>
+            <style>.list-group-item:hover { background-color: #eaeaea; }</style>
+            if (s.HasChildren && s.TemplateName == "Faculty Directory Input Section") // User Input Section
+            {
+                <style>.tblProfileInfo tr { line-height: 200%; }</style>
+                // For each faculty-list item view (User Input data)
+                foreach (Sitecore.Data.Items.Item v in s.Children)
+                {
+                    <ul class="list-group toggleFD_@sectionId">
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-sm-3">                                                                        
+                                    @Html.Sitecore().Field("Profile Image", v, new { @class = "form-control", @style = "height: auto;" })
+                                </div>                         
+                                <div class="col-sm-8">
+                                    <table class="tblProfileInfo">
+                                        <tr>
+                                            <th><b>First Name:</b></th>
+                                            <td>@Html.Sitecore().Field("First Name", v)</td>
+                                        </tr>
+                                        <tr>
+                                            <th><b>Last Name:</b></th>
+                                            <td>@Html.Sitecore().Field("Last Name", v)</td>
+                                        </tr>
+                                        <tr>
+                                            <th><b>Credentials:</b></th>
+                                            <td>@Html.Sitecore().Field("Credentials", v)</td>
+                                        </tr>
+                                        <tr>
+                                            <th><b>Job Title:</b></th>
+                                            <td>@Html.Sitecore().Field("Job Title", v)</td>
+                                        </tr>
+                                        <tr>
+                                            <th><b>Building:</b></th>
+                                            <td>@Html.Sitecore().Field("Building", v)</td>
+                                        </tr>
+                                        <tr>
+                                            <th><b>Phone:</b></th>
+                                            <td>@Html.Sitecore().Field("Phone", v)</td>
+                                        </tr>                                                    
+                                        <tr>
+                                            <th><b>Email:</b></th>
+                                            <td>@Html.Sitecore().Field("Email", v)</td>
+                                        </tr>
+                                        <tr>
+                                            <th><b>Profile Link:</b></th>
+                                            <td>@Html.Sitecore().Field("Profile Link", v)</td>
+                                        </tr>
+                                    </table>
+                                </div>                                 
+                                <div class="col-sm-1" style="float: right; text-align: right;">
+                                    <input class="pe-button pe-red" type="button" title="Delete" style="font-size: 1.4em;" value="X" onclick="Sitecore.PageModes.PageEditor.postRequest('webedit:delete(id=@v.ID.ToString())')">
+                                    <input class="pe-button pe-gray1" type="button" title="Move Up" onclick="Sitecore.PageModes.PageEditor.postRequest('item:moveup(id=@v.ID.ToString())')" value="▲">
+                                    <input class="pe-button pe-gray1" type="button" title="Move Down" onclick="Sitecore.PageModes.PageEditor.postRequest('item:movedown(id=@v.ID.ToString())')" value="▼">
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                }
+                <input type="button" id="btnAddNewFaculty" class="pe-button pe-green" style="float: right;" onclick="addFaculty('@s.ID.ToString()', 'User Input', null)" value="+ Add New Faculty" />
+            }
+            else if (s.HasChildren && s.TemplateName == "Faculty Directory DB Section") // DB Section
+            {
+                // For each faculty-list item view (DB data)
+                foreach (Sitecore.Data.Items.Item v in s.GetChildren())
+                {
+                    <div id="multipleModal_@sectionId" class="modal fade" style="z-index:9998;" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">×</button>
+                                    <span class="modal-title">Add Multiple Faculty</span>
+                                </div>
+                                <div class="modal-body" style="text-align: center;">
+                                    <table class="table table-hover searchResults">
+                                        <thead>
+                                            <tr>
+                                                <td><textarea placeholder="41245,362262,7542,784548,34367" cols="5" rows="3" class="form-control addIDs"></textarea></td>
+                                            </tr>
+                                            <tr>
+                                                <td><small>* Please separate multiple IDs with a comma(,)</small></td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="button" class="form-control pe-button pe-green btnAddMultipleIDs" value="Add multiple Faculty" onclick="addMultipleFaculty('@v.ID.ToString()', '@sectionId', $('#multipleModal_@(sectionId) .addIDs').val())" /></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    if (!String.IsNullOrEmpty(v.Fields["Faculty List"].Value))
+                    {
+                        System.Collections.Specialized.NameValueCollection allFaculties = Sitecore.Web.WebUtil.ParseUrlParameters(v["Faculty List"]);
+                        <div id="hidAllData_@sectionId" style="display:none;">
+                            @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(v, "Faculty List"))
+                        </div>
+                        <ul class="list-group toggleFD_@sectionId">
+                            @foreach (string personId in allFaculties)
+                            {
+                                HealthIS.Apps.MVC.Models.CorporatePersonInfo person = Model.LoadFacultyInfo(allFaculties, personId);
+                                if (!String.IsNullOrEmpty(Model.errorMessage))
+                                {
+                                    <li class="list-group-item"><h3>There is an error during the gathering faculty information</h3></li>
+                                    break;
+                                }
+                                else
+                                {
+                                    <li class="list-group-item">
+                                        <div style="float:left;width:95%;">
+                                            <br />
+                                            <div style="line-height:2em;width:100%;margin-bottom:10px;border-bottom:solid 1px #ddd;">
+                                                <div class="col-sm-10" style="padding-left:15px;">
+                                                    <div class="row textInputs input-group" style="width: 100%;">
+                                                        <input type="text" class="form-control" id="firstName_@(sectionId)_@(personId)" placeholder="First Name" style="width:49%;" />
+                                                        <span> </span>
+                                                        <input type="text" class="form-control" id="lastName_@(sectionId)_@(personId)" placeholder="Last Name" style="width:49%;" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2" style="text-align:left;padding:0 0 0 5px;">
+                                                    <input style="font-size: 1.25em;line-height: 2em;padding: 0px 10px;" id="btnSearchDir_@(sectionId)_@(personId)" class="pe-button pe-blue" type="button" value="Search" onclick="searchFacDir('@personId', '@sectionId')">
+                                                </div>
+                                                <span id="searchErr_@(sectionId)_@(personId)" class="row" style="color:#ff6868;"></span>
+                                            </div>
+                                            <div id="searchModal_@(sectionId)_@(personId)" class="modal fade" style="z-index:9999;" role="dialog">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal">×</button>
+                                                            <span class="modal-title">Search Results</span>
+                                                        </div>
+                                                        <div class="modal-body" style="text-align: center;">
+                                                            <h4>Chose a search result below:</h4>
+                                                            <table class="table table-hover searchResults">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="text-align: center;">HSC ID</th>
+                                                                        <th style="text-align: center;">Full Name</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody></tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="float: right; width: 5%; text-align: right;">
+                                            <input class="pe-button pe-red" type="button" title="Delete" style="font-size: 1.4em;" value="X" onclick="removeFaculty('@v.ID.ToString()', '@personId')">
+                                            <input class="pe-button pe-gray1" type="button" title="Move Up" onclick="sortFaculty('@v.ID.ToString()', '@personId', 'Move Up')" value="▲">
+                                            <input class="pe-button pe-gray1" type="button" title="Move Down" onclick="sortFaculty('@v.ID.ToString()', '@personId', 'Move Down')" value="▼">
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                        <div class="col-sm-3">                                                                        
+                                            <img id="imgProfilePic_@(personId)" alt="Profile Picture of @(person.FIRST_NAME)" src="/resources/root-elements/FacultyDirectoryGetFile.cshtml?method=picture&person_id=@(personId)">
+                                        </div>                                  
+                                        <div class="col-sm-9">
+                                            <table class="tblProfileInfo">
+                                                <tr>
+                                                    <th><b>First Name:</b></th>
+                                                    <td><input type="text" class="form-control" id="lblFName_@personId" value="@person.FIRST_NAME" disabled /></td>
+                                                </tr>
+                                                <tr>
+                                                    <th><b>Last Name:</b></th>
+                                                    <td><input type="text" class="form-control" id="lblLName_@personId" value="@person.LAST_NAME" disabled /></td>
+                                                </tr>
+                                                <tr>
+                                                    <th><b>Credentials:</b></th>
+                                                    <td><input type="text" class="form-control" id="lblCredentials_@personId" value="@person.TITLE" disabled /></td>
+                                                </tr>
+                                                <tr>
+                                                    <th><b>Job Title:</b></th>
+                                                    <td><textarea id="tbJTitle_@(sectionId)_@(personId)" class="form-control" style="width:100%;" rows="3" cols="45" onkeypress='window.frames["scWebEditRibbon"].contentWindow.scForm.setModified(true);'>@person.jobTitle</textarea></td>
+                                                </tr>
+                                                <tr>
+                                                    <th><b>Person ID:</b></th>
+                                                    <td><input type="text" class="form-control" id="lblPersonID_@personId" value="@(personId.ToLower().Contains("temp_") ? "" : personId)" disabled /></td>
+                                                </tr>
+                                                <tr>
+                                                    <th><b>HSC ID:</b></th>
+                                                    <td><input type="text" class="form-control" id="lblHSCID_@personId" value="@person.HSCNET_ID" disabled /></td>
+                                                </tr>                                                    
+                                                <tr>
+                                                    <th><b>Email:</b></th>
+                                                    <td><input type="text" class="form-control" id="lblEmail_@personId" value="@person.EMAIL" disabled /></td>
+                                                </tr>
+                                            </table>
+                                            @if ((!personId.Contains("Temp_")) && (String.IsNullOrEmpty(person.FIRST_NAME) || String.IsNullOrEmpty(person.LAST_NAME) || String.IsNullOrEmpty(person.EMAIL)))
+                                            {
+                                                <br />
+                                                <span class="error_msg_lblPersonID_@personId" style="font-size: 15px; color: orangered;"><b>This person having ID "@(personId)" doesn't have correct information.</b></span>
+                                            }
+                                        </div>
+                                        <div style="clear:both"></div>
+                                    </li>
+                                } // END - ShowErrorMessage
+
+                            }
+                        </ul>
+                        <script>
+                            // Whenever JobTitle field is editing, update its hidden field
+                            $('[id^="tbJTitle_@(sectionId)_"]').keyup(function () {
+                                updateData('@sectionId');
+                            });
+                        </script>
+                    }
+                    if (String.IsNullOrEmpty(Model.errorMessage))
+                    {
+                        <input type="button" id="btnAddNewFaculty" class="pe-button pe-green" style="float: right;" onclick="addFaculty('@v.ID.ToString()', 'Temp_' + Date.now())" value="+ Add New Faculty" />
+                        <input type="button" id="btnAddMultipleFaculty" class="pe-button pe-green" style="float: right; margin-right: 10px;" onclick="jQuery('#multipleModal_@sectionId').modal('show')" value="+ Add Multiple Faculty" />   
+                    }
+                }
+
+            } // If child exists
+            <br /><hr /><br />
+        } // End each section
+        <input type="button" id="btnAddListView" class="pe-button pe-green" style="float: right;" onclick='addBranch("@(Model.rendering.Item.ID.ToString())", "@(Model.pageItem.Name)", "Input Section")' value="+ Add New Manual Section" />
+        <input type="button" id="btnAddThumbnailView" class="pe-button pe-green" style="float: right; margin-right: 10px;" onclick='addBranch("@(Model.rendering.Item.ID.ToString())", "@(Model.pageItem.Name)", "DB Section")' value="+ Add New Database Section" />
+    } // End each view
+}
+else
+{
+    // When page is not on Editing Mode
+    if (!Model.isDatasourceNull && Model.hasChildren)
+    {
+        foreach (Sitecore.Data.Items.Item s in Model.rendering.Item.GetChildren()) // Get Section
+        {
+            string sectionTitle = s.Fields["Section Title"].Value;
+            string displayListView = s.Fields["Display as List View"].Value;
+            bool isThumbnailView = String.IsNullOrEmpty(displayListView) ? true : false;
+
+            <div class="row">
+                <div class="@(isThumbnailView ? "user-profile-view" : "user-list-view")">
+                    @if (!string.IsNullOrEmpty(sectionTitle))
+                    { <h2>@Html.Raw(sectionTitle)</h2> }
+                    <ul>
+                        @foreach (Sitecore.Data.Items.Item v in s.GetChildren()) // Get each view in section
+                        {
+                            if (v.TemplateName == "Faculty Directory DB View")
+                            {
+                                System.Collections.Specialized.NameValueCollection allFaculties = Sitecore.Web.WebUtil.ParseUrlParameters(v["Faculty List"]);
+                                foreach (string personId in allFaculties)
+                                {
+                                    HealthIS.Apps.MVC.Models.CorporatePersonInfo fInfo = Model.LoadFacultyInfo(allFaculties, personId);
+
+                                    if (!String.IsNullOrEmpty(Model.errorMessage))
+                                    {
+                                        <li><h4>Sorry for the inconvenience.<br />We are performing some maintenance at the moment.</h4></li>
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        string firstName = fInfo.FIRST_NAME;
+                                        string lastName = fInfo.LAST_NAME;
+                                        string fullName = firstName + " " + lastName;
+                                        fullName = !String.IsNullOrEmpty(fInfo.TITLE) ? fullName + ", " + fInfo.TITLE : fullName;
+                                        string email = fInfo.EMAIL;
+                                        string phone = fInfo.PHONE;
+                                        string jobTitle = fInfo.jobTitle;
+                                        string personid = fInfo.PERSON_ID;
+                                        string profileLink = string.IsNullOrEmpty(Model.GetProfileLink(s)) ? "" : Model.GetProfileLink(s) + personid + "/" + lastName;
+
+                                        if (!String.IsNullOrEmpty(firstName) && !String.IsNullOrEmpty(lastName) && !String.IsNullOrEmpty(email))
+                                        {
+                                            if (isThumbnailView) //Thumbnail View
+                                            {
+                                            <li>
+                                                @if (!String.IsNullOrEmpty(profileLink))
+                                                { 
+                                                    <text><a href="@profileLink"></text>
+                                                }
+                                                <img alt="Profile Picture of @(fullName)" src="/resources/root-elements/FacultyDirectoryGetFile.cshtml?method=picture&person_id=@(personid)">
+                                                <span>@(fullName)</span>
+                                                @if (!String.IsNullOrEmpty(profileLink))
+                                                { 
+                                                    @:</a>
+                                                }
+                                                <br>
+                                                <p>
+                                                    @Html.Raw(jobTitle.Replace("\n", "<br/>"))<br />
+                                                    <a href="mailto:@(email)">@(email)</a>
+                                                </p>
+                                            </li>
+                                            }
+                                            else //List View
+                                            {
+                                                <li>
+                                                    @{ profileLink = String.IsNullOrEmpty(profileLink) ? "mailto:" + email : profileLink; }
+                                                    <a href="@profileLink">@(fullName)</a>
+                                                    <span>@Html.Raw(jobTitle.Replace("\n", "<br/>"))</span>
+                                                </li>
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else if (v.TemplateName == "Faculty Directory Input View")
+                            {
+                                string firstName = v.Fields["First Name"].Value;
+                                string lastName = v.Fields["Last Name"].Value;
+                                string credentials = v.Fields["Credentials"].Value;
+                                string fullName = firstName + " " + lastName;
+                                fullName = !String.IsNullOrEmpty(credentials.ToString()) ? fullName + ", " + credentials : fullName;
+                                string building = v.Fields["Building"].Value;
+                                string email = v.Fields["Email"].Value;
+                                string phone = v.Fields["Phone"].Value;
+                                string jobTitle = v.Fields["Job Title"].Value;
+                                string profileLink = v.Fields["Profile Link"].Value;
+                                string profileImage = v.Fields["Profile Image"].Value;
+
+                                if (isThumbnailView) //Thumbnail View
+                                {
+                                    <li>
+                                        @if (!String.IsNullOrEmpty(profileLink))
+                                        { 
+                                            <text><a href="@profileLink"></text>
+                                        }
+                                        @if (String.IsNullOrEmpty(profileImage))
+                                        {
+                                            <img alt="Profile Picture of @(fullName)" src="\~/media/Images/Root Element/no-photo">
+                                        }
+                                        else
+                                        {
+                                            @Html.Sitecore().Field("Profile Image", v);
+                                        }
+                                        <span>@(fullName)</span>
+                                        @if (!String.IsNullOrEmpty(profileLink))
+                                        { 
+                                            @:</a>
+                                        }
+                                        <br>
+                                        <p>
+                                            @Html.Raw(HttpUtility.HtmlDecode(jobTitle.Replace("\n", "<br/>")))<br />
+                                            <a href="mailto:@(email)">@(email)</a>
+                                        </p>
+                                    </li>
+                                }
+                                else //List View
+                                {
+                                    <li>
+                                        @if (!String.IsNullOrEmpty(profileLink.Trim()))
+                                        {
+                                            <a href="@profileLink">@fullName</a>  
+                                            <span>@Html.Raw(HttpUtility.HtmlDecode(jobTitle.Replace("\n", "<br/>")))</span>
+                                        }
+                                        else
+                                        {
+                                            <p>@fullName</p>
+                                            <span>@Html.Raw(HttpUtility.HtmlDecode(jobTitle.Replace("\n", "<br/>")))</span>
+                                        }
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    }
+}

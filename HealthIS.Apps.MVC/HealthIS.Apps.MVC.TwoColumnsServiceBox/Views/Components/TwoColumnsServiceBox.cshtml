@@ -1,0 +1,87 @@
+﻿@model HealthIS.Apps.MVC.Models.TwoColumnsServiceBox
+
+@{
+    bool isEditing = false;
+    if (Sitecore.Context.PageMode.IsPageEditorEditing) { isEditing = true; }
+}
+
+@if (@Sitecore.Data.ID.IsID(Model.Rendering.DataSource))
+{
+    <div class="row doctors-row row-flex">
+        <div class="col-md-6 col-left-adjust">
+            <div class="doctors-box-services flex-col">
+                <h3>
+                    @if (isEditing)
+                    {
+                        @:Icon: @Html.Raw((String.IsNullOrEmpty(Model.LeftHeaderIcon)) ? "Not Selected" : @Model.LeftHeaderIcon) <br />
+                        @:Title: @Html.Raw(Model.LeftHeaderTitle)
+                    }
+                    else
+                    {
+                        <span class="@Model.LeftHeaderIcon"></span> @Html.Raw(Model.LeftHeaderTitle)
+                    }
+                </h3>
+                <div>
+                    @Html.Raw(Model.LeftBoxContent)
+                </div>
+            </div>
+        </div>
+        @if (!String.IsNullOrEmpty(@Model.RightHeaderTitle) && !String.IsNullOrEmpty(@Model.RightBoxContent))
+        {
+            <div class="col-md-6 col-right-adjust">
+                <div class="doctors-box-services flex-col">
+                    <h3>
+                        @if (isEditing)
+                        {
+                            @:Icon: @Html.Raw((String.IsNullOrEmpty(Model.RightHeaderIcon)) ? "Not Selected" : @Model.RightHeaderIcon) <br />
+                            @:Title: @Html.Raw(Model.RightHeaderTitle)
+                        }
+                        else
+                        {
+                            <span class="@Model.RightHeaderIcon"></span> @Html.Raw(Model.RightHeaderTitle)
+                        }
+                    </h3>
+                    <div>
+                        @Html.Raw(Model.RightBoxContent)
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="col-md-6 col-right-adjust">
+            </div>
+        }
+    </div>
+}
+else
+{
+    if (Sitecore.Context.PageMode.IsPageEditor)
+    {
+        <div>No Associated Datasource.<br />Please Create New Datasource</div><br />
+        <input type="button" class="btnAddDS" value="Create DataSource" onclick="callSetDataSrc()" />
+    
+        <script type="text/javascript">
+
+            Sitecore.PageModes.PageEditor.postRequest('webedit:save()');
+
+            // Create new datasource regarding to this component
+            function callSetDataSrc() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                      // itemID
+                    'User Defined2/Component Template/Two Columns Service Box',     // templatePath
+                    '_SB',                                                          // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',   // renderingID
+                    '@Html.Raw(Model.PageItem.Database.Name)',                      // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',             // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',               // renderingUID
+                    ''                                                              // btnID
+                );
+            }
+        </script>
+    }
+    else
+    {
+        <div>No Associated Datasource.<br />Please Create New Datasource</div><br />
+    }
+}

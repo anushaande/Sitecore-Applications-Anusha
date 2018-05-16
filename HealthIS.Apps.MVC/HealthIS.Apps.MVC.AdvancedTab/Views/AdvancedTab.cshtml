@@ -1,0 +1,212 @@
+﻿@model HealthIS.Apps.MVC.Models.AdvancedTab
+@using Sitecore.Mvc
+@{
+    string renderingItemId = string.Empty;
+    if (Sitecore.Context.PageMode.IsExperienceEditor && Model.IsDatasourceNull)
+    {
+        <center>
+            <h2>Advanced Tab</h2><p>If you want to create a new tab, click 'Create New Tab'.</p>
+            <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrcCB()" value="Create New Tab" />
+        </center>
+        <script>
+            jQuery(document).ready(function () {
+                autoSave();
+            });
+            // Create new datasource regarding to this component
+            function callSetDataSrcCB() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                      // itemID
+                    'User Defined2/Component Template/Advanced Tab',                // templatePath
+                    '_AT',                                                          // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',   // renderingID
+                    '@Html.Raw(Model.PageItem.Database.Name)',                      // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',             // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',               // renderingUID
+                    ''                                                              // btnID
+                );
+            }
+        </script>
+        return;
+    }
+
+    if (Sitecore.Context.PageMode.IsExperienceEditor)
+    {
+        <style>
+            .fa-input {
+                font-family: FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            }
+        </style>
+        renderingItemId = Model.Item.ID.ToShortID().ToString();
+        if (Model.Item.Children.Count <= 7)
+        {
+            <div class="row" style="padding-top: 30px;">
+                <div class="col-lg-9" @*style="width: 65%; padding: 0 2.5%;"*@>
+                    <select class="sltAdvancedTabLayout_@(renderingItemId) form-control">
+                        <option value="default">Select a layout to create a new tab</option>
+                        @foreach (var layoutId in Model.layouts.TargetIDs)
+                        {
+                            Model.availableLayout = Model.Item.Database.GetItem(layoutId);
+                            if (Model.availableLayout != null)
+                            {
+                                <option value="@Model.availableLayout.Name">@Model.availableLayout.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-3" @*style="width: 30%;"*@>
+                    <input type="button" id="btnSortAdvancedTab_Tab@(renderingItemId)" class="pe-button pe-gray1 fa-input" style="height: 30px; float: right; width: 45%; font-size: 90%; margin-left: 10px;" onclick='Sitecore.PageModes.PageEditor.postRequest("webedit:sortcontent(id=@(Model.Item.ID.ToString()))")' value="&#xf0c9; Sort" />
+                    <input type="button" id="btnAddNewAdvancedTab_@(renderingItemId)" class="pe-button pe-green fa-input" style="height: 30px; float: right; width: 45%; font-size: 90%; " onclick='callAddItemToDataSrcAT_@(renderingItemId)("")' value="&#xf067; Add Tab" /><br />
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row" style="padding-top: 30px;">
+                <div style="width: 97.5%; padding: 0 2.5%;">
+                    <input type="button" id="btnSortAdvancedTab_Tab@(renderingItemId)" class="pe-button pe-gray1 fa-input" style="height: 30px; width: 100%;" onclick='Sitecore.PageModes.PageEditor.postRequest("webedit:sortcontent(id=@(Model.Item.ID.ToString()))")' value="&#xf0c9; Sort Tab Items" />
+                </div>
+            </div>
+        }
+        if (Model.Item.HasChildren)
+        {
+            int count = 1;
+            string tabItemId = "";
+            <div class="row" style="padding: 5px 0;">
+                <div class="col-lg-9" @*style="width: 65%; padding: 0 2.5%;"*@>
+                    <select class="sltAdvancedTabView_@(renderingItemId) form-control">
+                        <option value="default" data-gui="default">Select a tab to update or remove</option>
+                        @foreach (Sitecore.Data.Items.Item child in Model.Item.Children)
+                        {
+                            string selected = "";
+                            tabItemId = child.ID.ToString();
+                            <option value="@(child.ID.ToShortID().ToString())" data-gui="@(tabItemId)" @(selected)>Tab @(count) - Title: @(child.Fields["Tab Title"].Value)</option>
+                            count++;
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-3" @*style="width: 30%;"*@>
+                    <input type="button" id="btnRemoveAdvancedTab_Tab@(renderingItemId)" class="pe-button pe-red fa-input" style="height: 30px; float: right; width: 45%; font-size: 90%; margin-left: 10px; " onclick='removeAdvancedTabItem_@(renderingItemId)("default")' value="&#xe000; Remove" />
+                    <input type="button" id="btnEditAdvancedTab_Tab@(renderingItemId)" class="pe-button pe-yellow fa-input" style="height: 30px; float: right; width: 45%; font-size: 90%; " onclick='editAdvancedTabItem_@(renderingItemId)("default")' value="&#xf040; Edit" />
+                </div>
+            </div>
+        }
+        <script>
+            // Update onClick event whenever option-value changes for Layout selection
+            jQuery(".sltAdvancedTabLayout_@(renderingItemId)").change(function () {
+                jQuery("#btnAddNewAdvancedTab_@(renderingItemId)").attr('onclick', "callAddItemToDataSrcAT_@(renderingItemId)('" + this.value + "')");
+            });
+
+            // Update onClick event whenever option-value changes for Tab selection
+            jQuery(".sltAdvancedTabView_@(renderingItemId)").change(function () {
+                var selectedOptionGui = $(this).find(':selected').data('gui');
+                jQuery("#btnEditAdvancedTab_Tab@(renderingItemId)").attr('onclick', "editAdvancedTabItem_@(renderingItemId)('" + selectedOptionGui + "')");
+                jQuery("#btnRemoveAdvancedTab_Tab@(renderingItemId)").attr('onclick', "removeAdvancedTabItem_@(renderingItemId)('" + selectedOptionGui + "')");
+                jQuery("#tab_" + this.value).prop("checked", true);
+            });
+
+            // Edit Tab item
+            function editAdvancedTabItem_@(renderingItemId)(tabItemId) {
+                if (tabItemId == "default") {
+                    alert("Please select a tab");
+                    return;
+                }
+                Sitecore.PageModes.PageEditor.postRequest("webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Tab Title|Video Embed URL|Video Thumbnail|Image Path|Description|Description Left|Description Right, id=" + tabItemId + ")");
+            }
+            // Remove Tab item
+            function removeAdvancedTabItem_@(renderingItemId)(tabItemId) {
+                if (tabItemId == "default") {
+                    alert("Please select a tab");
+                    return;
+                }
+                Sitecore.PageModes.PageEditor.postRequest("webedit:delete(id=" + tabItemId + ")");
+            }
+
+            // Create new sub-items regarding to this component
+            function callAddItemToDataSrcAT_@(renderingItemId)(templateName) {
+                if (templateName == "") {
+                    alert("Please select a layout");
+                    return;
+                }
+                addItemToDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                                  // itemID
+                    'User Defined2/Component Template/Advanced Tab/' + templateName,            // templatePath
+                    '_AT_Tab',                                                                  // suffix
+                    '@Html.Raw(Model.PageItem.Database.Name)',                                  // dbName
+                    '@Html.Raw(Model.Rendering.Item.ID)',                                       // dsFolderName
+                    false,                                                                      // Page Reload
+                    function (data) { editAdvancedTabItem_@(renderingItemId)(data); }           // CallBack
+                );
+            }
+        </script>
+        <br />
+    }
+}
+<div class="tabs">
+    @if (Model.Item.HasChildren)
+    {
+        string itemShortId = "";
+        string itemGuiId = "";
+        string itemChecked = "";
+        int count = 1;
+        foreach (Sitecore.Data.Items.Item tab in Model.Item.Children)
+        {
+            itemShortId = tab.ID.ToShortID().ToString();
+            itemGuiId = tab.ID.ToString();
+            if (count == 1)
+            {
+                itemChecked = itemGuiId;
+            }
+            if (tab.TemplateName == "Media Tab-Two Columns")
+            {
+                @Html.Partial("~/Views/Components/AdvancedTabLayout-Media-TwoColumns.cshtml", Model, new System.Web.Mvc.ViewDataDictionary { { "layoutType", "media-twoColumns" }, { "itemShortId", @itemShortId }, { "itemGuiId", @itemGuiId }, { "checked", @itemChecked } })
+            }
+            else
+            {
+                @Html.Partial("~/Views/Components/AdvancedTabLayout-Default-OneColumn.cshtml", Model, new System.Web.Mvc.ViewDataDictionary { { "layoutType", "default-oneColumn" }, { "itemShortId", @itemShortId }, { "itemGuiId", @itemGuiId }, { "checked", @itemChecked } })
+            }
+            count++;
+        }
+    }
+</div>
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    <script>
+        // Whenever Tab clicks, update Tab list selection
+        jQuery("input[id^='tab_']").click(function () {
+            var current = $(this);
+            var selectedOptionGui = "";
+            var itemId = current.attr("id").substring(4);
+
+            jQuery(".sltAdvancedTabView_@(renderingItemId) option").each(function () {
+                this.selected = (this.value == itemId);
+                if (this.selected) {
+                    selectedOptionGui = $(this).data("gui");
+                }
+            });
+
+            // Update Edit and Remove buttons' onclick event
+            jQuery("#btnEditAdvancedTab_Tab@(renderingItemId)").attr('onclick', "editAdvancedTabItem_@(renderingItemId)('" + selectedOptionGui + "')");
+            jQuery("#btnRemoveAdvancedTab_Tab@(renderingItemId)").attr('onclick', "removeAdvancedTabItem_@(renderingItemId)('" + selectedOptionGui + "')");
+        });
+    </script>
+}
+<script>
+    function advancedTabPlayVid(sender) {
+        jQuery(sender).parent().animate(
+            {
+                opacity: 0
+            }
+            , 1000
+            , function () {
+                var ytp = jQuery(jQuery(sender).parent().parent().find("iframe")[0]);
+                ytp.css("z-index", 3);
+            }
+        );
+        var ytp = jQuery(jQuery(sender).parent().parent().find("iframe")[0]);
+        ytp.attr("src", ytp.data("src"));
+    }
+
+    function fadeIn() {
+        jQuery('.iframeOverlay').fadeIn();
+    }
+</script>

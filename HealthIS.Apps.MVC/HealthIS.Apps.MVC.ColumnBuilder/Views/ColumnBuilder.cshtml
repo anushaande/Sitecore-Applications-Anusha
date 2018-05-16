@@ -1,0 +1,240 @@
+﻿@model HealthIS.Apps.MVC.Models.ColumnBuilder
+@using Sitecore.Mvc
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor && Model.IsDatasourceNull)
+{
+    <center>
+        <h2>Bootstrap Column Builder</h2><p>If you want to create a new builder, click 'Create New Builder'.</p>
+        <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrcCB()" value="Create New Builder" />
+    </center>
+    <script>
+        jQuery(document).ready(function () {
+            autoSave();
+        });
+        // Create new datasource regarding to this component
+        function callSetDataSrcCB() {
+            setDataSrc(
+                '@Html.Raw(Model.PageItem.ID.ToString())',                              // itemID
+                'User Defined2/Component Template/Column Builder',                      // templatePath
+                '_CB',                                                                  // suffix
+                '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',           // renderingID
+                '@Html.Raw(Model.PageItem.Database.Name)',                              // dbName
+                '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                     // deviceID
+                '@Html.Raw(Model.Rendering.UniqueId.ToString())',                       // renderingUID
+                ''                                                                      // btnID
+            );
+        }
+    </script>
+    return;
+}
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    if (!Model.IsDatasourceNull)
+    {
+        string guiId = new System.Text.RegularExpressions.Regex("-").Replace(Model.Rendering.Item.ID.Guid.ToString(), "");
+        if (Model.Rendering.Item.HasChildren)
+        {
+            foreach (Sitecore.Data.Items.Item child in Model.Rendering.Item.Children)
+            {
+                string cssClass = HealthIS.Apps.MVC.Helpers.getStrField(child, "CSS Class");
+                cssClass = !String.IsNullOrEmpty(cssClass) ? "class=" + cssClass : "";
+                if (child.TemplateName == "One Column")
+                {
+                    <div @(cssClass)>
+                        <h2 class="column-builder-headline">Heading: @Html.Raw(Model.DataItems(child, "Heading"))</h2>
+                        <div class="row">
+                            <div class="col-sm-12">@Html.Raw(Model.DataItems(child, "One Column"))</div>
+                        </div>
+                    </div>
+                }
+                else if (child.TemplateName == "Half and Half")
+                {
+                    <div @(cssClass)>
+                        <h2 class="column-builder-headline">Heading: @Html.Raw(Model.DataItems(child, "Heading"))</h2>
+                        <div class="row">
+                            <div class="col-sm-6">@Html.Raw(Model.DataItems(child, "Left Half"))</div>
+                            <div class="col-sm-6">@Html.Raw(Model.DataItems(child, "Right Half"))</div>
+                        </div>
+                    </div>
+                }
+                else if (child.TemplateName == "One Third and Two Thirds")
+                {
+                    <div @(cssClass)>
+                        <h2 class="column-builder-headline">Heading: @Html.Raw(Model.DataItems(child, "Heading"))</h2>
+                        <div class="row">
+                            <div class="col-sm-4">@Html.Raw(Model.DataItems(child, "One Third"))</div>
+                            <div class="col-sm-8">@Html.Raw(Model.DataItems(child, "Two Thirds"))</div>
+                        </div>
+                    </div>
+                }
+                else if (child.TemplateName == "Two Thirds and One Third")
+                {
+                    <div @(cssClass)>
+                        <h2 class="column-builder-headline">Heading: @Html.Raw(Model.DataItems(child, "Heading"))</h2>
+                        <div class="row">
+                            <div class="col-sm-8">@Html.Raw(Model.DataItems(child, "Two Thirds"))</div>
+                            <div class="col-sm-4">@Html.Raw(Model.DataItems(child, "One Third"))</div>
+                        </div>
+                    </div>
+                }
+                else if (child.TemplateName == "Three Columns")
+                {
+                    <div @(cssClass)>
+                        <h2 class="column-builder-headline">Heading: @Html.Raw(Model.DataItems(child, "Heading"))</h2>
+                        <div class="row">
+                            <div class="col-sm-4">@Html.Raw(Model.DataItems(child, "One Third-1"))</div>
+                            <div class="col-sm-4">@Html.Raw(Model.DataItems(child, "One Third-2"))</div>
+                            <div class="col-sm-4">@Html.Raw(Model.DataItems(child, "One Third-3"))</div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    @Html.Raw("You don't have correct column-builder item. Please remove \"" + child.Name + "\"")
+                }
+                <br />
+                @Model.MoveItemButton("pe-button pe-gray1", "moveup", "&#x25B2; Move up", child) @:&nbsp;
+                @Model.MoveItemButton("pe-button pe-gray1", "movedown", "&#x25BC; Move down", child) @:&nbsp;
+                <input type="button" class="pe-button pe-yellow" onclick="javascript:Sitecore.PageModes.PageEditor.postRequest('webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Heading|CSS Class, id=@child.ID)')" value="Add CSS Class"> @:&nbsp;
+                @Model.ActionItemButton("pe-button pe-red", "delete", "X", child)
+
+                @Html.Raw("<hr />");
+            }
+        }
+
+        <br />
+        <div>
+            <b>Select Column Type: </b>
+            <select class="sltColumnType_@(guiId)">
+                <option value="">--- Select Column Type ---</option>
+                <option value="One Column">One Column</option>
+                <option value="Half and Half">Half and Half</option>
+                <option value="One Third and Two Thirds">One Third and Two Thirds</option>
+                <option value="Two Thirds and One Third">Two Thirds and One Third</option>
+                <option value="Three Columns">Three Columns</option>
+            </select>
+        </div>
+        <style>
+            div.previewCB_@(guiId) { text-align: center; margin: 10px 0; }
+            .previewCB_@(guiId) div { padding: 30px; }
+        </style>
+        <!-- One Column -->
+        <div class="row previewCB_@(guiId) OneColumn_@(guiId)">
+            <div class="col-sm-12" style="background-color: lightblue;">One Column</div>
+        </div>
+        <!-- Half and Half -->
+        <div class="row previewCB_@(guiId) HalfandHalf_@(guiId)">
+            <div class="col-sm-6" style="background-color: lightblue;">Left Half</div>
+            <div class="col-sm-6" style="background-color: lightgreen;">Right Half</div>
+        </div>
+        <!-- One Third, Two Thirds -->
+        <div class="row previewCB_@(guiId) OneThirdandTwoThirds_@(guiId)">
+            <div class="col-sm-4" style="background-color: lightblue;">One Third</div>
+            <div class="col-sm-8" style="background-color: lightgreen;">Two Thirds</div>
+        </div>
+
+        <!-- Two Thirds, One Third -->
+        <div class="row previewCB_@(guiId) TwoThirdsandOneThird_@(guiId)">
+            <div class="col-sm-8" style="background-color: lightblue;">Two Thirds</div>
+            <div class="col-sm-4" style="background-color: lightgreen;">One Third</div>
+        </div>
+
+        <!-- Three Columns -->
+        <div class="row previewCB_@(guiId) ThreeColumns_@(guiId)">
+            <div class="col-sm-4" style="background-color: lightblue;">One Third</div>
+            <div class="col-sm-4" style="background-color: lightsalmon;">One Third</div>
+            <div class="col-sm-4" style="background-color: lightgreen;">One Third</div>
+        </div>
+        <input type="button" id="btnAddChildColBuilder_@(guiId)" class="pe-button pe-green" style="float: right;" onclick='callAddItemToDataSrcCB_@(guiId)("")' value="+ Add New Row" />
+        <br /><br />
+        <script>
+            jQuery(".previewCB_@(guiId)").hide();
+            jQuery(".sltColumnType_@(guiId)").change(function () {
+                jQuery("#btnAddChildColBuilder_@(guiId)").attr('onclick', "callAddItemToDataSrcCB_@(guiId)('" + this.value + "')");
+                jQuery(".previewCB_@(guiId)").hide();
+                var typeName = this.value.replace(/\s/g, '');
+                jQuery('.' + typeName + "_@(guiId)").show();
+            });
+
+            // Create new sub-items regarding to this component
+            function callAddItemToDataSrcCB_@(guiId)(templateName) {
+                if (templateName == "") {
+                    alert("Please select a column type");
+                    return;
+                }
+                var suffix = "";
+                switch (templateName) {
+                    case "One Column":
+                        suffix = "_One";
+                        break;
+                    case "Half and Half":
+                        suffix = "_HH";
+                        break;
+                    case "One Third and Two Thirds":
+                        suffix = "_OneTwo";
+                        break;
+                    case "Two Thirds and One Third":
+                        suffix = "_TwoOne";
+                        break;
+                    case "Three Columns":
+                        suffix = "_Three";
+                        break;
+                }
+
+                addItemToDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                                  // itemID
+                    'sitecore/templates/Branches/Components/Column Builder/CB_' + templateName, // templatePath
+                    '_CB' + suffix,                                                             // suffix
+                    '@Html.Raw(Model.PageItem.Database.Name)',                                  // dbName
+                    '@Html.Raw(Model.Rendering.Item.ID)'                                        // dsFolderName
+                );
+            }
+        </script>
+        <br />
+    }
+}
+else
+{
+    if (!Model.IsDatasourceNull)
+    {
+        if (Model.Item.HasChildren)
+        {
+            foreach (Sitecore.Data.Items.Item child in Model.Rendering.Item.Children)
+            {
+                string cssClass = Model.DataItems(child, "CSS Class");
+                cssClass = !String.IsNullOrEmpty(cssClass) ? "class=" + cssClass : "";
+                <div @(cssClass)>
+                    @if (!String.IsNullOrEmpty(Model.DataItems(child, "Heading")))
+                    { <h2 class="column-builder-headline">@Html.Raw(Model.DataItems(child, "Heading"))</h2> }
+                    <div class="row">
+                        @if (child.TemplateName == "One Column")
+                        {
+                            <div class="col-sm-12">@Html.Raw(HealthIS.Apps.MVC.Helpers.GenerateContents(Model.DataItems(child, "One Column")))</div>
+                        }
+                        else if (child.TemplateName == "Half and Half")
+                        {
+                            <div class="col-sm-6">@Html.Raw(HealthIS.Apps.MVC.Helpers.GenerateContents(Model.DataItems(child, "Left Half")))</div>
+                            <div class="col-sm-6">@Html.Raw(HealthIS.Apps.MVC.Helpers.GenerateContents(Model.DataItems(child, "Right Half")))</div>
+                        }
+                        else if (child.TemplateName == "One Third and Two Thirds")
+                        {
+                            <div class="col-sm-4">@Html.Raw(HealthIS.Apps.MVC.Helpers.GenerateContents(Model.DataItems(child, "One Third")))</div>
+                            <div class="col-sm-8">@Html.Raw(HealthIS.Apps.MVC.Helpers.GenerateContents(Model.DataItems(child, "Two Thirds")))</div>
+                        }
+                        else if (child.TemplateName == "Two Thirds and One Third")
+                        {
+                            <div class="col-sm-8">@Html.Raw(HealthIS.Apps.MVC.Helpers.GenerateContents(Model.DataItems(child, "Two Thirds")))</div>
+                            <div class="col-sm-4">@Html.Raw(HealthIS.Apps.MVC.Helpers.GenerateContents(Model.DataItems(child, "One Third")))</div>
+                        }
+                        else if (child.TemplateName == "Three Columns")
+                        {
+                            <div class="col-sm-4">@Html.Raw(HealthIS.Apps.MVC.Helpers.GenerateContents(Model.DataItems(child, "One Third-1")))</div>
+                            <div class="col-sm-4">@Html.Raw(HealthIS.Apps.MVC.Helpers.GenerateContents(Model.DataItems(child, "One Third-2")))</div>
+                            <div class="col-sm-4">@Html.Raw(HealthIS.Apps.MVC.Helpers.GenerateContents(Model.DataItems(child, "One Third-3")))</div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    }
+}

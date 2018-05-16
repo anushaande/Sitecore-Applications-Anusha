@@ -1,0 +1,52 @@
+﻿@model HealthIS.Apps.MVC.Models.Calendar25Live
+@using Sitecore.Mvc
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor && !Model.dsSet)
+{
+    <script type="text/javascript">
+        // Create new datasource regarding to this component
+        function callSetDataSrc() {
+            setDataSrc(
+                '@Html.Raw(Model.PageItem.ID.ToString())',                                  // itemID
+                '/sitecore/templates/Branches/Components/Calendar 25Live/Calendar 25Live',  // templatePath
+                '_25L',                                                                     // suffix
+                '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',               // renderingID
+                '@Html.Raw(Model.PageItem.Database.Name)',                                  // dbName
+                '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                         // deviceID
+                '@Html.Raw(Model.Rendering.UniqueId.ToString())',                           // renderingUID
+                ''                                                                          // btnID
+            );
+        }
+    </script>
+    <center>
+        <h2>Calendar 25Live Config</h2>
+        <p>If you want to create a new Calendar 25Live, click 'Create New Calendar 25Live'.</p>
+        <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrc()" value="Create New Calendar 25Live">
+        <script>if (typeof (autoSave) != "undefined") { autoSave(); }</script>
+    </center>
+    return;
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    // edit mode UI/controls
+    <h2>Calendar 25Live Config
+        <input type="button" class="pe-button pe-yellow" style="float:right" onclick="javascript:Sitecore.PageModes.PageEditor.postRequest('webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Header|Spud, id=@(Model.Item.ID))')" value="Edit">
+    </h2>
+    <hr />
+    if (!Model.IsValidSpud())
+    {
+        <div><span style="font-weight:bold;color:red">ERROR</span> : Please verify that you have entered a valid 25Live spud.</div>
+    }
+}
+
+@* preview mode UI *@
+@if (!String.IsNullOrEmpty(Model.Header))
+{
+    <h3>@Html.Raw(Model.Header)</h3>
+}
+
+@if (Model.IsValidSpud())
+{
+    @Html.Raw(Model.Spud)
+}

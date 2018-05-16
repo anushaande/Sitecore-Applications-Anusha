@@ -1,0 +1,707 @@
+﻿@using LBT = HealthIS.Apps.MVC.Models.ListBuilderType;
+@using LBST = HealthIS.Apps.MVC.Models.ListBuilderSubType;
+
+@{
+    string uid = "_" + Guid.NewGuid().ToString().Replace("-", "_");
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditorEditing)
+{
+    if (!Model.dsIsSet)
+    {
+        <script>
+                function callSetDataSrc@(uid)() {
+                    setDataSrc(
+                        '@Html.Raw(Model.PageItem.ID.ToString())',                                              // itemID
+                        'User Defined2/Component Template/List Builder/List Builder Root',                      // templatePath
+                        '_LB',                                                                                  // suffix
+                        '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                           // renderingID
+                        'master',                                                                               // dbName
+                        '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                                     // deviceID
+                        '@Html.Raw(Model.Rendering.UniqueId.ToString())',                                       // referenceID
+                        'btnDSSet@(uid)',                                                                       // btnID
+                        true,                                                                                  // reload
+                        null
+                    );
+                }
+        </script>
+        <div style="text-align:center">
+            <h2>List Builder Config</h2>
+            <p>If you want to create a new List Builder, click 'Create New List Builder'.</p>
+            <input id="btnDSSet@(uid)" class="pe-button pe-green" type="button" value="Create New List Builder" onclick="callSetDataSrc@(uid)()" />
+            <script>if(typeof(autoSave) != "undefined"){ autoSave(); }</script>
+        </div>
+    }
+    else
+    {
+        <script type="text/javascript">
+
+                function addSection@(uid)(){
+                    addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/List Builder/List Builder Section', '_LBS', 'master', '@Html.Raw(Model.DataSourceFolder.ID)', true, null);
+                }
+
+                function addSubItem@(uid)(ParentItemID, ListType){
+                    if (ListType == "MediaHorizontal" || ListType == "MediaVertical")
+                    {
+                        addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/List Builder/List Builder Section/Media List Item', '_MLI', 'master', ParentItemID, true, null);
+                    }
+                    else if (ListType == "PDFList")
+                    {
+                        addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/List Builder/List Builder Section/PDF List Item', '_PLI', 'master', ParentItemID, true, null);
+                    }
+                    else{
+                        console.log("Add sub item fail. Type: " + ListType);
+                    }
+                }
+
+        </script>
+        <h3>List Builder Config</h3>
+        <style>
+            .mli {
+                float: left;
+            }
+
+            .pli {
+                line-height: 27px;
+            }
+
+            .mliThumbnail {
+                text-align: center;
+                width: 15%;
+            }
+
+            .mliTitle {
+                padding-left: 10px;
+                width: 80%;
+            }
+
+            .mliDesc {
+                padding-left: 10px;
+            }
+
+            .pliTitle {
+                padding-right: 10px;
+            }
+
+            .mliDesc {
+                width: 80%;
+            }
+
+            .pliFunc {
+                float: right;
+                text-align: right;
+            }
+
+            .mliFunc {
+                position: absolute;
+                right: 10px;
+            }
+        </style>
+
+        if (Model.Sections.Count > 1)
+        {
+            <div style="text-align: right"><input type="button" id="btnSortListBuilderSections" class="pe-button pe-gray1 fa-input" onclick='Sitecore.PageModes.PageEditor.postRequest("webedit:sortcontent(id=@(Model.Item.ID.ToString()))")' value="<> Sort Sections" /></div>
+        }
+        <ul class="list-group">
+            @{
+            int sectCt = 0;
+            int fontSizeCt = 0;
+            string strHeaderFontSize = "";
+            }
+            @foreach (HealthIS.Apps.MVC.Models.ListBuilderSection lbs in Model.Sections)
+            {
+                fontSizeCt++;
+                if (lbs.SectionItem != null) //set field renderer
+                {
+                    strHeaderFontSize = Sitecore.Web.UI.WebControls.FieldRenderer.Render(lbs.SectionItem, "Section Header Font Size");
+                }
+                <li class="list-group-item">
+                    <ul class="list-group">
+                        @if (lbs.ListType == LBT.MediaVertical || lbs.ListType == LBT.MediaHorizontal)
+                        {
+                            string num1 = uid + "_" + fontSizeCt;
+                            <li class="list-group-item">
+                                <div class="mli pli">
+                                    <b>Header Font Size:</b>
+                                    <select id="selHeaderFontSize@(num1)" onchange="selOnChange('hidHeaderFontSize@(num1)','selHeaderFontSize@(num1)')">
+                                        @for (int i = 2; i <= 3; i++)
+                                        {
+                                            string selected = "";
+
+                                            if (String.IsNullOrEmpty(lbs.sectionHeaderFontSize) && i == 3)
+                                            {
+                                                selected = " selected='selected'";
+                                            }
+                                            else if (lbs.sectionHeaderFontSize.ToLower() == "h" + i)
+                                            {
+                                                selected = " selected='selected'";
+                                            }
+                                            <option value="h@(i)" style="font-size: @((2 / Math.Sqrt(i)) * 18)px;" @(selected)>H@(i) - Header Font Size</option>
+                                        }
+                                    </select>
+                                    <div style="display:none;" id="hidHeaderFontSize@(num1)">
+                                        @Html.Raw(strHeaderFontSize)
+                                    </div>
+                                    <br />
+                                    <b>Section Header:</b>&nbsp;@Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(lbs.SectionItem, "Header"))<br />
+                                    @if (lbs.ListType == LBT.MediaHorizontal)
+                                    {
+                                        <b>Image Width:</b>@:&nbsp;@Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(lbs.SectionItem, "Image Width")) px<br />
+                                        }
+                                    @if (lbs.ListType == LBT.MediaVertical)
+                                    {
+                                        string num = uid + "_" + sectCt;
+                                        sectCt++;
+                                        <b>Column Count:</b>
+                                        <select id="selColCt@(num)" onchange="selOnChange('hidColCt@(num)','selColCt@(num)')">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                        </select>
+                                        <div style="display:none;clear:both;" id="hidColCt@(num)">
+                                            @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(lbs.SectionItem, "Column Count"))
+                                        </div>
+                                        <script>
+                                            jQuery(document).ready(function(){
+                                                jQuery("#selColCt@(num)").val('@HealthIS.Apps.MVC.Helpers.getIntField(lbs.SectionItem, "Column Count").ToString()');
+                                            });
+                                        </script>
+
+                                    }
+                                </div>
+                                <div style="float:right;">
+                                    <input class="pe-button pe-red" type="button" value="&#120;" onclick="deleteItem('@(lbs.SectionItem.ID)')" />
+                                </div>
+                                <div style="clear:both;"></div>
+                            </li>
+                            string s = "</ul><ul class='list-group'>";
+                            @Html.Raw(s)
+                            if (Model.DataSourceFolder.HasChildren)
+                            {
+                                int dsChildCt = 0;
+                                foreach (Sitecore.Data.Items.Item i in lbs.SectionItem.Children)
+                                {
+                                    <li class="list-group-item">
+                                        <div class="mliThumbnail mli">
+                                            @{
+                                    Sitecore.Data.Fields.ImageField img = HealthIS.Apps.MVC.Helpers.getImgField(i, "Thumbnail");
+                                            }
+                                            @if (img != null && img.MediaItem != null)
+                                            {
+                                                <img alt="@(img.Alt)" src="@(Sitecore.Resources.Media.MediaManager.GetMediaUrl(img.MediaItem))" />
+                                            }
+                                            else
+                                            {
+                                                <img alt="Image Placeholder" src="http://placehold.it/100x125" />
+                                            }
+                                        </div>
+                                        <div class="mliTitle mli">
+                                            <b>Title:</b><br />
+                                            @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(i, "Title"))
+                                        </div>
+                                        <div class="mliDesc mli">
+                                            <b>Description:</b><br />
+                                            @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(i, "Description"))
+                                        </div>
+                                        <div class="mliDesc mli">
+                                            <b>Link URL:</b>&nbsp;
+                                            @{
+                                    Sitecore.Data.Fields.LinkField linkField = i.Fields["Link URL"];
+                                            }
+                                            @Html.Raw(HealthIS.Apps.MVC.Helpers.getLinkUrl(linkField))
+                                            <br />
+                                            <b>Open in new tab:</b>
+                                            @{
+                                    Sitecore.Data.Fields.CheckboxField cbf = HealthIS.Apps.MVC.Helpers.getCBField(i, "Open In New Tab");
+                                            }
+                                            @if (cbf != null)
+                                            {
+                                                string yn = cbf.Checked == true ? "Yes" : "No";
+                                                <em>@yn</em>
+                                            }
+                                        </div>
+                                        <div class="mliFunc mli">
+                                            @if (dsChildCt > 0)
+                                            {
+                                                <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:moveup(id=@(i.ID))",function(){location.reload(true);},false)' value="&#x25B2;" />
+                                            }
+                                            @if (dsChildCt < lbs.SectionItem.Children.Count - 1)
+                                            {
+                                                <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:movedown(id=@(i.ID))",function(){location.reload(true);},false)' value="&#x25BC;" />
+                                            }
+                                            <input class="pe-button pe-yellow" type="button" value="Edit" onclick="showEditDialog('@(i.ID)','Thumbnail|Link URL|Open In New Tab')" />
+                                            <input class="pe-button pe-red" type="button" value="&#120;" onclick="deleteItem('@(i.ID)')" />
+                                            @{dsChildCt++;}
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                }
+                            }
+                        }
+                        else if (lbs.ListType == LBT.PDFList)
+                        {
+                            string num = uid + "_" + fontSizeCt;
+                            <li class="list-group-item">
+                                <div class="mli pli">
+                                    <b>Header Font Size:</b>
+                                    <select id="selHeaderFontSize@(num)" onchange="selOnChange('hidHeaderFontSize@(num)','selHeaderFontSize@(num)')">
+                                        @for (int i = 2; i <= 3; i++)
+                                        {
+                                            string selected = "";
+
+                                            if (String.IsNullOrEmpty(lbs.sectionHeaderFontSize) && i == 3)
+                                            {
+                                                selected = " selected='selected'";
+                                            }
+                                            else if (lbs.sectionHeaderFontSize.ToLower() == "h" + i)
+                                            {
+                                                selected = " selected='selected'";
+                                            }
+                                            <option value="h@(i)" style="font-size: @((2 / Math.Sqrt(i)) * 18)px;" @(selected)>H@(i) - Header Font Size</option>
+                                        }
+                                    </select>
+                                    <div style="display:none;" id="hidHeaderFontSize@(num)">
+                                        @Html.Raw(strHeaderFontSize)
+                                    </div>
+                                    <br />
+                                    <b>Section Header:</b>&nbsp;@Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(lbs.SectionItem, "Header"))<br />
+                                    <b>Show in single column:</b>&nbsp;
+                                    @{
+                            Sitecore.Data.Fields.CheckboxField cbSingle = HealthIS.Apps.MVC.Helpers.getCBField(lbs.SectionItem, "Show in Single Column");
+                                    }
+                                    @if (cbSingle != null)
+                                    {
+                                        string ynSingle = cbSingle.Checked == true ? "Yes" : "No";
+                                        <em>@ynSingle</em>
+                                    }
+                                    <br />
+                                    <b>Show link icons:</b>
+                                    @{
+                                    Sitecore.Data.Fields.CheckboxField cbfIcon = HealthIS.Apps.MVC.Helpers.getCBField(lbs.SectionItem, "Show Link Icons");
+                                    if (cbfIcon != null)
+                                    {
+                                        string ynIcon = cbfIcon.Checked == true ? "Yes" : "No";
+                                        <em>@ynIcon</em>
+                                    }
+                                    }
+                                    <br />
+                                </div>
+                                <div class="pliFunc pli">
+                                    <input class="pe-button pe-yellow" type="button" value="Edit" onclick='showEditDialog("@Html.Raw(lbs.SectionItem.ID)","Header|Show in Single Column|Show Link Icons")' />
+                                </div>
+                                <div style="clear:both;"></div>
+                            </li>
+                            string s = "</ul><ul class='list-group'>";
+                            @Html.Raw(s)
+                            if (lbs.SectionItem.HasChildren)
+                            {
+                                int dsChildCt = 0;
+                                foreach (Sitecore.Data.Items.Item i in lbs.SectionItem.Children)
+                                {
+                                    <li class="list-group-item">
+                                        <div class="mli pli">
+                                            <b>Link Text:</b>&nbsp;
+                                            @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(i, "Link Text"))
+                                            <br />
+                                            <b>Open in new tab:</b>
+                                            @{
+                                    Sitecore.Data.Fields.CheckboxField cbf = HealthIS.Apps.MVC.Helpers.getCBField(i, "Open In New Tab");
+                                            }
+                                            @if (cbf != null)
+                                            {
+                                                string yn = cbf.Checked == true ? "Yes" : "No";
+                                                <em>@yn</em>
+                                            }
+                                        </div>
+                                        <div class="pliFunc pli">
+                                            @{
+                                            string editFields = "Link Text";
+                                            if (lbs.ListSubType == LBST.PDFList) { editFields += "|File Link"; }
+                                            else { editFields += "|Link URL"; }
+                                            editFields += "|Open In New Tab";
+                                            }
+                                            <input class="pe-button pe-yellow" type="button" value="Edit" onclick="showEditDialog('@(i.ID)','@editFields')" />
+                                            @if (dsChildCt > 0)
+                                            {
+                                                <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:moveup(id=@(i.ID))",function(){location.reload(true);},false)' value="&#x25B2;" />
+                                            }
+                                            @if (dsChildCt < Model.DataSourceFolder.Children.Count - 1)
+                                            {
+                                                <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:movedown(id=@(i.ID))",function(){location.reload(true);},false)' value="&#x25BC;" />
+                                            }
+                                            <input class="pe-button pe-red" type="button" value="&#120;" onclick="deleteItem('@(i.ID)')" />
+                                            @{dsChildCt++;}
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <li class="list-group-item">
+                                <style>
+                                    .lbSelectionColWrapper {
+                                        padding: 10px;
+                                    }
+
+                                    .lbSelectionCol {
+                                        text-align: center;
+                                        border: 1px solid #ddd;
+                                        border-radius: 4px;
+                                        padding: 10px;
+                                        cursor: pointer;
+                                    }
+                                </style>
+                                <script>
+                                    function setTypes@(uid)(sectionItemID, listType, subListType){
+                                        Sitecore.PageModes.PageEditor.postRequest('item:updateitemfield(id=' + sectionItemID + ',fieldName=List Type,fieldValue=' + listType + ')',
+                                            function(){
+                                                Sitecore.PageModes.PageEditor.postRequest('item:updateitemfield(id=' + sectionItemID + ',fieldName=List Sub Type,fieldValue=' + subListType + ')', function(){location.reload(true);}, false)
+                                            }
+                                        , false)
+                                    }
+                                </script>
+                                <div class="listTypeSelect">
+                                    <h3>Please choose a layout below:</h3>
+                                    <div class="lbSelectionColWrapper col-sm-4">
+                                        <div class="lbSelectionCol" onclick="setTypes@(uid)('@Html.Raw(lbs.SectionItem.ID)','mediahorizontal','imagetitleparagraph')">
+                                            <h4>Horizontal List</h4>
+                                            <img src="/sitecore/shell/Themes/Standard/Custom/16x16/LB-H_i-t-p.png" alt="Horizontal List" />
+                                        </div>
+                                    </div>
+                                    <div class="lbSelectionColWrapper col-sm-4">
+                                        <div class="lbSelectionCol" onclick="setTypes@(uid)('@Html.Raw(lbs.SectionItem.ID)','mediavertical', 'imagetitleparagraph')">
+                                            <h4>Vertical List</h4>
+                                            <img src="/sitecore/shell/Themes/Standard/Custom/16x16/LB-V_i-t-p.png" alt="Vertical List" />
+                                        </div>
+                                    </div>
+                                    <div class="lbSelectionColWrapper col-sm-4">
+                                        <div class="lbSelectionCol" onclick="setTypes@(uid)('@Html.Raw(lbs.SectionItem.ID)','pdflist', 'linklist')">
+                                            <h4>Link List</h4>
+                                            <img src="/sitecore/shell/Themes/Standard/Custom/16x16/LB_link-list.png" alt="Link List" />
+                                        </div>
+                                    </div>
+                                    <div style="clear:both"></div>
+                                </div>
+                            </li>
+                        }
+                        @if (lbs.ListType != LBT.None)
+                        {
+                            <li class="list-group-item">
+                                <span style="float:right;">
+                                    <input class="pe-button pe-green" type="button" value="&#43; Add List Item" onclick="addSubItem@(uid)('@(lbs.SectionItem.ID)', '@Html.Raw(lbs.ListType)')" />
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+            <li class="list-group-item">
+                <div style="float:right;">
+                    <input class="pe-button pe-green" type="button" value="&#43; Add Section" onclick="addSection@(uid)()" />
+                </div>
+                <div style="clear:both;"></div>
+            </li>
+        </ul>
+    }
+}
+
+@if (Model.dsIsSet && !Sitecore.Context.PageMode.IsPageEditor)
+{
+    if (Model.Sections.Count > 0)
+    {
+        foreach (HealthIS.Apps.MVC.Models.ListBuilderSection lbs in Model.Sections)
+        {
+            if (!String.IsNullOrEmpty(lbs.Header))
+            {
+                @Html.Raw("<" + lbs.sectionHeaderFontSize + " class='list-builder-headline'>" + lbs.Header + "</" + lbs.sectionHeaderFontSize + ">");
+            }
+            int colCt = HealthIS.Apps.MVC.Helpers.getIntField(lbs.SectionItem, "Column Count");
+            string imageWidth = HealthIS.Apps.MVC.Helpers.getStrField(lbs.SectionItem, "Image Width");
+            colCt = colCt == -1 ? 1 : colCt;
+            switch ((LBT)lbs.ListType)
+            {
+                case LBT.MediaHorizontal:
+                    switch ((LBST)lbs.ListSubType)
+                    {
+                        case LBST.ImageTitleParagraph:
+                            foreach (Sitecore.Data.Items.Item i in lbs.SectionItem.Children)
+                            {
+                                Sitecore.Data.Fields.ImageField img = HealthIS.Apps.MVC.Helpers.getImgField(i, "Thumbnail");
+                                Sitecore.Data.Fields.LinkField linkField = i.Fields["Link URL"];
+                                string url = HealthIS.Apps.MVC.Helpers.getLinkUrl(linkField);
+                                string target = HealthIS.Apps.MVC.Helpers.getCBField(i, "Open In New Tab").Checked ? "target=\"_blank\"" : "";
+                                string description = HealthIS.Apps.MVC.Helpers.getStrField(i, "Description");
+                                bool hasLink = string.IsNullOrEmpty(url) ? false : true;
+                                string imgURL = "";
+                                string alt = "image placeholder";
+                                string internalCss = "";
+                                string cssInternal = "<style>.img-responsive-internal {float: left;margin-right: 20px;padding: 4px;width: " + imageWidth + "px;}@media (max-width: 768px) { .img-responsive-internal { display: block;margin: 0 auto;float: none;width: auto; }}</style>";
+
+                                if (String.IsNullOrEmpty(imageWidth)) { @Html.Raw(cssInternal); }                                
+
+                                if (img != null && img.MediaItem != null)
+                                {
+                                    imgURL = Sitecore.Resources.Media.MediaManager.GetMediaUrl(img.MediaItem).Trim();
+                                    alt = img.Alt;
+                                }
+                                <div class="list-builder-horizontal">
+                                    @if (hasLink)
+                                    {
+                                        <a href="@(url)" @Html.Raw(target)>
+                                            @if (!String.IsNullOrEmpty(imgURL))
+                                            {
+                                                if (!String.IsNullOrEmpty(imageWidth))
+                                                {
+                                                    @Html.Raw(cssInternal)
+                                                    internalCss = "-internal";
+                                                }
+                                                <img class="img-responsive@(internalCss)" alt="@(alt)" src="@(imgURL)" />
+                                            }
+                                            @if (!String.IsNullOrEmpty(@HealthIS.Apps.MVC.Helpers.getStrField(i, "Title")))
+                                            {
+                                                <h4 class="l-title">@HealthIS.Apps.MVC.Helpers.getStrField(i, "Title")</h4>
+                                            }
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <div class="no-link">
+                                            @if (!String.IsNullOrEmpty(imgURL))
+                                            {
+                                                if (!String.IsNullOrEmpty(imageWidth))
+                                                {
+                                                    @Html.Raw(cssInternal)
+                                                    internalCss = "-internal";
+                                                }
+                                                <img class="img-responsive@(internalCss)" alt="@(alt)" src="@(imgURL)" />
+                                            }
+                                            @if (!String.IsNullOrEmpty(@HealthIS.Apps.MVC.Helpers.getStrField(i, "Title")))
+                                            {
+                                                <h4 class="l-title">@HealthIS.Apps.MVC.Helpers.getStrField(i, "Title")</h4>
+                                            }
+                                        </div>
+                                    }
+                                    <div class="l-paragraph">@Html.Raw(HealthIS.Apps.MVC.Helpers.GenerateContents(description))</div>
+                                </div>
+                            }
+                            break;
+                        default:
+                        case LBST.None:
+                        <p>No list sub type set.</p>
+                            break;
+                    }
+                    break;
+                case LBT.MediaVertical:
+                    switch ((LBST)lbs.ListSubType)
+                    {
+                        case LBST.ImageTitleParagraph:
+                        case LBST.ImageTitle:
+                        case LBST.ImageParagraph:
+                        case LBST.ImageGrid:
+                            <div class="row list-builder">
+                                @{
+                            int rowItemCt = 0;
+                            int colFrac = (int)Math.Floor(12 / (double)colCt);
+                            string colClass = "col-sm-" + colFrac.ToString();
+                                }
+                                @foreach (Sitecore.Data.Items.Item i in lbs.SectionItem.Children)
+                                {
+                                    string endRow = "";
+                                    if (rowItemCt != 0 && rowItemCt % colCt == 0)
+                                    {
+                                        endRow = "</div><div class='row list-builder'>";
+                                    }
+                                    rowItemCt++;
+                                    @Html.Raw(endRow)
+                                    <div class="@(colClass)">
+                                        @{
+                                    Sitecore.Data.Fields.ImageField img = HealthIS.Apps.MVC.Helpers.getImgField(i, "Thumbnail");
+                                    string imgURL = "";
+                                    string alt = "image placeholder";
+                                    Sitecore.Data.Fields.LinkField linkField = i.Fields["Link URL"];
+                                    string url = HealthIS.Apps.MVC.Helpers.getLinkUrl(linkField);
+                                    string target = HealthIS.Apps.MVC.Helpers.getCBField(i, "Open In New Tab").Checked ? "target=\"_blank\"" : "";
+                                    bool hasLink = string.IsNullOrEmpty(url) ? false : true;
+                                    string title = HealthIS.Apps.MVC.Helpers.getStrField(i, "Title");
+                                    string paragraph = HealthIS.Apps.MVC.Helpers.getStrField(i, "Description");
+                                        }
+                                        @if (img != null && img.MediaItem != null)
+                                        {
+                                            imgURL = Sitecore.Resources.Media.MediaManager.GetMediaUrl(img.MediaItem).Trim();
+                                            alt = img.Alt;
+                                        }
+                                        @if (hasLink)
+                                        {
+                                            <a class="img-hover" href="@(url)" @Html.Raw(target)>
+                                                @if (!String.IsNullOrEmpty(imgURL))
+                                                {
+                                                    <img class="img-responsive" alt="@(alt)" src="@(imgURL)" />
+                                                }
+                                                @if (!string.IsNullOrEmpty(title))
+                                                {
+                                                    <h4 class="l-title">@title</h4>
+                                                }
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            if (!String.IsNullOrEmpty(imgURL))
+                                            {
+                                                <img class="img-responsive" alt="@(alt)" src="@(imgURL)" />
+                                            }
+                                            if (!string.IsNullOrEmpty(title))
+                                            {
+                                                <h4 class="l-title">@title</h4>
+                                            }
+                                        }
+                                        @if (!string.IsNullOrEmpty(paragraph))
+                                        {
+                                            <div class="l-paragraph">@Html.Raw(HealthIS.Apps.MVC.Helpers.GenerateContents(paragraph))</div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                                break;
+                        default:
+                        case LBST.None:
+                        <p>No list sub type set.</p>
+                                break;
+                    }
+                    break;
+                case LBT.PDFList:
+                    switch ((LBST)lbs.ListSubType)
+                    {
+                        case LBST.LinkList:
+                            Sitecore.Data.Fields.CheckboxField cbSingleCol = HealthIS.Apps.MVC.Helpers.getCBField(lbs.SectionItem, "Show in Single Column");
+                            if (cbSingleCol.Checked)
+                            {
+                                Sitecore.Data.Fields.CheckboxField cbShowIcon = HealthIS.Apps.MVC.Helpers.getCBField(lbs.SectionItem, "Show Link Icons");
+                                string listClass = cbShowIcon.Checked ? "link-list link-list-icons" : "link-list";
+                                <ul class="@(listClass)">
+                                    @foreach (Sitecore.Data.Items.Item i in lbs.SectionItem.Children)
+                                    {
+                                        Sitecore.Data.Fields.LinkField linkField = i.Fields["Link URL"];
+                                        string url = HealthIS.Apps.MVC.Helpers.getLinkUrl(linkField);
+                                        string icon = "link";
+                                        string target = HealthIS.Apps.MVC.Helpers.getCBField(i, "Open In New Tab").Checked ? "target=\"_blank\"" : "";
+                                        bool hasLink = string.IsNullOrEmpty(url) ? false : true;
+                                        string iconClass = cbShowIcon.Checked ? "-with-icon" : "-no-icon";
+                                        string liClass = hasLink ? "" : "class='no-link" + iconClass + "'";
+                                        <li @Html.Raw(liClass)>
+                                            @if (cbShowIcon.Checked)
+                                            {
+                                                if (!string.IsNullOrEmpty(url))
+                                                {
+                                                    string ext = url.Split('.')[url.Split('.').Length - 1];
+                                                    switch (ext)
+                                                    {
+                                                        case "doc":
+                                                        case "docx":
+                                                            icon = "file-word";
+                                                            break;
+                                                        case "pdf":
+                                                            icon = "file-pdf";
+                                                            break;
+                                                        default:
+                                                            break;
+                                                    }
+                                                }
+                                                <em class="icon-@(icon)"></em>
+                                            }
+                                            @if (hasLink)
+                                            {
+                                                <a href="@(url)" @Html.Raw(target)>@HealthIS.Apps.MVC.Helpers.getStrField(i, "Link Text")</a>
+                                            }
+                                            else
+                                            {
+                                                @HealthIS.Apps.MVC.Helpers.getStrField(i, "Link Text")
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+
+                                decimal childCt = lbs.SectionItem.Children.Count;
+                                decimal cutPoint = childCt > 1 ? Math.Ceiling(childCt / 2) : childCt + 1;
+                                int ct = 1;
+                                List<Sitecore.Data.Items.Item> firstCol = new List<Sitecore.Data.Items.Item>();
+                                List<Sitecore.Data.Items.Item> secondCol = new List<Sitecore.Data.Items.Item>();
+                                foreach (Sitecore.Data.Items.Item i in lbs.SectionItem.Children)
+                                {
+                                    if (ct <= cutPoint || cbSingleCol.Checked)
+                                    {
+                                        firstCol.Add(i);
+                                    }
+                                    else
+                                    {
+                                        secondCol.Add(i);
+                                    }
+                                    ct++;
+                                }
+                                List<List<Sitecore.Data.Items.Item>> cols = new List<List<Sitecore.Data.Items.Item>>();
+                                cols.Add(firstCol);
+                                cols.Add(secondCol);
+                                <div class="row">
+                                    @{int rowItemCt = 0;}
+                                    @foreach (List<Sitecore.Data.Items.Item> col in cols)
+                                    {
+                                        if (col.Count > 0)
+                                        {
+                                            string endRow = "";
+                                            if (rowItemCt == 2)
+                                            {
+                                                endRow = "</div><div class='row list-builder'>";
+                                            }
+                                            rowItemCt++;
+                                            @Html.Raw(endRow)<div class="col-sm-6">
+                                                <ul class="link-list">
+                                                    @foreach (Sitecore.Data.Items.Item i in col)
+                                                    {
+                                                        Sitecore.Data.Fields.LinkField linkField = i.Fields["Link URL"];
+                                                        string url = HealthIS.Apps.MVC.Helpers.getLinkUrl(linkField);
+                                                        string icon = "link";
+                                                        string target = HealthIS.Apps.MVC.Helpers.getCBField(i, "Open In New Tab").Checked ? "target=\"_blank\"" : "";
+                                                        bool hasLink = string.IsNullOrEmpty(url) ? false : true;
+                                                        string liClass = hasLink ? "" : "class='no-link-no-icon'";
+                                                        <li @Html.Raw(liClass)>
+                                                            @if (hasLink)
+                                                            {
+                                                                <a href="@(url)" @Html.Raw(target)>@HealthIS.Apps.MVC.Helpers.getStrField(i, "Link Text")</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                @HealthIS.Apps.MVC.Helpers.getStrField(i, "Link Text")
+                                                            }
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+                            break;
+                        case LBST.PDFList:
+                        <div class="row">
+                            PDF List type is deprecated. Update to link list type. Contact support on how to.
+                        </div>
+                            break;
+                        default:
+                        case LBST.None:
+                        <p>No list sub type set.</p>
+                            break;
+                    }
+                    break;
+                default:
+                <p>No list type set.</p>
+                    break;
+            }
+        }
+    }
+}

@@ -1,0 +1,251 @@
+﻿@model HealthIS.Apps.MVC.Blog.Models.List
+@using Sitecore.Mvc
+
+@{
+    List<Sitecore.Data.Items.Item> listTheseArticles = Model.allArticles;
+    string reqUrl = Request.Url.ToString();
+    if (reqUrl.Contains("/category?") && reqUrl.Contains("&name"))
+    {
+        Model.listType = "category";
+        listTheseArticles = Model.GetRelatedPosts(Request["name"]);
+    }
+    else if (reqUrl.Contains("/tag?") && reqUrl.Contains("&name"))
+    {
+        Model.listType = "tag";
+        listTheseArticles = Model.GetRelatedPosts(Request["name"]);
+    }
+    else if (reqUrl.Contains("/search?") && reqUrl.Contains("&search="))
+    {
+        Model.listType = "search";
+    }    
+    else if (reqUrl.Contains("/author?") && reqUrl.Contains("&username="))
+    {
+        Model.listType = "author";
+    }
+    Model.Pag = new HealthIS.Apps.MVC.Blog.Models.Pagination(listTheseArticles.Count, Request["page"].ToInt(), Model.articlesPerPage);
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    string articles = string.Empty;
+    if(Model.IsBlogArticleRoot())
+    {
+        articles = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Articles Per Page");
+    }
+    else
+    {
+        articles = HealthIS.Apps.MVC.Helpers.getStrField(Model.articleRootPath, "Articles Per Page");
+    }
+    
+    <h2>Blog List Config</h2>
+    <div>
+        <b>Articles Available Per Page: </b> @Html.Raw(articles)
+    </div>
+}
+else
+{
+    if (listTheseArticles.Count < 1)
+    {
+        string type = string.Empty;
+        if (Model.listType.Equals("category"))
+        {
+            type = " with that category";
+        }
+        else if (Model.listType.Equals("tag"))
+        {
+            type = " with that tag";
+        }
+        else if (Model.listType.Equals("author"))
+        {
+            type = " by this author";
+        }
+        <div id="middle" class="search-page">
+            <h1 class="page-title">Oops!</h1>
+            <hr>
+            <p>No items found@(type). Please try a search.<br />(redirect to search page?) </p>
+        </div>
+    }
+    else
+    {
+        string singlePostModClass = "col-md-6";
+        string showHeader = "";
+        string param = "";
+        string key = "";
+        int imgWidth = 300;
+
+        if (!String.IsNullOrEmpty(Model.listType))
+        {
+            singlePostModClass = "col-md-12";
+            imgWidth = 150;
+
+            switch (Model.listType)
+            {
+                case "category":
+                    param = "&name=";
+                    key = Request["name"];
+                    showHeader = "category";
+                    break;
+                case "tag":
+                    param = "&name=";
+                    key = Request["name"];
+                    showHeader = "tag";
+                    break;
+                case "author":
+                    param = "&username=";
+                    key = Request["username"];
+                    showHeader = "author";
+                    break;
+            }
+
+            if (showHeader.Equals("category"))
+            {
+                string category = string.Empty;
+                if (!String.IsNullOrEmpty(key))
+                {
+                    category = Model.GetCategoryByKey(key);
+                    <h3 class="title">Posts in category: <strong>@category</strong></h3>
+                }
+            }
+            else if (showHeader.Equals("tag"))
+            {
+                string tag = string.Empty;
+                if (!String.IsNullOrEmpty(key))
+                {
+                    tag = key.Replace("-", " ");
+                    <h3 class="title">Posts tagged under: <strong>@tag</strong></h3>
+                }
+            }
+            else if (showHeader.Equals("author"))
+            {
+                if (!String.IsNullOrEmpty(key))
+                {
+                    <h3 class="title">Author Archive</h3>
+                }
+            }
+        }
+
+        <div class="col-mod-12">
+            <div class="post-row">
+                @for (int i = Model.Pag.ArticleStart; i <= Model.Pag.ArticleEnd; i++)
+                {
+                    if (i <= Model.Pag.TotalNumberOfArticles)
+                    {
+                        Sitecore.Data.Items.Item art = listTheseArticles.ElementAt(i - 1);
+                        if (art != null)
+                        {
+                            string postURL = art.Paths.FullPath;
+                            Sitecore.Data.Fields.ImageField thumbnail = HealthIS.Apps.MVC.Helpers.getImgField(art, "ThumbnailImage");
+                            string imgSrc = thumbnail.MediaItem != null ? Sitecore.Resources.Media.MediaManager.GetMediaUrl(thumbnail.MediaItem) : "/~/media/Images/Root Element/rss-default.ashx";
+                            string imgAltText = thumbnail.MediaItem != null ? thumbnail.Alt : "";
+                            string title = art.Fields["Title"].Value;
+                            string desc = art.Fields["Description"].Value;
+
+                            <div class=@singlePostModClass>
+                                <div class="post-thumbnail">
+                                    <a href="@postURL"><img src="@imgSrc" alt="@imgAltText" style="width:@(imgWidth)px;height:auto" /></a>
+                                </div>
+                                @if (!String.IsNullOrEmpty(title))
+                                {
+                                    <h3 class="post-title">
+                                        <a href="@postURL">@title</a>
+                                    </h3>
+                                }
+                                @if (!String.IsNullOrEmpty(art.Fields["pubDate"].Value))
+                                {
+                                    <div class="post-pub-date">
+                                        <strong> Posted on </strong> @Html.Sitecore().Field("pubDate", art, new { format = "MMMM dd, yyyy" })
+                                    </div>
+                                }
+                                @if (!String.IsNullOrEmpty(desc))
+                                {
+                                    desc = desc.Replace("<p>", "").Replace("</p>", "") + " [...]";
+                                    <div class="post-desc">
+                                        @Html.Raw(desc)
+                                    </div>
+                                }
+                            </div>
+                            <!-- end post -->
+                        }
+                    }
+                }
+            </div>
+        </div>
+
+        int numOfPagesShowing = 10;
+        <div id="page-buttons">
+            <!-- Pagination -->
+            @if (Model.Pag.TotalPages > 1)
+            {
+                <ul class="pagination">
+                    @if (Model.Pag.RenderedPageNumber > 1)
+                    {
+                        <li>
+                            <a href="@Model.url?page=@(Model.Pag.RenderedPageNumber - 1)@param@key" class="prev">«</a>
+                        </li>
+                    }
+
+                    @if (Model.Pag.TotalPages < numOfPagesShowing)
+                    {
+                        for (var page = 1; page <= Model.Pag.TotalPages; page++)
+                        {
+                            <li class="@(page == Model.Pag.RenderedPageNumber ? "active" : "")">
+                                <a href="@Model.url?page=@page@param@key">@page</a>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        int numBreaks = Model.Pag.TotalPages / numOfPagesShowing;
+                        int start = 1, stop = numOfPagesShowing;
+                        for (int i = 0; i < numBreaks; i++)
+                        {
+                            if ((Model.Pag.RenderedPageNumber >= start) && (Model.Pag.RenderedPageNumber <= stop))
+                            {
+                                for (var page = start; page <= stop; page++)
+                                {
+                                    <li class="@(page == Model.Pag.RenderedPageNumber ? "active" : "")">
+                                        <a href="@Model.url?page=@page@param@key">@page</a>
+                                    </li>
+                                }
+                                @Html.Raw("...")
+                                <li>
+                                    <a href="@Model.url?page=@Model.Pag.TotalPages@param@key">@Model.Pag.TotalPages</a>
+                                </li>
+                                break;
+                            }
+                            else
+                            {
+                                start += numOfPagesShowing;
+                                stop = start + numOfPagesShowing - 1;
+                            }
+                        }
+
+                        if (Model.Pag.RenderedPageNumber == Model.Pag.TotalPages)
+                        {
+                            <li>
+                                <a href="@Model.url?page=1">1</a>
+                            </li>
+                            @Html.Raw("...")
+                            for (var page = @Model.Pag.RenderedPageNumber - 4; page < @Model.Pag.RenderedPageNumber + 1; page++)
+                            {
+                                <li class="@(page == Model.Pag.RenderedPageNumber ? "active" : "")">
+                                    <a href="@Model.url?page=@page@param@key">@page</a>
+                                </li>
+                            }
+                        }
+                    }
+
+                    @if (Model.Pag.TotalPages > 1)
+                    {
+                        if (Model.Pag.RenderedPageNumber != Model.Pag.TotalPages)
+                        {
+                            <li>
+                                <a href="@Model.url?page=@(Model.Pag.RenderedPageNumber + 1)@param@key" class="next">»</a>
+                            </li>
+                        }
+                    }
+                </ul>
+            }
+        </div>
+    }
+}

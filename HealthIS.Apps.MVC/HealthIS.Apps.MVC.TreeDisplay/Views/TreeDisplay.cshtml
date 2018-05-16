@@ -1,0 +1,240 @@
+﻿@functions{
+        public string DisplayChildren(Sitecore.Data.Items.Item parent){
+            string content = "";
+            string iconName = parent.Appearance.Icon.ToLower();
+            Sitecore.Layouts.LayoutDefinition layout = Sitecore.Layouts.LayoutDefinition.Parse(parent[Sitecore.FieldIDs.LayoutField]);
+            if (layout != null && parent[Sitecore.FieldIDs.LayoutField].Length > 0)//(iconName.Contains("document") || iconName.Contains("folder")) && !iconName.Contains("Resources"))
+            {
+                Sitecore.Links.UrlOptions options = new Sitecore.Links.UrlOptions();
+                options.AlwaysIncludeServerUrl = true;
+                string href = Sitecore.Links.LinkManager.GetItemUrl(parent, options);
+                string gID = Guid.NewGuid().ToString().Replace("-","");
+                string strNew = "";
+                if(DateTime.Now.Subtract(parent.Statistics.Created).Days < 3){
+                    strNew = "<span class='newPage'>NEW</span>";
+                }
+                content += "<li><em class='icon-circle'></em>" + strNew + "<div class='treeItem'><a href=" + href + " target='_blank' data-lastmod='" + parent.Statistics.Updated + "'>" + parent.DisplayName.Trim() + "</a>&nbsp;<span class='childCount'></span><span class='totalCount'></span><br/><span class='spanURL' id='" + gID + "'>" + href + "</span></div>";// +"<br/>Status code: " + GetHttpStatus(href);
+                content += "<script>addToCheck('" + href + "', '" + gID + "');</script>";
+                if(parent.HasChildren){
+                    string childContent = "";
+                    foreach(Sitecore.Data.Items.Item child in parent.Children){
+                        if (!child.Name.Contains("Resources"))
+                        {
+                            childContent += DisplayChildren(child); 
+                        }
+                    }
+                    if(!string.IsNullOrEmpty(childContent)){
+                        content += "<ul style='display:none;'>" + childContent + "</ul>";   
+                    }
+                }
+                content += "</li>";                 
+            }
+            return content;
+        }
+
+        static HttpStatusCode GetHttpStatus(string url)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Timeout = 1500;
+            request.Method = "HEAD";
+            try
+            {
+                using (WebResponse response = request.GetResponse())
+                {
+                    HttpWebResponse hwp = (HttpWebResponse)response;
+                    return hwp.StatusCode;
+                }
+            }
+            catch (WebException)
+            {
+                return HttpStatusCode.RequestTimeout;
+            }
+        }
+}
+
+<style>
+    .tree li {
+        list-style-type:none;
+    }
+    .tree em {
+        margin-right:10px;
+        float:left;
+        font-size:2em;
+    }
+        .icon-plus-sign:hover, .icon-minus-sign:hover {
+            cursor: pointer;
+        }
+    .tree a {
+        font-weight: bold;
+        font-size:1.25em;
+    }
+    .tree ul li.active > .treeItem:before {
+        background-position: 0 center;
+    }
+    .tree li.parent > .treeItem:before {
+        background-image: url("../images/plus_minus_icons.png");
+        background-position: 25px center;
+        content: "";
+        display: block;
+        height: 21px;
+        left: 0;
+        position: absolute;
+        top: 2px;
+        vertical-align: middle;
+        width: 23px;
+    }
+    .childCount, .totalCount {
+        font-weight:bold;
+        margin-right: 5px;
+    }
+
+    .newPage {
+        font-weight:bold;
+        color:red;
+        float: left;
+        margin-right: 5px;
+    }
+</style>
+
+<script>
+    var ItemsToCheck = [];
+
+    function addToCheck(_href, _gID) {
+        ItemsToCheck[ItemsToCheck.length] = { href: _href, gID: _gID };
+    }
+
+    function doCheck(href, gID){
+        if (typeof href != "undefined" && typeof gID != "undefined") {
+            jQuery.ajax({
+                type: 'GET',
+                method: 'HEAD',
+                url: href,
+                complete: function (e) {
+                    if (e.status != 200) {
+                        jQuery('#' + gID).css('color', 'red');
+                    }
+                    else {
+                        jQuery('#' + gID).css('color', 'green');
+                    }
+                }
+            });
+        } else { console.log("href/gID undefined "); }
+    }
+
+    function startCheck() {
+        for (i = 0; i < ItemsToCheck.length; i++) {
+            setTimeout(doCheck(ItemsToCheck[i].href, ItemsToCheck[i].gID), 1000);
+        }
+    }
+
+    function setTree(tree) {
+        tree = "#" + tree;
+        var l = 0;
+        jQuery(tree).find('li').each(function () {
+            l = jQuery(this).children('ul').children('li').length;
+            /*console.log(jQuery(this));
+            console.log("count: " + l);
+            console.log();*/
+            if (l > 0) {
+                jQuery(this).children('em').toggleClass('icon-circle icon-plus-sign');
+                jQuery(this).children('div.treeItem').children('span.childCount').text("[Children: " + l + "]");
+                jQuery(this).children('div.treeItem').children('span.totalCount').text("[Total: " + jQuery(this).find('li').length + "]");
+            }
+        });
+
+        jQuery(tree).find('em.icon-plus-sign').click(function () {
+            jQuery(this).toggleClass('icon-plus-sign icon-minus-sign');
+            jQuery(this).parent().children('ul').slideToggle();
+        });
+
+        jQuery('#btnToggleAll').click(function () {
+            jQuery(tree).find('li').each(function () {
+                jQuery(this).find('em').toggleClass('icon-plus-sign icon-minus-sign');
+                jQuery(this).children('ul').slideToggle('fast');
+            });
+        });
+    }
+
+    function getXMLSitemap() {
+        var xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+        var items = jQuery('.tree').find('li').each(function () {
+            var loc = jQuery(this).children('.treeItem').children('.spanURL').text();
+            var lastMod = jQuery(this).children('.treeItem').children('a').data("lastmod");
+            xml += "\n\t<url>\n\t\t<loc>" + loc + "</loc>\n\t\t<lastmod>" + lastMod + "</lastmod>\n\t</url>";
+        });
+        xml += "\n</urlset>";
+        return xml;
+    }
+
+    function jsonifyTreeRecurs(ul) {
+        var items = jQuery(ul).children('li').map(function () {
+            var item = {};
+            item.displayName = jQuery(this).children('.treeItem').children('a').text();
+            item.loc = jQuery(this).children('.treeItem').children('.spanURL').text();
+            item.lastModDate = jQuery(this).children('.treeItem').children('a').data("lastmod");
+            item.children = [];
+            var childList = jQuery(this).children('ul');
+            if (childList.length > 0) {
+                item.children = jsonifyTreeRecurs(childList);
+            }
+            return item;
+        });
+        return items;
+        //post json to webform and use that for a download
+    }
+
+    function jsonifyTree() {
+        var items = jQuery('.tree').find('li').map(function () {
+            var item = {};
+            item.displayName = jQuery(this).children('.treeItem').children('a').text();
+            item.loc = jQuery(this).children('.treeItem').children('.spanURL').text();
+            item.lastModDate = jQuery(this).children('.treeItem').children('a').data("lastmod");
+            return item;
+        });
+        return items;
+    }
+
+    jQuery.extend({
+        stringify: function stringify(obj) {
+            var t = typeof (obj);
+            if (t != "object" || obj === null) {
+                // simple data type
+                if (t == "string") obj = '"' + obj + '"';
+                return String(obj);
+            } else {
+                // recurse array or object
+                var n, v, json = [], arr = (obj && obj.constructor == Array);
+
+                for (n in obj) {
+                    v = obj[n];
+                    t = typeof (v);
+                    if (obj.hasOwnProperty(n)) {
+                        if (t == "string") v = '"' + v + '"'; else if (t == "object" && v !== null) v = jQuery.stringify(v);
+                        json.push((arr ? "" : '"' + n + '":') + String(v));
+                    }
+                }
+                return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
+            }
+        }
+    });
+</script>
+
+@try{
+    Sitecore.Data.Items.Item home = Sitecore.Data.Database.GetDatabase("web").GetItem("/sitecore/content/Home");
+    if(home != null){
+        <input type="button" value="Toggle All" id="btnToggleAll" class="pe-button pe-gray1"/>
+        <ul class="tree" id="treeContainer">
+            @foreach(Sitecore.Data.Items.Item i in home.Children){
+                @Html.Raw(DisplayChildren(i))
+            }
+        </ul>
+        <script>setTree('treeContainer');</script>
+    }
+    else{
+        <p>Cannot find home node.</p>   
+    }
+}catch(Exception ex){
+    <h3 style="color:red">Error:</h3>
+    <p>@ex.Message</p>
+    <p>@ex.StackTrace</p>
+}

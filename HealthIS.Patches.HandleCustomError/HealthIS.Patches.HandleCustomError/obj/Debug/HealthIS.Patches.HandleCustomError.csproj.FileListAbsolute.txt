@@ -1,0 +1,11 @@
+c:\users\rbarkley\documents\visual studio 2012\Projects\HealthIS.Patches.HandleCustomError\HealthIS.Patches.HandleCustomError\bin\Debug\HealthIS.Patches.HandleCustomError.dll
+c:\users\rbarkley\documents\visual studio 2012\Projects\HealthIS.Patches.HandleCustomError\HealthIS.Patches.HandleCustomError\bin\Debug\HealthIS.Patches.HandleCustomError.pdb
+c:\users\rbarkley\documents\visual studio 2012\Projects\HealthIS.Patches.HandleCustomError\HealthIS.Patches.HandleCustomError\bin\Debug\Sitecore.Kernel.dll
+c:\users\rbarkley\documents\visual studio 2012\Projects\HealthIS.Patches.HandleCustomError\HealthIS.Patches.HandleCustomError\obj\Debug\HealthIS.Patches.HandleCustomError.csprojResolveAssemblyReference.cache
+c:\users\rbarkley\documents\visual studio 2012\Projects\HealthIS.Patches.HandleCustomError\HealthIS.Patches.HandleCustomError\obj\Debug\HealthIS.Patches.HandleCustomError.dll
+c:\users\rbarkley\documents\visual studio 2012\Projects\HealthIS.Patches.HandleCustomError\HealthIS.Patches.HandleCustomError\obj\Debug\HealthIS.Patches.HandleCustomError.pdb
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Patches.HandleCustomError\HealthIS.Patches.HandleCustomError\bin\Debug\HealthIS.Patches.HandleCustomError.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Patches.HandleCustomError\HealthIS.Patches.HandleCustomError\bin\Debug\HealthIS.Patches.HandleCustomError.pdb
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Patches.HandleCustomError\HealthIS.Patches.HandleCustomError\obj\Debug\HealthIS.Patches.HandleCustomError.csprojResolveAssemblyReference.cache
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Patches.HandleCustomError\HealthIS.Patches.HandleCustomError\obj\Debug\HealthIS.Patches.HandleCustomError.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Patches.HandleCustomError\HealthIS.Patches.HandleCustomError\obj\Debug\HealthIS.Patches.HandleCustomError.pdb

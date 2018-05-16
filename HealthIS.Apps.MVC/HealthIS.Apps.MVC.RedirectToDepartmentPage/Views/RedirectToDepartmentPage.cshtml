@@ -1,0 +1,37 @@
+﻿@using Sitecore
+@model HealthIS.Apps.MVC.Models.RedirectToDepartmentPage
+
+@if (!String.IsNullOrEmpty(Model.targetLocation))
+{
+    System.Web.HttpContext.Current.Response.Redirect(Model.targetLocation, true);
+}
+else
+{
+    <div style="text-align: center;">
+        <h3>
+            USF Health Main Page is under development. <br /><br />
+            Please navigate your department page through Navigation Bar, below links or correct URL.<br />
+        </h3>
+        <br /><br />
+        <table style="font-size: 18px; margin: auto;">
+            <tr>
+                <td><a href="/medicine">Morsani College of Medicine</a></td>
+            </tr>
+            <tr>
+                <td><a href="/nursing">College of Nursing</a></td>
+            </tr>
+            <tr>
+                <td><a href="/public health">College of Public Health</a></td>
+            </tr>
+            <tr>
+                <td><a href="/dpt">School of Physical Therapy</a></td>
+            </tr>
+            <tr>
+                <td><a href="/pharmacy">College of Pharmacy</a></td>
+            </tr>
+            <tr>
+                <td><a href="/doctors">Patient Care</a></td>
+            </tr>
+        </table>
+    </div>
+}

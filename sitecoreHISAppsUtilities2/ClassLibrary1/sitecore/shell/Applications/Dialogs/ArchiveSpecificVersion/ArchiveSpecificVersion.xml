@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<control xmlns:def="Definition" xmlns="http://schemas.sitecore.net/Visual-Studio-Intellisense">
+  <ArchiveSpecificVersion>
+    <FormDialog Header="Archive specific item version"
+      Text="Check the item versions you want to archive." >
+      <CodeBeside Type="HealthIS.Apps.Dialogs.ArchiveSpecificVersionForm,HealthIS.Apps.Util" />
+      <Script>
+        function clearall(){
+        $$('.scComboBoxPick').each(function(e){ e.checked=false; });
+        }
+        function selectall(){
+        $$('.scComboBoxPick').each(function(e){ e.checked=true; });
+        }
+        function scPersistSelectedValue() {
+          
+          var selectedValue = $("selectedValue");
+          if (!selectedValue) {
+            selectedValue = new Element("input", {type: "hidden", id: "selectedValue"});
+            var form = document.forms[0];
+            if (!form) {
+              return;
+            }
+            form.appendChild(selectedValue);
+          }
+          var ids = $$(".scComboBoxPick").map(function(item) { if (item.checked) { return item.getAttribute("versionnumber"); }}) || [];
+          var serialized = ids.filter(function(val) { return val; }).join("|") || "";
+          selectedValue.value = serialized;
+
+          var allChecked = $("allChecked");
+          if (!allChecked) {
+            allChecked = new Element("input", {type: "hidden", id: "allChecked"});
+            form.appendChild(allChecked);
+          }
+          if ($$("[name='scComboBoxPick[]']:checked").size() == $$("[name='scComboBoxPick[]']").size()) {
+            allChecked.value = "true";
+          } else {
+            allChecked.value = "false";
+          }
+        };
+      </Script>
+      <div class="scFlexColumnContainer scStretch">
+        <Scrollbox ID="VerisonsPanel" class="scScrollbox" Padding="0">
+          <Border ID="Versions"  />
+        </Scrollbox>
+      </div>
+      <Border def:placeholder="Buttons">
+	      <Button Header="Select all" Type="button" Click="" onclick="javascript:selectall(); scPersistSelectedValue();"/>
+        <Button Header="Clear all" Type="button" Click="" onclick="javascript:clearall();  scPersistSelectedValue();"/>
+      </Border>
+    </FormDialog>
+  </ArchiveSpecificVersion>
+</control>

@@ -1,0 +1,119 @@
+﻿@model HealthIS.Apps.MVC.Models.AZDirectory 
+@{  
+    //unique id to use 
+    string UID = "_" + Model.Rendering.UniqueId.ToString().Replace('-', '_');   
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditorEditing)
+{
+    if (!Model.dsSet || Model.DataSourceFolder == null)
+    {
+        <script>
+            function callSetDataSrc@(UID)(){
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                                              // itemID
+                    'User Defined2/Component Template/AZDirectory Root',                                            // templatePath
+                    '_AZ',                                                                                 // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                           // renderingID
+                    'master',                                                  // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                                     // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',                                       // referenceID
+                    'btnDSSet@(UID)',                                                                                     // btnID
+                    true
+                );
+            }
+        </script>
+        <div style="text-align:center">    
+            <h2>A-Z Directory Config</h2>
+            <p>If you want to create a new A-Z Directory, click 'Create New A-Z Directory'.</p>
+            <input id="btnDSSet@(UID)" class="pe-button pe-green" type="button" value="Create New A-Z Directory" onclick="callSetDataSrc@(UID)    ()" />
+            <script>if(typeof(autoSave) != "undefined"){ autoSave(); }</script>
+        </div>
+    }
+    else{
+        <h2>A-Z Directory Config</h2>
+        <script>
+            function addSubItem@(UID)(){
+                addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/AZDirectory Root/AZDirectory Item', '_AZI', 'master', '@(Model.DataSourceFolder.ID.Guid.ToString())', true)
+            }
+
+        </script>
+        <ul class="list-group">
+            @{int iCt = 0;}
+            <li class="list-group-item">
+                <b>Theme:</b>
+                <select id="selTheme@(UID)" onchange="selOnChange('hidTheme@(UID)','selTheme@(UID)')">
+                    <option value="">Blank</option>
+                    <option value="usfGreen">Green</option>
+                    <option value="usfGold">Gold</option>
+                    <option value="usfDoctors">Doctors</option>
+                </select>
+                <div style="display:none;">
+                    <div id="hidTheme@(UID)">@Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.DataSourceFolder, "Style"))</div>
+                    <script>
+                        whenAvailable("scForm", function(){jQuery('#selTheme@(UID)').val('@Model.Style');console.log("Setting style to: @(Model.Style)");});
+                    </script>
+                </div>
+            </li>
+            @if (Model.Directory.Count > 0)
+            {
+                foreach (HealthIS.Apps.MVC.Models.AZDirectoryItem i in Model.Directory)
+                {
+                    <li class="list-group-item">     
+                        <div style="width:100%;"> 
+                            <div class="col-sm-6">                  
+                                <span style="font-weight:bold;">Link Text:</span><br />
+                                @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(i.SCItem, "Link Text"))
+                            </div>
+                            <div class="col-sm-6">  
+                                <span style="font-weight:bold;">Link URL: (include <em>http://</em> if external link)</span><br />
+                                @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(i.SCItem, "Link URL"))
+                            </div>
+                        </div>
+                        <div style="position:absolute;top:5px;right:5px;">
+                            <input class="pe-button pe-red sm" style="margin-right:2px;" type="button" value="&#120;" onclick="deleteItem('@(i.SCItem.ID)    ')" />
+                        </div>
+                        <div style="clear:both;"></div>
+                    </li>
+                    iCt++;
+                }
+            }
+            <li class="list-group-item" style="text-align:right;">
+                <input class="pe-button pe-green" type="button" value="&#43; Add Directory Item" onclick="addSubItem@(UID)    ()"/>
+            </li>
+        </ul>
+    }
+}
+else{
+    char[] alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+    string cssClass = string.IsNullOrEmpty(Model.Style) ? "" : "bg-" + Model.Style;
+    <div class="slick-shadow">
+        <div class="az-index-menu btn-group" role="toolbar" aria-label="index-group">
+            @foreach (char c in alpha)
+            {
+                <a class="btn @(cssClass)" href="#@(c)" role="button">@(c)</a>
+            }
+        </div>
+ 
+        <ul class="az-index-list">
+            @{
+                List<HealthIS.Apps.MVC.Models.AZDirectoryItem> dir = Model.Directory.Where(x => !String.IsNullOrEmpty(x.LinkText)).ToList(); 
+            }
+            @foreach(char alphaChar in alpha){
+                List<HealthIS.Apps.MVC.Models.AZDirectoryItem> charDir = dir.Where(i => i.LinkText.ToUpper()[0] == alphaChar && i.LinkURL.Length > 0).OrderBy(i => i.LinkText).ToList();
+                if (charDir.Count > 0)
+                {
+                    <li>
+                        <h2 id="@(alphaChar)">@(alphaChar)</h2><hr>
+                        @foreach (HealthIS.Apps.MVC.Models.AZDirectoryItem azi in charDir)
+                        {
+                            <a href="@(azi.LinkURL)">
+                                <span class="name">@(azi.LinkText)</span>
+                            </a>
+                        }
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+}

@@ -1,0 +1,178 @@
+﻿@{
+    string uid = "_" + Guid.NewGuid().ToString().Replace("-", "_");
+    string title = "";
+    string linkUrl = "";
+}
+@if (Sitecore.Context.PageMode.IsExperienceEditor && !Model.dsIsSet)
+{
+    <script>
+        function callSetDataSrc@(uid)() {
+            setDataSrc(
+                '@Html.Raw(Model.PageItem.ID.ToString())',                                              // itemID
+                '/sitecore/templates/Branches/Components/Vertical Navigation/VerticalNavRoot',          // templatePath
+                '_VN',                                                                                  // suffix
+                '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                           // renderingID
+                '@Html.Raw(Model.PageItem.Database.Name)',                                              // dbName
+                '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                                     // deviceID
+                '@Html.Raw(Model.Rendering.UniqueId.ToString())',                                       // referenceID
+                'btnDSSet@(uid)',                                                                       // btnID
+                true                                                                                    // reload
+            );
+        }
+
+        function setExistingDataSrc@(uid)(){
+            Sitecore.PageModes.PageEditor.postRequest('webedit:setdatasource(referenceId={@(Model.Rendering.UniqueId.ToString().ToUpper())},renderingId=@(Model.Rendering.Properties["RenderingItemPath"]),id=@(Model.PageItem.ID))', null, false);
+        }
+    </script>
+    <h2 style="text-align:center">Vertical Navigation</h2>
+    <div style="text-align:center">
+        <p>If reusing an existing navigation, click "Use Existing Navigation".<br />If you want to create a new navigation element click "Create New Navigation".</p>
+        <input id="btnDSExistingSet@(uid)" class="pe-button sm pe-green" type="button" value="Use Existing Navigation" onclick="setExistingDataSrc@(uid)()" />
+        <input id="btnDSSet@(uid)" class="pe-button sm pe-green" type="button" value="Create New Navigation" onclick="callSetDataSrc@(uid)()" />
+    </div>
+    <script>if (typeof (autoSave) != "undefined") { autoSave(); }</script>
+}
+else if (Sitecore.Context.PageMode.IsExperienceEditor && Model.dsIsSet && Model.dsEditable)
+{
+    <script>
+        function addSubItem@(uid)(ParentItemID){
+            addItemToDataSrc('@(Model.PageItem.ID.ToString())', '/sitecore/templates/Branches/Components/Vertical Navigation/VerticalNavItem', '_VN', 'master', ParentItemID, false)
+        }
+    </script>
+
+    <h2 style="text-align:center">Vertical Navigation</h2>
+    <ul class="list-group">
+        @if (Model.DataSourceFolder.HasChildren)
+        {
+            int dsChildCt = 0;
+            foreach (Sitecore.Data.Items.Item i in Model.DataSourceFolder.Children)
+            {
+                @Model.RenameItem(i)
+                title = HealthIS.Apps.MVC.Helpers.getStrField(i, "Title");
+                <li class="list-group-item">
+                    <span style="float:left;margin-top:3px;margin-bottom:2px;">@Html.Raw(title)</span>
+                    <span style="float:right;">
+                        @if (dsChildCt > 0)
+                        {
+                            <input class='pe-button sm pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:moveup(id=@(i.ID))",function(){location.reload(true);},false)' value="&#x25B2;" />
+                        }
+                        @if (dsChildCt < Model.DataSourceFolder.Children.Count - 1)
+                        {
+                            <input class='pe-button sm pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:movedown(id=@(i.ID))",function(){location.reload(true);},false)' value="&#x25BC;" />
+                        }
+                        <input class="pe-button sm pe-yellow" type="button" value="Edit" onclick="showEditDialog('@(i.ID)','Title|URL|Open In New Tab')" />
+                        <input class="pe-button sm pe-red" type="button" value="&#120;" onclick="deleteItem('@(i.ID)')" />
+                        @{dsChildCt++;}
+                    </span>
+                    <div style="clear:both;"></div>
+                    @if (i.HasChildren || Model.itemCount < Model.itemCtMax)
+                    {
+                        <ul class="list-group" style="margin-top:10px;">
+                            @{int iChildCt = 0;}
+                            @foreach (Sitecore.Data.Items.Item iChild in i.Children)
+                            {
+                                @Model.RenameItem(iChild)
+                                title = HealthIS.Apps.MVC.Helpers.getStrField(iChild, "Title");
+                                <li class="list-group-item" style="background-color: rgb(247, 247, 247);">
+                                    <span style="float:left;margin-top:3px;margin-bottom:2px;">@Html.Raw(title)</span>
+                                    <span style="float:right;">
+                                        @if (iChildCt > 0)
+                                        {
+                                            <input class='pe-button sm pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:moveup(id=@(iChild.ID))",function(){location.reload(true);},false)' value="&#x25B2;" />
+                                        }
+                                        @if (iChildCt < i.Children.Count - 1)
+                                        {
+                                            <input class='pe-button sm pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:movedown(id=@(iChild.ID))",function(){location.reload(true);},false)' value="&#x25BC;" />
+                                        }
+                                        <input class="pe-button sm pe-yellow" type="button" value="Edit" onclick="showEditDialog('@(iChild.ID)','Title|URL|Open In New Tab')" />
+                                        <input class="pe-button sm pe-red" type="button" value="&#120;" onclick="deleteItem('@(iChild.ID)')" />
+                                        @{iChildCt++;}
+                                    </span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                            }
+                            @if (Model.itemCount < Model.itemCtMax)
+                            {
+                                <li class="list-group-item" style="background-color: rgb(247, 247, 247);">
+                                    <span style="float:right;margin-top:5px;margin-bottom:4px;">
+                                        <input class="pe-button sm pe-green" type="button" value="&#43; Add Sub-Item" onclick="addSubItem@(uid)('@(i.ID)')" />
+                                    </span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </li>
+            }
+        }
+        @if (Model.itemCount < Model.itemCtMax)
+        {
+            <li class="list-group-item">
+                <span style="float:right;">
+                    <input class="pe-button sm pe-green" type="button" value="&#43; Add Menu Item" onclick="addSubItem@(uid)('@(Model.DataSourceFolder.ID)')" />
+                </span>
+                <div style="clear:both;"></div>
+            </li>
+        }
+    </ul>
+}
+else // preview UI
+{
+    if (Sitecore.Context.PageMode.IsExperienceEditor && (!Model.dsEditable))
+    {
+        /* currentPagePath is not the main root of contact information datasource - datasource NOT editable from this page
+            display short message and show preview UI in Editing Mode */
+            @Html.Raw(HealthIS.Apps.MVC.Helpers.DisplayDatasourceUneditableMessage(Model.datasourcePath));
+    }
+
+    <nav class="site-nav" id="vNav@(uid)">
+        <ul class="secondary-nav">
+            @if (Model.dsIsSet && Model.DataSourceFolder.HasChildren)
+            {
+                foreach (Sitecore.Data.Items.Item i in Model.DataSourceFolder.Children)
+                {
+                    <li class="navTabs">
+                        @if (i.HasChildren)
+                        {
+                            title = HealthIS.Apps.MVC.Helpers.getStrField(i, "Title");
+                            <span class="accordion-label">@Html.Raw(title)</span>
+                            <ul style="display: none; width: 200px;">
+                                @foreach (Sitecore.Data.Items.Item iChild in i.Children)
+                                {
+                                    linkUrl = HealthIS.Apps.MVC.Helpers.getLinkUrl(iChild.Fields["URL"]);
+                                    title = HealthIS.Apps.MVC.Helpers.getStrField(iChild, "Title");
+                                    Sitecore.Data.Fields.CheckboxField cbf = HealthIS.Apps.MVC.Helpers.getCBField(iChild, "Open In New Tab");
+                                    string target = "";
+                                    if (cbf != null) { target = cbf.Checked ? "target=\"_blank\"" : ""; }
+                                    else { target = "data-ichild='" + iChild.Name + "'"; }
+                                    <li>
+                                        <a href="@Html.Raw(linkUrl)" @(target)>@Html.Raw(title)</a>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            linkUrl = HealthIS.Apps.MVC.Helpers.getLinkUrl(i.Fields["URL"]);
+                            title = HealthIS.Apps.MVC.Helpers.getStrField(i, "Title");
+                            Sitecore.Data.Fields.CheckboxField cbf = HealthIS.Apps.MVC.Helpers.getCBField(i, "Open In New Tab");
+                            string target = "";
+                            if (cbf != null) { target = cbf.Checked ? "target=\"_blank\"" : ""; }
+                            <a href="@Html.Raw(linkUrl)" @(target)>@Html.Raw(title)</a>
+                        }
+                    </li>
+                }
+            }
+        </ul>
+    </nav>
+    <script type="text/javascript">
+        var currOnload = window.onload;
+        var newOnload = function(e){
+            if(typeof currOnload != "undefined" && currOnload != null){ currOnload(e); }
+            whenAvailable("jQuery",function(){
+                jQuery('#vNav@(uid) .secondary-nav .navTabs').click(function(){});
+            });
+        }
+        window.onload = newOnload;
+    </script>
+}

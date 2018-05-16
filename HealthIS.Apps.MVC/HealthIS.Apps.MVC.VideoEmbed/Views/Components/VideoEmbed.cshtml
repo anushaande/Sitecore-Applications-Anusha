@@ -1,0 +1,49 @@
+﻿@model HealthIS.Apps.MVC.Models.VideoEmbed
+
+<div>
+	<span style="color:Red;"></span>
+
+    @if (Sitecore.Context.PageMode.IsPageEditor)
+    {
+        if (!@Sitecore.Data.ID.IsID(Model.Rendering.DataSource))
+        {
+            <div><h2>Video Component</h2>No Associated Datasource. Please Create New Datasource</div><br />
+            <input type="button" class="btnAddDS" value="Create DataSource" onclick="callSetDataSrc()" />
+        }
+        else
+        {
+            @:Title: @Html.Raw(Model.Title) <br />
+            @:CSS: @Html.Raw(Model.CSS) <br />
+            @:URL: @Html.Raw(Model.URL) <br />
+            @:Thumbnail: @Html.Raw(Model.ThumbnailImage) <br />
+        }
+        
+        <script type="text/javascript">
+
+            Sitecore.PageModes.PageEditor.postRequest('webedit:save()');
+
+            // Create new datasource regarding to this component
+            function callSetDataSrc() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                      // itemID
+                    'User Defined2/Component Template/vidEmbed',                    // templatePath
+                    '_VID',                                                         // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',   // renderingID
+                    '@Html.Raw(Model.PageItem.Database.Name)',                      // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',             // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',               // renderingUID
+                    ''                                                              // btnID
+                );
+            }
+        </script>
+    }
+    else
+    {
+        <div class="video-container">
+            @*<span class="video-title"><span>@Html.Raw(Model.Title)</span></span>*@
+            <a href="@Html.Raw(Model.URL)" class="@Html.Raw(Model.CSS)" data-toggle="lightbox" data-title="@Html.Raw(Model.LightboxTitle)">
+                @Html.Raw(Model.ThumbnailImage)
+            </a>
+        </div>
+    }
+</div>

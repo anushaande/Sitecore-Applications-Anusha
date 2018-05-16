@@ -1,0 +1,23 @@
+﻿@using Sitecore.Mvc
+
+<h1 class="doctors-page-title">@Html.Raw(Model.PageMainTitle)</h1>
+
+<div class="row doctors-row">
+    <div class="col-md-12">
+        <div class="doctors-box-secondary" style="padding: 0;">
+            @Html.Raw(Model.Content1)
+        </div>
+        <div style="padding: 0;" class="doctors-box-secondary">
+            @Html.Raw(Model.Content2)
+
+        </div>
+        <div style="padding: 0;" class="doctors-box-secondary">
+            @Html.Raw(Model.Content3)
+        </div>
+    </div>
+</div>
+
+<!-- Extra Placeholder -->
+<div class="row doctors-row">
+    @Html.Sitecore().Placeholder("DynamicPlaceholder")
+</div>

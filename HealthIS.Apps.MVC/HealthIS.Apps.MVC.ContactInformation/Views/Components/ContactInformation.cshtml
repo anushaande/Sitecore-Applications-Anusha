@@ -1,0 +1,122 @@
+﻿@model HealthIS.Apps.MVC.Models.ContactInformation
+@using Sitecore.Mvc
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    <script>
+        $(document).ready(function () {
+            autoSave();
+        });
+    </script>
+}
+@if (String.IsNullOrEmpty(Model.datasourceSet))
+{
+    if (Sitecore.Context.PageMode.IsExperienceEditor)
+    {
+        <center>
+            <div><h2>Contact Information</h2><p>If re-using an existing Contact Information, click 'Use Existing Contact Information'.<br />If you want to create a new Contact Information, click 'Create New Contact Information'.</p></div>
+            <div>
+                <input type="button" id="btnExistingDS" class="pe-button sm pe-green" onclick="setDatasource()" value="Use Existing Contact Information">
+                <input type="button" id="btnAddDS" class="pe-button sm pe-green" onclick="callSetDataSrc()" value="Create New Contact Information">
+            </div>
+        </center>
+        <script>
+            // Set existing datasource
+            function setDatasource() {
+                Sitecore.PageModes.PageEditor.postRequest("webedit:setdatasource(referenceId={@Model.Rendering.UniqueId.ToString().ToUpper()},renderingId=@Model.Rendering.Properties["RenderingItemPath"],id=@Model.PageItem.ID)", null, false);
+            }
+
+            // Create new datasource with Branch
+            function callSetDataSrc() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                          // itemID
+                    'User Defined2/Component Template/Contact Information',             // templatePath
+                    '_CI',                                                              // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',       // renderingID
+                    '@Html.Raw(Model.PageItem.Database.Name)',                          // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                 // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',                   // referenceID
+                    ''                                                                  // btnID
+                );
+            }
+        </script>
+    } else {
+        <div>Please add datasource for Contact Information</div>
+    }
+    return;
+}
+<div class="contact-info">
+    @if (Sitecore.Context.PageMode.IsExperienceEditor && Model.dsEditable) // Editing Mode when datasource is main root
+    {
+        <h3>Contact Us</h3>
+        <p>
+            <strong>@Html.Raw(Model.name)</strong><br />
+            @Html.Raw(Model.address1)<br />
+            @Html.Raw(Model.address2)<br />
+            @Html.Raw(Model.address3)<br />
+            @Html.Raw(Model.address4)<br />
+            @Html.Raw(Model.address5)<br />
+        </p>
+        <ul>
+            <li>
+                <em class="icon-phone">  </em>
+                <a class="vnav-link" href="#">@Html.Raw(Model.phone)</a>
+            </li>
+            <li>
+                <em class="icon-envelope"> </em>
+                <a href="mailto: @Model.email"> @Html.Raw(Model.email)</a>
+            </li>
+        </ul>
+    }
+    else
+    {
+        if (Sitecore.Context.PageMode.IsExperienceEditor && (!Model.dsEditable))
+        {
+            /* currentPagePath is not the main root of contact information datasource - datasource NOT editable from this page
+                display short message and show preview UI in Editing Mode */
+            @Html.Raw(HealthIS.Apps.MVC.Helpers.DisplayDatasourceUneditableMessage(Model.datasourcePath));
+        }
+
+        string name = HealthIS.Apps.MVC.Helpers.getStrField(Model.item, "Name");
+        string addr1 = HealthIS.Apps.MVC.Helpers.getStrField(Model.item, "Address1");
+        string addr2 = HealthIS.Apps.MVC.Helpers.getStrField(Model.item, "Address2");
+        string addr3 = HealthIS.Apps.MVC.Helpers.getStrField(Model.item, "Address3");
+        string addr4 = HealthIS.Apps.MVC.Helpers.getStrField(Model.item, "Address4");
+        string addr5 = HealthIS.Apps.MVC.Helpers.getStrField(Model.item, "Address5");
+        string phone = HealthIS.Apps.MVC.Helpers.getStrField(Model.item, "Phone");
+        string email = HealthIS.Apps.MVC.Helpers.getStrField(Model.item, "Email");
+
+        <h3>Contact Us</h3>
+        if (!String.IsNullOrEmpty(name))
+        {
+            <p>
+                <strong>@Html.Raw(name)</strong><br />
+                @Html.Raw(Model.addBreak(addr1))
+                @Html.Raw(Model.addBreak(addr2))
+                @Html.Raw(Model.addBreak(addr3))
+                @Html.Raw(Model.addBreak(addr4))
+                @Html.Raw(Model.addBreak(addr5))
+            </p>
+        }
+
+    if (!String.IsNullOrEmpty(phone) || !String.IsNullOrEmpty(email))
+    {
+            <ul>
+                @if (!String.IsNullOrEmpty(phone))
+                {
+                    <li>
+                        <em class="icon-phone">  </em>
+                        <a class="vnav-link" onclick="_gaq.push(['_trackEvent','Phone Call Tracking','Click/Touch','Flyout']);" href="tel:@phone">@Html.Raw(phone)</a>
+                    </li>
+                }
+                @if (!String.IsNullOrEmpty(email))
+                {
+                    <li>
+                        <em class="icon-envelope"> </em>
+                        <a href="mailto: @email"> @Html.Raw(email)</a>
+                    </li>
+                }
+            </ul>
+        }
+    }
+</div>

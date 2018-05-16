@@ -1,0 +1,43 @@
+﻿@model Layout_v2.Models.SlideShow
+@{
+    string active = "";
+    int count = 0;
+    
+    if (!Model.Item.HasChildren) {
+        @Model.Error;
+        return;
+    }
+}
+
+<div id="@Model.HtmlID" class="carousel slide @Model.StyleClass @Model.FadeTransition @Model.SlideShowNoArrow @Model.SlideShowIndicator" data-ride="carousel" data-interval="@Model.TransitionTime" data-pause="@Model.PauseOnHover">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        @for (int i = 0; i < @Model.Item.Children.Count(); i++)
+        {
+            if (i == 0) { active = "active"; } else { active = ""; }
+            <li data-target="#@Model.HtmlID" data-slide-to="@i" class="@active"></li>
+        } 
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner">
+        @foreach (Sitecore.Data.Items.Item item in @Model.Item.Children)
+        {
+            if (count == 0) { active = "active"; } else { active = ""; }
+            
+            <div class="item @active">
+                @Html.Raw(item.Fields["image"].Value)
+                <div class="carousel-caption"></div>
+            </div>
+            count++;
+        } 
+    </div>
+
+    <!-- Controls -->
+    <a class="left carousel-control" href="#@Model.HtmlID" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a class="right carousel-control" href="#@Model.HtmlID" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+</div>

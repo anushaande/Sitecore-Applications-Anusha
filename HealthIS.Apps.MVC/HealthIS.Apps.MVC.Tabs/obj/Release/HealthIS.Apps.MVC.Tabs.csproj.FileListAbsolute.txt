@@ -1,0 +1,16 @@
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\obj\Release\HealthIS.Apps.MVC.Tabs.csprojResolveAssemblyReference.cache
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\bin\HealthIS.Apps.MVC.Tabs.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\bin\HealthIS.Apps.MVC.Tabs.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\bin\Microsoft.Web.Infrastructure.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\bin\System.Web.Helpers.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\bin\System.Web.Razor.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\bin\System.Web.Webpages.Deployment.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\bin\System.Web.Webpages.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\bin\System.Web.Webpages.Razor.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\bin\System.Web.Razor.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\bin\System.Web.Webpages.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\bin\System.Web.Webpages.Deployment.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\bin\System.Web.Webpages.Razor.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\bin\System.Web.Helpers.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\obj\Release\HealthIS.Apps.MVC.Tabs.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Tabs\obj\Release\HealthIS.Apps.MVC.Tabs.pdb

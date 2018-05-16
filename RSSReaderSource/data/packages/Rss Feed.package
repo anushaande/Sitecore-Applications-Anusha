@@ -1,0 +1,83 @@
+<project>
+  <Metadata>
+    <metadata>
+      <PackageName>Rss Feed</PackageName>
+      <Author>Ryan Barkley &amp; Sivaramakrishnan Subramanian</Author>
+      <Version>1.0</Version>
+      <Revision />
+      <License />
+      <Comment>Initial Version of the Generalized RSS Feed.</Comment>
+      <Attributes />
+      <Readme />
+      <Publisher />
+      <PostStep />
+      <PackageID />
+    </metadata>
+  </Metadata>
+  <SaveProject>True</SaveProject>
+  <Sources>
+    <xitems>
+      <Entries>
+        <x-item>/master/sitecore/content/RSS Feeds/Sample RSS Feed/{8A218F6E-EF6B-4EEB-9019-3D2570A0CF5C}/invariant/0</x-item>
+        <x-item>/master/sitecore/content/RSS Feeds/{E9379822-F85D-4E96-9A51-70BB10E3C688}/invariant/0</x-item>
+        <x-item>/master/sitecore/layout/Sublayouts/RSS Reader/{CC8B5B75-3FD4-4674-AD9C-E5FF03F062D6}/invariant/0</x-item>
+        <x-item>/master/sitecore/layout/Sublayouts/RSS Reader/RSS Reader/{A8778CD7-E6CD-446F-A200-AE1A8F121D13}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/RSS Reader/{DC8E30A5-AA05-4877-AF67-90DFF3CB5C5C}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/RSS Reader/RSS Feed/{12E424AE-1790-4409-8CDD-B667F08C1DB2}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/RSS Reader/RSS Feed/RSS Feed/{1445CEFD-C84F-4D0B-946D-E8F7FB1344C6}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/RSS Reader/RSS Feed/Styling/{4B8D3773-8DDF-47E5-AB07-A43CACDEF000}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/RSS Reader/RSS Feed/__Standard Values/{B21B33D2-855D-4643-8C1F-0603945ED819}/invariant/0</x-item>
+      </Entries>
+      <SkipVersions>False</SkipVersions>
+      <Converter>
+        <ItemToEntryConverter>
+          <Transforms>
+            <InstallerConfigurationTransform>
+              <Options>
+                <BehaviourOptions>
+                  <ItemMode>Undefined</ItemMode>
+                  <ItemMergeMode>Undefined</ItemMergeMode>
+                </BehaviourOptions>
+              </Options>
+            </InstallerConfigurationTransform>
+          </Transforms>
+        </ItemToEntryConverter>
+      </Converter>
+      <Include />
+      <Exclude />
+      <Name>Items</Name>
+    </xitems>
+    <xfiles>
+      <Entries>
+        <x-item>/layouts/RSS Reader.ascx</x-item>
+        <x-item>/bin/Sitecore.RSSReader.dll</x-item>
+      </Entries>
+      <Converter>
+        <FileToEntryConverter>
+          <Root />
+          <Transforms>
+            <InstallerConfigurationTransform>
+              <Options>
+                <BehaviourOptions>
+                  <ItemMode>Undefined</ItemMode>
+                  <ItemMergeMode>Undefined</ItemMergeMode>
+                </BehaviourOptions>
+              </Options>
+            </InstallerConfigurationTransform>
+          </Transforms>
+        </FileToEntryConverter>
+      </Converter>
+      <Include />
+      <Exclude />
+      <Name>Files</Name>
+    </xfiles>
+  </Sources>
+  <Converter>
+    <TrivialConverter>
+      <Transforms />
+    </TrivialConverter>
+  </Converter>
+  <Include />
+  <Exclude />
+  <Name />
+</project>

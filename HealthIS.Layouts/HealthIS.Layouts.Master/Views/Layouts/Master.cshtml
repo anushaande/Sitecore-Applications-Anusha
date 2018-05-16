@@ -1,0 +1,296 @@
+﻿@model HealthIS.Layouts.Models.Master
+@using Sitecore.Mvc
+@using Sitecore.Mvc.Analytics.Extensions
+@*@if (Sitecore.Context.PageMode.IsExperienceEditor) { Model.UpdateMetaTitle(); }*@
+@{
+    string bodyClass = string.Empty;
+    string title = Model.currentItem.Name;
+    string deptName = "";
+    Dictionary<string, string> sw = null;
+
+    deptName = HealthIS.Apps.Util.getItemNameAtLevel(2);
+
+    // setup sitewit IDs
+    sw = new Dictionary<string, string>();
+    sw.Add("medicine", "1306");
+    sw.Add("nursing", "1307");
+    sw.Add("publichealth", "1308");
+    sw.Add("pharmacy", "1309");
+    sw.Add("paperfree", "1310");
+
+    Response.AddHeader("X-UA-Compatible", "IE=Edge");
+    string profilePageTitle = "";
+    string profileMetaDesc = "";
+    try
+    {
+        profilePageTitle = HealthIS.Apps.MVC.Models.FacultyDirectoryAcademicProfile.GetHeaderData().Item1;
+        profileMetaDesc = HealthIS.Apps.MVC.Models.FacultyDirectoryAcademicProfile.GetHeaderData().Item2;
+    }
+    catch{}
+
+    if (!String.IsNullOrEmpty(profilePageTitle))
+    {
+        title = profilePageTitle;
+    }
+    else if (!String.IsNullOrEmpty(Model.MetaTitle))
+    {
+        title = @Model.MetaTitle;
+    } else {
+        title = @Model.currentItem.Name;
+    }
+}
+<!DOCTYPE html>
+<html lang="en-us" class="no-js">
+
+    <!-- Start Global Head Resource -->
+    <head>
+        <!-- BEGIN_REMOVE|htmlTitle  -->
+        <title>@title | USF Health</title>
+        <!-- END_REMOVE|htmlTitle  -->
+
+        <!-- BEGIN_REMOVE|metaTags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="CODE_LANGUAGE" content="C#" />
+        <meta name="vs_defaultClientScript" content="JavaScript" />
+        <meta name="vs_targetSchema" content="//schemas.microsoft.com/intellisense/ie5" />
+        @if (!String.IsNullOrEmpty(Model.MetaKeywords))
+        {
+        <meta name="keywords" content="@Model.MetaKeywords" />
+        }
+        @if (!String.IsNullOrEmpty(Model.MetaDescription))
+        {
+        <meta name="description" content="@Model.MetaDescription" />
+        }
+        @if (String.IsNullOrEmpty(Model.MetaDescription) && !String.IsNullOrEmpty(profileMetaDesc))
+        { 
+        <meta name="description" content="@profileMetaDesc" />
+        }
+        @if (HealthIS.Apps.Util.isOnProduction() && Model.UseOpenGraphMetaTags())
+        {
+            string articleUrl = HealthIS.Apps.MVC.Blog.Models.DetailPage.GetOpenGraphMetaTagsData().Item1;
+            string articleTitle = HealthIS.Apps.MVC.Blog.Models.DetailPage.GetOpenGraphMetaTagsData().Item2;
+            string articleDescription = HealthIS.Apps.MVC.Blog.Models.DetailPage.GetOpenGraphMetaTagsData().Item3;
+            string articleImageUrl = HealthIS.Apps.MVC.Blog.Models.DetailPage.GetOpenGraphMetaTagsData().Item4;
+            string imageWidth = HealthIS.Apps.MVC.Blog.Models.DetailPage.GetOpenGraphMetaTagsData().Item5;
+            string imageHeight = HealthIS.Apps.MVC.Blog.Models.DetailPage.GetOpenGraphMetaTagsData().Item6;
+
+        <!-- Open Graph Meta Tags -->
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="@articleTitle" />
+        <meta property="og:description" content="@articleDescription" />
+        <meta property="og:image" content="@articleImageUrl" />
+        <meta property="og:url" content="@articleUrl" />
+        <meta property="og:site_name" content="Health IS Technology Blog" />
+        <meta property="article:publisher" content="https://www.facebook.com/usfhealthis/" />
+
+        <meta property="og:image:width" content="@imageWidth" />
+        <meta property="og:image:height" content="@imageHeight" />
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="@articleTitle">
+        <meta name="twitter:description" content="@articleDescription">
+        <meta name="twitter:image" content="@articleImageUrl">
+        <!-- Open Graph Meta Tags -->
+        }
+        <!-- END_REMOVE|metaTags -->        
+
+        <link rel="stylesheet" href="/layouts/styles/health.css" />
+        <link rel="stylesheet" href="/layouts/styles/print.css" media="print" />
+        @if (!String.IsNullOrEmpty(Model.TemplateStylesPath))
+        {
+        string[] stylesheets = Model.TemplateStylesPath.Split(';');
+        foreach (string stylePath in stylesheets)
+        {
+        <link rel="stylesheet" href="@stylePath" />
+        }
+        }
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" />
+        <!-- BEGIN_REMOVE|customCss  -->
+        @if (!String.IsNullOrEmpty(Model.CollegeStylesPath))
+        {
+        string[] stylesheets = Model.CollegeStylesPath.Split(';');
+        foreach (string stylePath in stylesheets)
+        {
+        <link rel="stylesheet" href="@stylePath" />
+        }
+        }
+        @if (!String.IsNullOrEmpty(Model.CustomStylesPath))
+        {
+        string[] stylesheets = Model.CustomStylesPath.Split(';');
+        foreach (string stylePath in stylesheets)
+        {
+        <link rel="stylesheet" href="@stylePath" />
+        }
+        }
+        <!-- END_REMOVE|customCss  -->
+        @Html.Sitecore().VisitorIdentification()
+
+        @*@if (HealthIS.Apps.Util.isOnProduction() && sw.ContainsKey(deptName))
+        {
+            <script type="text/javascript">
+                var loc = (("https:" == document.location.protocol) ? "//analytics." : "//analytics.");
+                document.write(unescape("%3Cscript src='" + loc + "sitewit.com/sw.js'   type='text/javascript'%3E%3C/script%3E"));
+
+                var sw = new _sw_analytics();
+                sw.id = '@sw[deptName]';
+                sw.register_page_view();
+
+                alert(sw.id);
+            </script>
+        }*@
+        @if (HealthIS.Apps.Util.isOnProduction())
+        {
+        <script type="text/javascript">
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-4198073-1', 'auto');
+            ga('require', 'displayfeatures');
+            ga('send', 'pageview');
+        </script>
+        }
+        
+        @if (Sitecore.Context.PageMode.IsExperienceEditor)
+        { 
+        // To enable cookie when it is on page editing mode
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript" src="/layouts/scripts/jquery_cookie.js"></script>
+
+        // Walkme added on 11/28/2017 by Jihyun Kim
+        <script type="text/javascript">
+            (function () {
+                var walkme = document.createElement('script');
+                walkme.type = 'text/javascript';
+                walkme.async = true;
+                walkme.src = 'https://cdn.walkme.com/users/7211fb860c5542a2a1cab484cb70e668/walkme_7211fb860c5542a2a1cab484cb70e668_https.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(walkme, s);
+                window._walkmeConfig = { smartLoad: true };
+            })();
+        </script>
+        <script type="text/javascript" src="/resources/scripts/HealthIS.Apps.Util.js"></script>
+        }
+        
+        @try
+        {
+        if (HealthIS.Apps.MVC.Helpers.FindRenderingItemOnPage("Google Map") > 0)
+        {
+        <script type='text/javascript' src='https://maps.googleapis.com/maps/api/js?key=AIzaSyClWSzzJUD1lvB83k2rD_pvFI8aD_6bQT0&amp;sensor=true'></script>
+        }
+        }
+        catch { }
+        <!-- BEGIN_REMOVE|customJS  -->
+        <!-- END_REMOVE|customJS  -->
+        
+        @if (HealthIS.Apps.Util.isOnProduction() && Model.UseGoogleAnalyticsTracking() && !String.IsNullOrEmpty(Model.cookiePath))
+        {
+        <script type="text/javascript">
+            setTimeout(function () {
+                var a = document.createElement("script");
+                var b = document.getElementsByTagName("script")[0];
+                a.src = document.location.protocol + "//script.crazyegg.com/pages/scripts/0029/8149.js?" + Math.floor(new Date().getTime() / 3600000);
+                a.async = true; a.type = "text/javascript";
+                b.parentNode.insertBefore(a, b)
+            } , 1);
+        </script>        
+        <script type="text/javascript">
+            // Google Analytics Tracking Code Customizations
+            var pageTracker = _gat._getTracker("UA-4198073-1");
+            pageTracker._setCookiePath("@Model.cookiePath");
+            pageTracker._trackPageview();
+        </script>
+        }
+        @if (HealthIS.Apps.Util.isOnProduction() && Model.UseGoogleTagManager())
+        {
+            <!-- Global site tag (gtag.js) - Google Analytics -->
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-91208920-1"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag()
+
+                { dataLayer.push(arguments); }
+                gtag('js', new Date());
+
+                gtag('config', 'UA-91208920-1');
+            </script>
+        }
+        @Html.Raw(Model.CustomHead)
+        <!-- BEGIN_REPLACE|htmlHeadContent -->
+        <!-- END_REPLACE|htmlHeadContent -->
+    </head>
+    <!-- End Global Head Resource -->
+
+    @if (Sitecore.Context.PageMode.IsExperienceEditor)
+    {
+        bodyClass = " class=main-body-edit-mode";
+    }
+
+    <body data-sc="sc-2"@(bodyClass)>
+        @if (Sitecore.Context.PageMode.IsExperienceEditor)
+        { 
+        <div id='loadingOverlay' style="display:block;"></div>
+        <script type="text/javascript">
+            whenAvailable('scForm', function () {
+                whenAvailable('Sitecore', function () {
+                    whenAvailable('$', function () {
+                        hideLoading();
+                    });
+                });
+            });
+        </script>
+        }
+        else
+        {
+        <script type="text/javascript" src="/layouts/scripts/jQuery.noconflict.js"></script>
+        }
+        @Html.Sitecore().Placeholder("Main Layout")
+        <!-- Start Javascript External Links -->
+        <script src="/layouts/scripts/modernizr.js"></script>
+        <!-- BEGIN_REPLACE|jquery -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>
+            window.jQuery || document.write('<script src="/layouts/scripts/jquery.min.js"><\/script>')
+        </script>
+        <!-- END_REPLACE|jquery -->
+
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+        <script src="/layouts/scripts/template.min.js?v=1"></script>
+
+        <!-- BEGIN_REPLACE|customJS  -->
+        <script src="/layouts/scripts/plugins.min.js?v=5"></script>
+
+        <!-- Call global JS for components' event -->
+        
+        @if (Sitecore.Context.PageMode.IsExperienceEditor)
+        { <script type="text/javascript" src="/layouts/scripts/jquery_cookie.js"></script> }
+        @if (!String.IsNullOrEmpty(Model.TemplateScriptsPath))
+        {
+        string[] scripts = Model.TemplateScriptsPath.Split(';');
+        foreach (string scriptPath in scripts)
+        {
+        <script type="text/javascript" src="@scriptPath"></script>
+        }
+        }
+        @if (!String.IsNullOrEmpty(Model.CollegeScriptsPath))
+        {
+        string[] scripts = Model.CollegeScriptsPath.Split(';');
+        foreach (string scriptPath in scripts)
+        {
+        <script type="text/javascript" src="@scriptPath"></script>
+        }
+        }
+        @if (!String.IsNullOrEmpty(Model.CustomScriptsPath))
+        {
+        string[] scripts = Model.CustomScriptsPath.Split(';');
+        foreach (string scriptPath in scripts)
+        {
+        <script type="text/javascript" src="@scriptPath"></script>
+        }
+        }
+        @Html.Raw(Model.CustomFooter)
+    </body>
+</html>

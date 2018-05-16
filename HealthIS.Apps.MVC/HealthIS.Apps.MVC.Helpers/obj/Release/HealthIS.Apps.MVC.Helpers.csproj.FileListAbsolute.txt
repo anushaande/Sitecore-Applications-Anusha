@@ -1,0 +1,6 @@
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Helpers\bin\Release\HealthIS.Apps.MVC.Helpers.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Helpers\bin\Release\HealthIS.Apps.MVC.Helpers.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Helpers\obj\Release\HealthIS.Apps.MVC.Helpers.csprojResolveAssemblyReference.cache
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Helpers\obj\Release\HealthIS.Apps.MVC.Helpers.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Helpers\obj\Release\HealthIS.Apps.MVC.Helpers.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Helpers\bin\Release\System.Web.Helpers.dll

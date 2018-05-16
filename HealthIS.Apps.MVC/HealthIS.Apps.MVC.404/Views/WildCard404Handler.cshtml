@@ -1,0 +1,38 @@
+﻿@model HealthIS.Apps.MVC.WildCard404Handler
+
+@if (Sitecore.Context.PageMode.IsExperienceEditorEditing)
+{
+    <h2>This page will 404 when not editing.</h2>
+    if(String.IsNullOrEmpty(Model.Rendering.DataSource))
+    {
+        string UID = "_" + Model.Rendering.UniqueId.ToString().Replace('-', '_');
+        <script>
+            function callSetDataSrc@(UID)() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                                              // itemID
+                    '	/sitecore/templates/System/Templates/Template',                                               // templatePath
+                    '_404',                                                                                 // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                           // renderingID
+                    '@Html.Raw(Model.Item.Database.Name)',                                                  // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                                     // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',                                       // referenceID
+                    'btnDSSet@(UID)',                                                                                     // btnID
+                    true                                                                                    // reload true
+                );
+            }
+        </script>
+        <div style="text-align:center" class="imgContainer">    
+            <p>Create a datasource so that Sitecore will render this component when not editing.</p>
+            <input id="btnDSSet@(UID)" class="pe-button pe-green" type="button" value="Create New Datasource" onclick="callSetDataSrc@(UID)()" />
+            <script>if(typeof(autoSave) != "undefined"){ autoSave(); }</script>
+        </div>
+    }
+} 
+else 
+{
+    Sitecore.Data.Items.Item notFoundPage = null;
+    notFoundPage = Sitecore.Context.Database.GetItem("/sitecore/content/Home/PageNotFound");
+    if (notFoundPage != null){
+        HttpContext.Current.Response.RedirectPermanent(Sitecore.Links.LinkManager.GetItemUrl(notFoundPage), true); 
+    }
+}

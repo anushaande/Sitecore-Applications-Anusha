@@ -1,0 +1,6 @@
+C:\SVN\Sources\HealthIS.Support\HealthIS.Support.ClearCaches\bin\Debug\HealthIS.Support.ClearCaches.dll
+C:\SVN\Sources\HealthIS.Support\HealthIS.Support.ClearCaches\bin\Debug\HealthIS.Support.ClearCaches.pdb
+C:\SVN\Sources\HealthIS.Support\HealthIS.Support.ClearCaches\bin\Debug\Sitecore.Kernel.dll
+C:\SVN\Sources\HealthIS.Support\HealthIS.Support.ClearCaches\obj\Debug\HealthIS.Support.ClearCaches.csprojResolveAssemblyReference.cache
+C:\SVN\Sources\HealthIS.Support\HealthIS.Support.ClearCaches\obj\Debug\HealthIS.Support.ClearCaches.dll
+C:\SVN\Sources\HealthIS.Support\HealthIS.Support.ClearCaches\obj\Debug\HealthIS.Support.ClearCaches.pdb

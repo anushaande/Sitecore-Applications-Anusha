@@ -1,0 +1,149 @@
+﻿@model HealthIS.Apps.MVC.Models.AdvancedTab
+@using Sitecore.Mvc
+@using System.Text.RegularExpressions
+
+@{
+    string layoutType = this.ViewData["layoutType"].ToString();
+    string itemShortId = this.ViewData["itemShortId"].ToString();
+    string itemGuiId = this.ViewData["itemGuiId"].ToString();
+    bool isSelectedTab = (this.ViewData["checked"].ToString() == itemGuiId ? true : false);
+    string selectedTab = isSelectedTab ? "checked='checked'" : "";
+    if (layoutType != "media-twoColumns" || String.IsNullOrEmpty(itemShortId))
+    {
+        return;
+    }
+
+    Sitecore.Data.Items.Item tabItem = Model.Item.Database.GetItem(itemGuiId); 
+    Regex youtubeRegex = new Regex(@"youtu(?:\.be|be\.com)/(?:.*v(?:/|=)|(?:.*/)?)([a-zA-Z0-9-_]+)");
+    Regex vimeoRegex = new Regex(@"vimeo\.com/(?:.*#|.*video/)?([0-9]+)");
+    string videoUrl = string.Empty;
+    string videoId = string.Empty;
+    string videoImage = string.Empty;
+    string autoPlay = string.Empty;
+
+    if (tabItem != null)
+    {
+        Model.tabTitle = tabItem.Fields["Tab Title"].Value;
+        Model.videoEmbedUrl = tabItem.Fields["Video Embed URL"].Value;
+        Model.videoThumbnail = tabItem.Fields["Video Thumbnail"];
+        Model.imagePath = tabItem.Fields["Image Path"];
+        Model.descriptionLeft = tabItem.Fields["Description Left"].Value;
+        Model.descriptionRight = tabItem.Fields["Description Right"].Value;
+
+        System.Text.RegularExpressions.Match youtubeMatch = youtubeRegex.Match(Model.videoEmbedUrl);
+        System.Text.RegularExpressions.Match vimeoMatch = vimeoRegex.Match(Model.videoEmbedUrl);
+
+        if (Model.videoThumbnail.MediaItem != null)
+        {
+            videoImage = Sitecore.Resources.Media.MediaManager.GetMediaUrl(Model.videoThumbnail.MediaItem);
+        }
+        if (youtubeMatch.Success)
+        {
+            videoId = youtubeMatch.Groups[1].Value;
+            videoUrl = @"https://www.youtube.com/embed/" + videoId;
+            autoPlay = videoUrl + "?autoplay=1";
+
+            // Convert video thumbnail
+            if (Model.videoThumbnail.MediaItem == null)
+            {
+                videoImage = "https://img.youtube.com/vi/" + videoId + "/maxresdefault.jpg";
+                // maxresdefault thumbnail is needed to remove black bars from 16:9 ratio videos
+                try
+                {
+                    // check to see if maxresdefault thumbnail exists for this YouTube video
+                    // if HttpWebResponse doesn't 404, use maxresdefault
+                    HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(videoImage);
+                    request.Method = "HEAD";
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                }
+                catch (WebException ex)
+                {
+                    if (((HttpWebResponse)ex.Response).StatusCode == HttpStatusCode.NotFound)
+                    {
+                        // maxresdefault thumbnail DOES NOT exist for this YouTube video, use standard hqdefault thumbnail
+                        videoImage = videoImage.Replace("maxresdefault", "0");
+                    }
+                }
+            }
+        }
+        else if (vimeoMatch.Success)
+        {
+            var srcSplit = Model.videoEmbedUrl.Split('/');
+            videoId = srcSplit[srcSplit.Length - 1];
+            videoUrl = @"https://player.vimeo.com/video/" + videoId;
+            autoPlay = videoUrl + "?autoplay=1";
+
+            // Convert video thumbnail
+            if (Model.videoThumbnail.MediaItem == null)
+            {
+                videoImage = "http://vimeo.com/api/v2/video/" + videoId + ".json?callback=showThumb";
+                var webReq = (HttpWebRequest)WebRequest.Create("https://www.vimeo.com/api/v2/video/" + videoId + ".json?");
+                webReq.ContentType = "text/json";
+                webReq.Method = "GET";
+                var webResp = (HttpWebResponse)webReq.GetResponse();
+                string resp = "";
+                using (var rdr = new StreamReader(webResp.GetResponseStream()))
+                {
+                    resp = HttpUtility.HtmlDecode(rdr.ReadToEnd()).Replace("&lt;", "<").Replace("&amp;", "&").Replace("&gt;", ">").Replace("&quot;", "\"").Replace("&apos;", "'");
+                }
+                if (!string.IsNullOrEmpty(resp))
+                {
+                    try
+                    {
+                        HealthIS.Apps.MVC.Models.VimeoVid v = Newtonsoft.Json.JsonConvert.DeserializeObject<List<HealthIS.Apps.MVC.Models.VimeoVid>>(resp)[0];
+                        videoImage = v.thumbnail_large;
+                    }
+                    catch { }
+                }
+            }
+        }
+        else if (Model.videoEmbedUrl.ToLower().Contains("panopto") && Model.videoEmbedUrl.ToLower().Contains("viewer.aspx"))
+        {
+            videoUrl = Model.videoEmbedUrl.Replace("Viewer", "Embed");
+            autoPlay = videoUrl + "&autoplay=true";
+            if (Model.videoThumbnail.MediaItem == null)
+            {
+                videoImage = "/images/panoptoPlaceholder.jpg";
+            }
+        }
+    }
+}
+<input type="radio" name="tabs" id="tab_@(itemShortId)" @(selectedTab)>
+<label for="tab_@(itemShortId)">@Html.Raw(Model.tabTitle)</label>
+<div class="tab">
+    <div class="tab-inner-content">
+        <div class="tab-left-content">
+            @if ((Model.imagePath.MediaItem != null && Model.videoThumbnail.MediaItem != null) || !String.IsNullOrEmpty(Model.videoEmbedUrl))
+            {
+                if (Model.videoThumbnail.MediaItem != null)
+                {
+                    <div class="video-section" style="padding-top: 0%;">
+                        <div class="iframeOverlay">
+                            <img class="iframeThumbnail" src="@(videoImage)" />
+                            <div class="playCir" onclick="advancedTabPlayVid(this)">
+                                <div class="playTri"></div>
+                            </div>
+                        </div>
+                        <iframe src="@(videoUrl)" data-src="@(autoPlay)" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                }
+                else
+                {
+                    <div class="video-section">
+                        <iframe src="@(videoUrl)" data-src="@(autoPlay)" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                }
+            }
+            else if (Model.imagePath.MediaItem != null)
+            {
+                <img src="@(Sitecore.Resources.Media.MediaManager.GetMediaUrl(Model.imagePath.MediaItem))" alt="@(Model.imagePath.Alt)" />
+            }
+            @Html.Raw(Model.descriptionLeft)
+        </div>
+        <div class="tab-right-content">
+            <div class="tab-right-inner">
+                @Html.Raw(Model.descriptionRight)
+            </div>
+        </div>
+    </div>
+</div>

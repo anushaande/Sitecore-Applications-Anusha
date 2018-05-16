@@ -1,0 +1,32 @@
+﻿@using Sitecore.Mvc
+@using HealthIS.Apps.MVC
+@{
+    if (Sitecore.Context.PageMode.IsPageEditor)
+    {
+        @*string renderingId = @Sitecore.Mvc.Presentation.RenderingContext.Current.Rendering.UniqueId.ToString().ToUpper();
+        <div style="display: none;">@renderingId</div>
+        if (Helpers.removeRendering(Model.Item, "HPM Homepage Type", @renderingId))
+        {
+            <script>alert("We don't allow to add more than one root-element in \"HPM Homepage Type\" placeholder."); location.reload(true);</script>
+        }*@
+        <script>
+            jQuery(document).ready(function () {
+                autoSave();
+            });
+        </script>
+        <style>.col-left-adjust { margin-top: 40px; }</style>
+    }
+}
+<div class="row">
+    <div class="col-sm-3 col-left-adjust">
+        <!-- left nav root element goes here -->
+        @Html.Sitecore().Placeholder("Vertical Navigation") @Helpers.placeholderRequired("Vertical Navigation")
+        @if (String.IsNullOrEmpty(Helpers.placeholderRequired("Additional Vertical Navigation").ToHtmlString()))
+        { <hr /> }
+        @Html.Sitecore().Placeholder("Additional Vertical Navigation")
+        @Html.Sitecore().Placeholder("Contact Information")
+    </div>
+    <div class="col-sm-9 col-right-adjust">
+        @Html.Sitecore().Placeholder("Pediatrics Left Column Page Type")
+    </div>
+</div>

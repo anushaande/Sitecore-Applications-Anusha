@@ -1,0 +1,49 @@
+﻿@model HealthIS.Apps.MVC.Models.RequestAppointmentNumber
+@using Sitecore.Mvc
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor && !Model.dsSet)
+{
+    <script type="text/javascript">
+        // Create new datasource regarding to this component
+        function callSetDataSrc() {
+            setDataSrc(
+                '@Html.Raw(Model.PageItem.ID.ToString())',                      // itemID
+                '/sitecore/templates/Branches/Components/Request Appointment Number/Request Appointment Number',  // templatePath
+                '_RAN',                                                          // suffix
+                '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',   // renderingID
+                '@Html.Raw(Model.PageItem.Database.Name)',                      // dbName
+                '@Html.Raw(Sitecore.Context.Device.ID.ToString())',             // deviceID
+                '@Html.Raw(Model.Rendering.UniqueId.ToString())',               // renderingUID
+                ''                                                              // btnID
+            );
+        }
+    </script>
+    <center>
+        <p>Click to create new<br />Request Appointment Number</p>
+        <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrc()" value="Create Appointment Number">
+        <script>if (typeof (autoSave) != "undefined") { autoSave(); }</script>
+    </center>
+    return;
+}
+else if (!Sitecore.Context.PageMode.IsExperienceEditor && !Model.dsSet)
+{
+    <div>Please add<br />Request Appointment Number</div>
+    return;
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    if (Model.dsEditable) // Edit Mode UI when datasource is main root
+    {
+        <div style="text-align:right;">
+            <input type="button" class="pe-button pe-yellow" onclick="javascript:Sitecore.PageModes.PageEditor.postRequest('webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Appointment Phone Number, id=@(Model.Item.ID))')" value="Edit">
+        </div>
+    }
+    else
+    {
+        // currentPagePath is not the main root of Req Appt Num datasource - datasource NOT editable from this page, display short message
+        @Html.Raw(HealthIS.Apps.MVC.Helpers.DisplayDatasourceUneditableMessage(Model.datasourcePath));
+    }
+}
+
+@Model.GetRequestAppointmentNumber()

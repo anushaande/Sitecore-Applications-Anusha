@@ -1,0 +1,164 @@
+﻿@model HealthIS.Apps.MVC.Models.FeaturedEmployee
+@using Sitecore.Mvc
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor && !Model.dsIsSet)
+{
+    <center>
+        <h2>Featured Employee</h2><p>If you want to create a Featured Employee, click 'Create Featured Employee'.</p>
+        <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrc()" value="Create Featured Employee" />
+    </center>
+    <script>
+        jQuery(document).ready(function () {
+            autoSave();
+        });
+        // Create new datasource regarding to this component
+        function callSetDataSrc() {
+            setDataSrc(
+                '@Html.Raw(Model.PageItem.ID.ToString())',                                  // itemID
+                'User Defined2/Component Template/Featured Employee',                       // templatePath
+                '_FE',                                                                      // suffix
+                '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',               // renderingID
+                '@Html.Raw(Model.PageItem.Database.Name)',                                  // dbName
+                '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                         // deviceID
+                '@Html.Raw(Model.Rendering.UniqueId.ToString())',                           // renderingUID
+                ''                                                                          // btnID
+            );
+        }
+    </script>
+    return;
+}
+
+@if (Model.dsIsSet)
+{
+    <script src="/resources/root-elements/scripts/featured-employee-search.js"></script>
+    Model.ProcessInput();
+
+    if (Sitecore.Context.PageMode.IsExperienceEditor)
+    {
+        <h3>
+            <b>Heading:</b> @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.dsItem, "Heading"))
+            <input class="pe-button pe-yellow" style="float:right;margin-right:8px" type="button" value="Edit" onclick='Sitecore.PageModes.PageEditor.postRequest("webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Heading|PersonID List|Profile Page, id=@(Model.dataSourceID))");' />
+        </h3>
+        <div style="float:left;width:100%;padding-bottom:10px">
+            <br />
+            <div style="line-height:2em;width:100%;margin-bottom:10px;border-bottom:solid 1px #ddd;">
+                <div class="col-sm-10" style="padding-left:15px;">
+                    <div class="row textInputs input-group" style="width: 100%;">
+                        <input type="text" class="form-control" id="firstName" placeholder="First Name" style="width:49%;" />
+                        <span> </span>
+                        <input type="text" class="form-control" id="lastName" placeholder="Last Name" style="width:49%;" />
+                    </div>
+                </div>
+                <div class="col-sm-2" style="text-align:left;padding:0 0 0 5px">
+                    <input style="font-size:1.25em;line-height:2em;padding:0px 10px;" id="btnSearchDir" class="pe-button pe-blue" type="button" value="Search" onclick="searchFacDir('@Model.dataSourceID')">
+                </div>
+                <span id="searchErr" class="row" style="color:#ff6868;float:left;margin-left:0"></span>
+            </div>
+            <div id="searchModal" class="modal fade" style="z-index:9999;" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+                            <span class="modal-title">Search Results</span>
+                        </div>
+                        <div class="modal-body" style="text-align:center;">
+                            <h4>Chose a search result below:</h4>
+                            <table class="table table-hover searchResults">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center;">HSC ID</th>
+                                        <th style="text-align: center;">Full Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        if (!String.IsNullOrEmpty(Model.errMessage) || !String.IsNullOrEmpty(Model.facDirErr))
+        {
+            <div class="featured-employee" style="float:left;width:100%;margin-bottom:8px">
+                <div class="error">
+                    @if (String.IsNullOrEmpty(Model.profileList))
+                    {
+                        <p>@Html.Raw(Model.errMessage)</p>
+                    }
+                    else
+                    {
+                        <p><b>Error:</b>
+                            @if (!String.IsNullOrEmpty(Model.errMessage) && !String.IsNullOrEmpty(Model.facDirErr))
+                            {
+                                @Html.Raw(Model.errMessage)<br />
+                                @Html.Raw(Model.facDirErr)
+                            }
+                            else
+                            {
+                                if (!String.IsNullOrEmpty(Model.errMessage))
+                                { @Html.Raw(Model.errMessage) }
+                                else if (!String.IsNullOrEmpty(Model.facDirErr))
+                                { @Html.Raw(Model.facDirErr) }
+                            }
+                        </p>
+                    }
+                </div>
+            </div>
+        }
+        <div id="list">
+            <p><b>ID List:</b> @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.dsItem, "PersonID List"))</p>
+        </div>
+        <p><b>Profile Page:</b> @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.dsItem, "Profile Page"))</p>
+    }
+    else
+    {
+        if (Model.profileArray.Length > 0)
+        {
+            Model.GenerateFeaturedEmployee(Model.profileArray);
+            string profileURL = string.Empty;
+
+            string personID = Model.personID.ToString();
+            string fullName = Model.person.firstName + " " + Model.person.lastName;
+            string heading = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.dsItem, "Heading");
+            if (!String.IsNullOrEmpty(Model.profilePage))
+            {
+                profileURL = Model.profilePage + "/" + personID + "/" + Model.person.lastName.Replace(' ', '-');
+            }
+            <div class="featured-employee">
+                @if (!String.IsNullOrEmpty(heading))
+                {
+                    <h3 class="heading">@(heading)</h3>
+                }
+                <div class="feature">
+                    @if (!String.IsNullOrEmpty(Model.person.title))
+                    {
+                        <img class="profile-photo" src="/resources/root-elements/FacultyDirectoryGetFile.cshtml?method=picture&person_id=@(personID)" alt="@Html.Raw(fullName + ", " + Model.person.title)" />
+                        <h4><a href="@(profileURL)">@(fullName), <span class="credentials">@Html.Raw(Model.person.title)</span></a></h4>
+                    }
+                    else
+                    {
+                        <img class="profile-photo" src="/resources/root-elements/FacultyDirectoryGetFile.cshtml?method=picture&person_id=@(personID)" alt="@(fullName)" />
+                        <h4><a href="@(profileURL)">@(fullName)</a></h4>
+                    }
+                    @if (Model.person.appointments.Length > 0)
+                    {
+                        string appt = HealthIS.Apps.MVC.Helpers.FormatString("Appt", Model.person.appointments[0]);
+                        <span class="position">@Html.Raw(appt)</span>
+                    }
+                </div>
+                <div class="interests">
+                    @if (Model.person.researchInterests.Length > 0)
+                    {
+                        <ul>
+                            @foreach (string interest in Model.person.researchInterests)
+                            {
+                                <li>@Html.Raw(interest)</li>
+                            }
+                        </ul>
+                        <a href="@(profileURL)">Read More...</a>
+                    }
+                </div>
+            </div>
+        }
+    }
+}

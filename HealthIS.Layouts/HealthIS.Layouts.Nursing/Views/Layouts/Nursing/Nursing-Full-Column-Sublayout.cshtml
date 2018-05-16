@@ -1,0 +1,16 @@
+﻿@using Sitecore.Mvc
+@using HealthIS.Apps.MVC
+@{
+    if (Sitecore.Context.PageMode.IsExperienceEditor)
+    {
+        <script>
+            jQuery(document).ready(function () {
+                autoSave();
+            });
+        </script>
+        <style>.slick-shadow { margin-top: 40px; }</style>
+    }
+}
+<div>
+    @Html.Sitecore().Placeholder("Nursing Page Type")
+</div>

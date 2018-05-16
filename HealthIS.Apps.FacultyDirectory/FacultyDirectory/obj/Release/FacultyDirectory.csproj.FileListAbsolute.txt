@@ -1,0 +1,7 @@
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\sitecore\facultydirectory\FacultyDirectory\FacultyDirectory\bin\Release\HealthIS.Apps.Util.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\sitecore\facultydirectory\FacultyDirectory\FacultyDirectory\bin\Release\Oracle.DataAccess.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\sitecore\facultydirectory\FacultyDirectory\FacultyDirectory\bin\Release\HealthIS.Apps.FacultyDirectory.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\sitecore\facultydirectory\FacultyDirectory\FacultyDirectory\bin\Release\HealthIS.Apps.FacultyDirectory.pdb
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\sitecore\facultydirectory\FacultyDirectory\FacultyDirectory\obj\Release\HealthIS.Apps.FacultyDirectory.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\sitecore\facultydirectory\FacultyDirectory\FacultyDirectory\obj\Release\HealthIS.Apps.FacultyDirectory.pdb
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\sitecore\facultydirectory\FacultyDirectory\FacultyDirectory\obj\Release\FacultyDirectory.csprojResolveAssemblyReference.cache

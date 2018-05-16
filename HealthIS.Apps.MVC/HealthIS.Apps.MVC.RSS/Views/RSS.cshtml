@@ -1,0 +1,478 @@
+﻿@using Sitecore.Mvc
+
+@{    
+    string UID = "_" + Model.Rendering.UniqueId.ToString().Replace('-', '_'); //unique id to use
+    string cssClass = "";    
+    string imgBg = "";
+}
+
+@if (Sitecore.Context.PageMode.IsPageEditor)
+{
+    //START EDIT VIEW
+    try
+    {
+        string feedURL = "";
+        string strFeedHeadingFontSize = "";
+        string strFeedHeading = "";
+        string strNumberOfItems = "";
+        string strCharLimit = "";
+        string strTheme = "";
+        string strShowOnMobile = "";
+        string strShowMoreLink = "";
+        string strIsPanopto = "";
+        string strDefaultThumbnail = "";
+        string strImageWidth = "";
+
+
+        //id's for hidden elements        
+        string hidFeedHeadingFontSize = "hidFeedHeadingFontSize" + UID;
+        string hidIsPanopto = "hidIsPanopto" + UID;
+        string hidNumOfImages = "hidNumOfImages" + UID;
+        string hidCharLimit = "hidCharLimit" + UID;
+        string hidTheme = "hidTheme" + UID;
+        string hidShowOnMobile = "hidShowOnMobile" + UID;
+        string hidShowMoreLink = "hidShowMoreLink" + UID;
+        
+        
+        //id's for visible elements        
+        string selFeedHeadingFontSize = "selFeedHeadingFontSize" + UID;
+        string selNumOfImages = "selNumOfImages" + UID;
+        string selCharLimit = "selCharLimit" + UID;
+        string selTheme = "selTheme" + UID;
+        string cbIsPanopto = "cbIsPanopto" + UID;
+        string cbShowOnMobile = "cbShowOnMobile" + UID;
+        string cbShowMoreLink = "cbShowMoreLink" + UID;
+                        
+
+        //default values for checkboxes        
+        string ckdShowOnMobile = Model.GetCheckedAttr(Model.displayOnMobile);
+        string ckdShowMoreLink = Model.GetCheckedAttr(Model.displayShowMoreLink);
+        string ckdIsPanopto = Model.GetCheckedAttr(Model.isPanoptoFeed);
+
+        
+        //set field renderers
+        if (Model.Item != null)
+        {   
+            feedURL = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Feed URL");
+            strFeedHeadingFontSize = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Feed Heading Font Size");
+            strFeedHeading = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Feed Heading");            
+            strNumberOfItems = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Number of Items");
+            strCharLimit = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Feed Item Description Character Limit");
+            strTheme = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Theme");
+            strShowOnMobile = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Show On Mobile");
+            strShowMoreLink = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Display Show More Link");
+            strIsPanopto = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Is Panopto Feed");
+            strDefaultThumbnail = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Default Thumbnail", "style=width:150px");            
+            strImageWidth = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Image Width");            
+        }
+
+        <div id="divRSS@(UID)">
+            @if (Model.dsSet)
+            {
+                <h2>RSS Feed Config
+                @if (Model.DisplayCSSButton())
+                {
+                    <span style="float: right; padding-right: 15px;"><input type="button" class='pe-button pe-yellow' onclick="Sitecore.PageModes.PageEditor.postRequest('webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=CSS Class, id=@Model.Item.ID)')" value="Add CSS Class" /></span>
+                }
+                </h2>
+
+                <style>
+                    .settings-label {
+                        font-weight: bold;
+                    }
+                    .odd {
+                        background-color: rgb(247, 247, 247);
+                    }
+                    .editTable tr td {
+                        border: 1px solid #ddd;
+                        padding: 10px;
+                    }
+                    .editTable tr:last-child td:first-child {
+                        -moz-border-radius-bottomleft: 10px;
+                        -webkit-border-bottom-left-radius: 10px;
+                        border-bottom-left-radius: 10px;
+                    }
+                    .editTable tr:last-child td:last-child {
+                        -moz-border-radius-bottomright: 10px;
+                        -webkit-border-bottom-right-radius: 10px;
+                        border-bottom-right-radius: 10px;
+                    }
+                </style>
+
+                <div style="display:none;">
+                    <div id="@hidFeedHeadingFontSize">@Html.Raw(strFeedHeadingFontSize)</div>
+                    <div id="@hidIsPanopto">@Html.Raw(strIsPanopto)</div>
+                    <div id="@hidNumOfImages">@Html.Raw(strNumberOfItems)</div>
+                    <div id="@hidCharLimit">@Html.Raw(strCharLimit)</div>
+                    <div id="@hidTheme">@Html.Raw(strTheme)</div>
+                    <div id="@hidShowOnMobile">@Html.Raw(strShowOnMobile)</div>
+                    <div id="@hidShowMoreLink">@Html.Raw(strShowMoreLink)</div>                    
+                </div>
+                
+                <table id="tblFeedConfig@(UID)" class="editTable">
+                    <tr>
+                        <td class="settings-label">Feed Heading Font Size:</td>
+                        <td>
+                            <select class="form-control" id="@(selFeedHeadingFontSize)" onchange="selOnChange('@(hidFeedHeadingFontSize)','@(selFeedHeadingFontSize)')">
+                                @for (int i = 2; i <= 6; i++)
+                                {
+                                    string selected = "";
+
+                                    if (String.IsNullOrEmpty(Model.feedHeadingFontSize) && i == 3)
+                                    {
+                                        selected = " selected='selected'";
+                                    }
+                                    else if (Model.feedHeadingFontSize.ToLower() == "h" + i)
+                                    {
+                                        selected = " selected='selected'";
+                                    }
+                                    <option value="h@(i)" style="font-size: @((2 / Math.Sqrt(i)) * 18)px;" @(selected)>H@(i) - Feed Heading Font Size</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class ="odd">
+                        <td class="settings-label">Feed Heading:</td>
+                        <td>
+                            @Html.Raw(strFeedHeading)
+                        </td>
+                    </tr>
+                    <tr >
+                        <td class="settings-label">Feed URL:</td>
+                        <td>@Html.Raw(feedURL)</td>
+                    </tr>
+                    <tr class ="odd">
+                        <td class="settings-label">Is Panopto Feed:</td>
+                        <td>
+                            <input type="checkbox" id="@cbIsPanopto" @ckdIsPanopto onmousedown="cbOnChange('@(hidIsPanopto)', '@(cbIsPanopto)')" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="settings-label">Image Width:</td>
+                        <td>
+                        @if (Model.isPanoptoFeed)
+                        {
+                            @Html.Raw("<em>Disabled for Panopto feeds</em>")
+                        }
+                        else if (HealthIS.Apps.MVC.Helpers.getStrField(Model.Item, "Theme").Equals("rss-horizontal") || HealthIS.Apps.MVC.Helpers.getStrField(Model.Item, "Theme").Equals("rss-text-only"))
+                        {
+                            @Html.Raw("<em>Disabled for selected theme</em>")
+                        }
+                        else { @Html.Raw(strImageWidth + " px") }
+                        </td>
+                    </tr>
+                    <tr class="odd">
+                        <td class="settings-label">Default Thumbnail:</td>
+                        <td style="height: 150px">@Html.Raw(strDefaultThumbnail)</td>
+                    </tr>
+                    <tr>
+                        <td class="settings-label">Number of Items to Show:</td>
+                        <td>
+                            <select class="form-control" id="@(selNumOfImages)" onchange="selOnChange('@(hidNumOfImages)','@(selNumOfImages)')">
+                                @for (int i = 1; i <= Model.maxNumberOfItems; i++)
+                                {
+                                    <option value="@(i)">@(i)</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="odd">
+                        <td class="settings-label">Feed Item Description Character Limit:</td>
+                        <td>
+                        @if (!Model.isPanoptoFeed)
+                        {
+                            <select class="form-control" id="@(selCharLimit)" onchange="selOnChange('@(hidCharLimit)','@(selCharLimit)')">
+                                @for (int i = 100; i <= Model.maxCharLimit; i = i + 100)
+                                {
+                                    <option value="@(i)">@(i)</option>
+                                }
+                            </select>
+                        }
+                        else { @Html.Raw("<em>Disabled for Panopto feeds</em>") }
+                        </td>
+                    </tr>                                        
+                    <tr>
+                        <td class="settings-label">
+                            <span class="settings-label">Theme:</span>
+                        </td>
+                        <td>
+                            @if (!Model.isPanoptoFeed)
+                            {
+                            <select class="form-control" id="@(selTheme)" onchange="selOnChange('@(hidTheme)','@(selTheme)')">
+                                <option value="rss-green-grey">Green and Grey</option>
+                                <option value="rss-gold-green">Gold and Green</option>
+                                <option value="rss-green-lemongrass">Green and Lemongrass</option>
+                                <option value="rss-tealgreen-grey">Teal-Green and Grey</option>
+                                <option value="rss-text-only">Text Only (Hide Image)</option>
+                                <option value="rss-horizontal">Horizontal</option>
+                                <option value="rssnobg">No Background Color</option>
+                            </select>
+                            }
+                            else
+                            { @Html.Raw("Text-Only") }                            
+                        </td>
+                    </tr>
+                    <tr class="odd">
+                        <td class="settings-label">
+                            <span class="settings-label">Display on Mobile:</span>
+                        </td>
+                        <td>
+                            <input type="checkbox" id="@cbShowOnMobile" @ckdShowOnMobile onmousedown="cbOnChange('@(hidShowOnMobile)', '@(cbShowOnMobile)')" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="settings-label">
+                            <span class="settings-label">Display "Show More" Link:</span>
+                        </td>
+                        <td>
+                            <input type="checkbox" id="@cbShowMoreLink" @ckdShowMoreLink onmousedown="cbOnChange('@(hidShowMoreLink)', '@(cbShowMoreLink)')" />
+                        </td>
+                    </tr>
+                </table>
+                <script>
+                    jQuery('#@(selNumOfImages)').val(@Model.numberOfItems);
+                    jQuery('#@(selCharLimit)').val(@Model.descriptionCharacterLimit);
+                    jQuery('#@(selTheme)').val("@Model.feedTheme");
+                </script>
+            }
+            else
+            {
+                <h2 style="text-align:center;">RSS Feed Config</h2>
+                <script>
+                    function callSetDataSrc@(UID)() {
+                        setDataSrc(
+                            '@Html.Raw(Model.PageItem.ID.ToString())',                                              // itemID
+                            'User Defined2/Component Template/RSS Root',                                            // templatePath
+                            '_RSS',                                                                                 // suffix
+                            '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                           // renderingID
+                            '@Html.Raw(Model.Item.Database.Name)',                                                  // dbName
+                            '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                                     // deviceID
+                            '@Html.Raw(Model.Rendering.UniqueId.ToString())',                                       // referenceID
+                            '',                                                                                     // btnID
+                            true                                                                                    // reload true
+                        );
+                    }
+                </script>
+                <div style="text-align:center">
+                    <p>If you want to create a new data source, click 'Create New RSS'.</p>
+                    <input id="btnDSSet@(UID)" class="pe-button pe-green" type="button" value="Create New RSS" onclick="callSetDataSrc@(UID)()" />
+                    <script>if(typeof(autoSave) != "undefined"){ autoSave(); }</script>
+                </div>
+            }
+        </div>
+    }
+    catch (Exception ex)
+    {
+        <h2>Error: </h2>
+        <p>@ex.Message</p>
+    }
+    //END EDIT VIEW
+}
+
+else
+{   //not in edit mode - show rss feed
+    if (Model.dsSet)
+    {
+        if (!String.IsNullOrEmpty(Model.Item.Fields["CSS Class"].Value)) { cssClass = " " + Model.Item.Fields["CSS Class"].Value; }
+        string hidClass = Model.displayOnMobile ? "" : " hide-feed";
+        if (!Model.isPanoptoFeed)
+        {
+            if (Model.feedTheme == "rss-horizontal")
+            {
+                <div class="feed rss-4-across@(cssClass)@(hidClass)">
+                    @if (!String.IsNullOrEmpty(Model.feedHeading))
+                    {
+                        @Html.Raw("<" + Model.feedHeadingFontSize + " id='rssFeedHeading" + @UID + "' class='feed-headline'>" + Model.feedHeading + "</" + Model.feedHeadingFontSize + ">");
+                    }
+                    <div class="row">
+                        @if (Model.feedSet)
+                        {
+                            string rowEnd = "</div><div class=\"row\">";
+                            for (int i = 0; i < 4 && i < Model.feedItems.Count; i++)
+                            {
+                                if (i != 0 && i % 4 == 0)
+                                {@Html.Raw(rowEnd);
+                                }
+                                <div class="col-sm-3">
+                                    <div class="outlined">
+                                        @if (Model.feedItems.Count > 0 && @Model.feedItems[i].Images.Count > 0)
+                                        {
+                                            imgBg = "style=\"background-image: url('" + @Model.feedItems[i].Images[0] + "');\"";
+                                        }
+                                        else
+                                        {
+                                            imgBg = "style=\"background-image: url('" + @Model.defaultThumbnailSrc + "');\"";
+                                        }
+                                        <a href="@(Model.feedItems[i].Link)" target="_blank">
+                                            <div class="feed-item-image" @Html.Raw(imgBg)></div>
+                                            <div class="feed-item-title">
+                                                @Model.feedItems[i].Title
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                string imageStyleCSS = "";
+                string imageWidth = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Image Width");
+                if (!String.IsNullOrEmpty(imageWidth))
+                {
+                    imageStyleCSS = "style=width:" + imageWidth + "px";
+                }
+                <div id="rssFeed@(UID)" class="feed @(Model.feedTheme)@(cssClass)@(hidClass)">
+                    @if (!String.IsNullOrEmpty(Model.feedHeading))
+                    {
+                        @Html.Raw("<" + Model.feedHeadingFontSize + " id='rssFeedHeading" + @UID + "' class='feed-headline'>" + Model.feedHeading + "</" + Model.feedHeadingFontSize + ">");
+                    }
+                    @if (Model.feedSet)
+                    {
+                        for (int i = 0; i < Model.numberOfItems && i < Model.feedItems.Count; i++)
+                        {
+                            <div class="feed-wrapper">
+                                <div class="feed-item-image">
+                                @if (Model.feedItems[i].Images.Count > 0)
+                                {
+                                    for (int j = 0; j < Model.feedItems[i].Images.Count && j < Model.numberOfImages; j++)
+                                    {
+                                        <a href="@(Model.feedItems[i].Link)" target="_blank">
+                                            @if (String.IsNullOrEmpty(Model.feedItems[i].Images[j]))
+                                            {
+                                                <img src="@Model.defaultThumbnailSrc" @(imageStyleCSS) />
+                                            }
+                                            else
+                                            {
+                                                <img src="@Model.feedItems[i].Images[j]" @(imageStyleCSS) />
+                                            }
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <img src="@Model.defaultThumbnailSrc" @(imageStyleCSS) />
+                                }
+                                </div>
+                                <div class="feed-item-title">
+                                    <a href="@(Model.feedItems[i].Link)" target="_blank">@Model.feedItems[i].Title</a>
+                                </div>
+                                @if (Model.feedItems[i].strPubDate.Length > 0)
+                                {
+                                    <div class="feed-item-publish-date">
+                                        @if (Model.feedItems[i].PublishDate != DateTime.MinValue)
+                                        {
+                                            @Html.Raw(Model.feedItems[i].PublishDate.ToShortDateString())
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw(Model.feedItems[i].strPubDate)
+                                        }
+                                    </div>
+                                }
+                                <div class="feed-item-description">
+                                    @if (Model.feedItems[i].Description.Length > Model.descriptionCharacterLimit)
+                                    {
+                                        string desc = Model.feedItems[i].Description.Replace("[&#8230;]", "");
+                                        @Html.Raw((desc.Substring(0, Math.Min(desc.Length, Model.descriptionCharacterLimit))))
+                                        @:&#8230;
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(Model.feedItems[i].Description)
+                                    }
+                                    [<a href="@(Model.feedItems[i].Link)" target="_blank">read more</a>]
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                            @:No feed items found.
+                    }
+                </div>
+            }
+        }
+        else if (Model.isPanoptoFeed) // panopto feed
+        {
+            <div id="rssFeed@(UID)" class="feed panopto-feed rss-text-only@(cssClass)@(hidClass)">
+            @if (!String.IsNullOrEmpty(Model.feedHeading))
+            {
+                @Html.Raw("<" + Model.feedHeadingFontSize + " id='rssFeedHeading" + @UID + "' class='feed-headline'>" + Model.feedHeading + "</" + Model.feedHeadingFontSize + ">");
+            }
+            @if (Model.feedSet)
+            {
+                for (int i = 0; i < Model.numberOfItems && i < Model.feedItems.Count; i++)
+                {
+                    <article class="feed-wrapper panopto-feed__item">
+                        <h4 class="feed-item-title panopto-feed__item--title">
+                            <a href="@(Model.feedItems[i].Link)" target="_blank">@Model.feedItems[i].Title</a>
+                        </h4>
+                        @if (Model.feedItems[i].strPubDate.Length > 0)
+                        {
+                            <span class="feed-item-publish-date panopto-feed__item--date">
+                                @if (Model.feedItems[i].PublishDate != DateTime.MinValue)
+                                {
+                                    @Html.Raw(Model.feedItems[i].PublishDate.ToString("MMMM d, yyyy"))
+                                }
+                                else
+                                {
+                                    @Html.Raw(Model.feedItems[i].strPubDate)
+                                }
+                            </span>
+                        }
+                    </article>
+                }
+            }
+            else
+            {
+                @:No feed items found.
+            }
+            </div>
+        }
+        if (!String.IsNullOrEmpty(Model.feedURL) && Model.displayShowMoreLink)
+        {
+            if (Model.isPanoptoFeed)
+            {
+                <a class="view-more-videos" href="@Model.TransformPanoptoFeedURL()" target=_blank>View More Videos...</a>
+            }
+            else
+            {
+                <a class="read-more-news" href="@Model.feedURL.Replace(@"/feed", "")" target=_blank>Read More News Stories...</a>
+            }
+        }
+
+        if (!Model.displayOnMobile)
+        {
+            <script>
+                whenAvailable("jQuery",function(){
+                    toggleRss@(UID)();
+                    jQuery(window).resize(toggleRss@(UID));
+                });
+
+                function toggleRss@(UID)(){
+                    var wrapper = jQuery('#rssFeed@(UID)').parent();
+                    if(wrapper.attr('class').indexOf('content-area') != -1){
+                        if(window.innerWidth <= 767){wrapper.hide(); }
+                        else{ wrapper.show(); }
+                    }
+                }
+            </script>
+        }
+    }
+    else
+    {
+        <h2>No RSS datasource found</h2>
+    }
+}
+
+@if (Model.errorLog.Count > 0)
+{
+    <h2 style="color:red;">Error Log</h2>
+    foreach (string err in Model.errorLog)
+    {
+        <p>@err</p>
+    }
+}

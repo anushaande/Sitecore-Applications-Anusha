@@ -1,0 +1,55 @@
+﻿@using Sitecore.Mvc
+
+@{
+    List<string> kk = new List<string>();
+    string jj = "";
+    int count = 0;
+    List<Sitecore.Data.Items.Item> child = new List<Sitecore.Data.Items.Item>();
+    if (!String.IsNullOrEmpty(Model.Rendering.DataSource))
+    {
+        Sitecore.Data.Items.Item data = Sitecore.Context.Database.GetItem(Model.Rendering.DataSource);
+        if (data.HasChildren)
+        {
+            foreach (Sitecore.Data.Items.Item i in data.Children)
+            {
+                child.Add(i);
+                count++;
+            }
+        }
+    }
+}
+<h3>
+    <span class="icon-user-md"></span>  @Html.Raw(Model.Subject)
+</h3>
+@foreach (Sitecore.Data.Items.Item item in @child)
+{
+    <div class="provider-directory-person">
+        <div class="row row-padding-top">
+            <div class="col-xs-3">
+                <div class="provider-img-container">
+                    <a href="#">
+                        @Html.Raw(Model.Datasource(item, "Profile Image"))
+                    </a>
+                </div>
+            </div>
+            <div class="col-xs-9 no-gutter-left">
+                <h4>@Html.Raw(Model.Datasource(item, "Name"))</h4>
+                <p>
+                    @Html.Raw(Model.Datasource(item, "Content"))
+                    <br />
+                    <span itemprop="profile">                          
+                        <span class="icon-user-md"></span> <a href="@Model.Datasource(item, "Profile Link")">Full Profile @*@Html.Raw(Model.Datasource(item, "Profile Link"))*@</a>
+                    </span>
+                </p>
+            </div>
+        </div>
+        @if (count > 1) { <hr /> }
+    </div>
+}
+
+
+
+
+
+
+

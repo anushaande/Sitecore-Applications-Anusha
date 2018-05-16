@@ -1,0 +1,349 @@
+﻿@if (Sitecore.Context.PageMode.IsExperienceEditorEditing)
+{
+	<h4>Faculty Directory Doctors Profile</h4>
+    <p>Faculty Directory Profile rendering has been added.</p>
+    <script>if(typeof(autoSave) != "undefined"){ autoSave(); }</script>
+}
+else
+{
+    string pStreet = null;
+    string pStreet2 = null;
+    string pCity = null;
+    string pState = null;
+    string pZip = null;
+    string pLabel = null;
+    string pUrl = null;
+    
+    <div class="clinical-profile">
+
+        @if (!Model.validId)
+        {
+            <h1>Invalid Person ID.</h1>
+        }
+        else if (Model.person == null || String.IsNullOrEmpty(Model.personID.ToString()) || !String.IsNullOrEmpty(Model.person.error))
+        {
+            //Model.ProfileNotFound();
+            <h1>Person could not be found.</h1>
+        }
+        else
+        {
+            <div id="clinical_wrapper">
+                <div id="clinical_bios" class="clearfix">
+                    @{string title= "";
+                      string credentials = "";
+                      string fullName = Model.person.firstName + " " + Model.person.lastName;
+                        if (!String.IsNullOrEmpty(Model.person.title))
+                        {
+                            title = ", <span class=\"title\">" + Model.person.title + "</span>";
+                            credentials = ", " + Model.person.title;
+                        }
+                    }                    
+                    <h2>@Html.Raw(fullName + title)</h2>
+                    <div id="bio_top">
+                        <div id="bio_top_left">
+                            <img src="/resources/root-elements/FacultyDirectoryGetFile.cshtml?method=picture&person_id=@Html.Raw(Model.personID)" alt="@Html.Raw(fullName + credentials)" />
+                            <div class="meta-info">
+                                <div id="new-patients">                                
+                                    @{
+                                        string accepting = "";
+                                        if (Model.person.isAcceptingNewPatients) { accepting = "Yes"; } else { accepting = "No"; }                                    
+                                    }<span>Accepting New Patients</span>@accepting
+                                </div>
+                                <a href="http://hsccf.hsc.usf.edu/clinicaldirectory/index.cfm" class="login" target="_blank">Login to update<br>your profile</a>
+                            </div>
+                        </div>
+                        <div id="bio_top_right">
+                            <!-- Contact Info -->
+                            @if (Model.person.myAddresses.Length > 0) {                            
+                                    pStreet = Model.person.myAddresses[0].street;
+                                    pStreet2 = Model.person.myAddresses[0].street2;
+                                    pCity = Model.person.myAddresses[0].city;
+                                    pState = Model.person.myAddresses[0].state;
+                                    pZip = Model.person.myAddresses[0].zip;
+                                    pLabel = Model.person.myAddresses[0].label;
+                                    pUrl = Model.person.myAddresses[0].url;
+                                    <p>
+                                        <span class="profile-label">Primary Practice Address:</span><br>
+                                        @Html.Raw(pLabel) <br>
+                                        @Html.Raw(pStreet) <br>
+                                        @if (!String.IsNullOrEmpty(pStreet2)) { @Html.Raw(pStreet2 + "<br>")}
+                                        @Html.Raw(pCity + ", " + pState + " "+ pZip + "<br>")
+                                        <a href="#locations">View More Locations</a>
+                                    </p>
+                            }
+                            @if (!String.IsNullOrEmpty(Model.person.health_care_phil)) {
+                                <div class="philosophy">
+                                    <p><strong>"</strong>@Html.Raw(Model.person.health_care_phil)<strong>"</strong></p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div id="pt">
+                        <!-- Call Pateint Toolbox -->
+                        @Model.GetPatientToolBox()
+                    </div>
+                </div>
+            </div>
+            <div id="biotabs" class="tabNavigatorify">
+                <ul class="tabNavigatorify-tabs">
+                    @if (Model.person.myInterests.keywords.Length > 0 || Model.person.myInterests.conditions.Length > 0 || Model.person.myInterests.procedures.Length > 0 || !String.IsNullOrEmpty(Model.person.personalStatement) || Model.person.specialties.Length > 0)
+                    {
+                    <li><a href="#specialties">Specialties &amp; Clinical Interest</a></li>
+                    }
+                    @if (Model.person.myAwards.Length > 0 || Model.person.myMemberships.Length > 0)
+                    {
+                    <li><a href="#awards">Awards &amp; Memberships</a></li>
+                    }
+                    @if (!String.IsNullOrEmpty(Model.person.degrees)) {
+                    <li><a href="#education">Education &amp; Training</a></li>
+                    }
+                    @if (Model.person.myAddresses.Length > 0)
+                    {
+                    <li><a href="#locations">Appointment &amp; Locations</a></li>
+                    }
+                    @if (Model.person.myInsurances.Length > 0)
+                    {
+                    <li><a href="#insurance">Insurance</a></li>
+                    }
+                </ul>
+                <div class="tabNavigatorify-panes">
+                @if (Model.person.myInterests.keywords.Length > 0 || Model.person.myInterests.conditions.Length > 0 || Model.person.myInterests.procedures.Length > 0 || !String.IsNullOrEmpty(Model.person.personalStatement) || Model.person.specialties.Length > 0)
+                {
+                <div class="pane" id="specialties">
+                    <!-- Biosketch Statement -->
+                    @if (!String.IsNullOrEmpty(Model.person.personalStatement)) {
+                    <div id="biosketch">
+                        <h4>Biosketch Statement</h4>
+                        <p>@Html.Raw(Model.person.personalStatement)</p>
+                    </div>
+                    }
+                    <!-- Specialties -->
+                    @if (Model.person.specialties.Length > 0)
+                    {                    
+                       <div class="row">
+                            <h4>Specialties</h4>
+                            <ul>
+                                @foreach (string specialty in Model.person.specialties) {
+                                    <li>@Html.Raw(specialty)</li>
+                                }
+                            </ul>
+                        </div>
+                    }      
+                    <!-- Clinical Interests -->
+                    @if (Model.person.myInterests.keywords.Length > 0 || Model.person.myInterests.conditions.Length > 0) {
+                        <div class="row">
+                            <h4>Clinical Interests</h4>
+                            <ul>
+                                @foreach (HealthIS.Apps.FacultyDirectory.interest key in Model.person.myInterests.keywords) {
+                                    if (!String.IsNullOrEmpty(key.url)) {
+                                        if (key.url.IndexOf("http://") != 0) { key.url = "http://" + key.url; }
+                                        <li><a target="_blank" href="@Html.Raw(key.url)">@Html.Raw(key.name)</a></li>
+                                    }
+                                    else {
+                                        <li>@Html.Raw(key.name)</li>
+                                    }
+                                }
+                                @foreach (HealthIS.Apps.FacultyDirectory.interest cond in Model.person.myInterests.conditions) {
+                                    if (!String.IsNullOrEmpty(cond.url)) {
+                                        if (cond.url.IndexOf("http://") != 0) { cond.url = "http://" + cond.url; }
+                                        <li><a target="_blank" href="@Html.Raw(cond.url)">@Html.Raw(cond.name)</a></li>
+                                    }
+                                    else {
+                                        <li>@Html.Raw(cond.name)</li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    }
+                    <!-- Procedures -->
+                    @if (Model.person.myInterests.procedures.Length > 0) {
+                        <div class="row">
+                            <h4>Procedures</h4>
+                            <ul>
+                                @foreach (HealthIS.Apps.FacultyDirectory.interest proc in Model.person.myInterests.procedures) {
+                                    if (!String.IsNullOrEmpty(proc.url)) {
+                                        if (proc.url.IndexOf("http://") != 0) { proc.url = "http://" + proc.url; }
+                                        <li><a target="_blank" href="@Html.Raw(proc.url)">@Html.Raw(proc.name)</a></li>
+                                    }
+                                    else {
+                                        <li>@Html.Raw(proc.name)</li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    }
+                </div>
+            }
+            @if (Model.person.myAwards.Length > 0 || Model.person.myMemberships.Length > 0)
+            {
+            <div class="pane" id="awards">
+                <!-- Awards -->
+                @if (Model.person.myAwards.Length > 0)
+                {
+                <h4>Awards</h4>
+                <ul>
+                    @foreach (HealthIS.Apps.FacultyDirectory.award aw in Model.person.myAwards) {
+                    <li>@Html.Raw(aw.year) <strong>@Html.Raw(aw.title + " ")</strong><br>@Html.Raw(aw.organization + " ") </li>
+                    }
+                </ul>
+                }
+               <!-- Memberships -->
+               @if (Model.person.myMemberships.Length > 0)
+               {
+                <h4>Memberships</h4>
+                <ul>
+                    @foreach (HealthIS.Apps.FacultyDirectory.membership mem in Model.person.myMemberships) {
+                    <li><strong>@Html.Raw(mem.title + " ")</strong>-@Html.Raw(" " + mem.name + " from " )  @Html.Raw(mem.startDate + " to " + mem.endDate) </li>
+                    }
+                </ul>
+                }
+            </div>
+            }
+            @if (Model.person.degrees != "") {
+            <div class="pane" id="education">
+                <!-- Education -->
+                <h4>Education</h4>
+                    @Html.Raw(Model.person.degrees)
+            </div>
+            }
+            @if (Model.person.myAddresses.Length > 0)
+            {
+            <div class="pane" id="locations">
+                <!-- Locations -->
+                <h4>Locations</h4>
+                 <div class="column">
+                        <br><span class="profile-label">Primary Practice Address:</span><br>
+                        @if (!String.IsNullOrEmpty(pUrl)) {
+                            <a target="_blank" href="@Html.Raw(pLabel)">
+                                @Html.Raw(pLabel) <br>
+                                @Html.Raw(pStreet) <br>
+                                @if (!String.IsNullOrEmpty(pStreet2)) {
+                                    @Html.Raw(pStreet2) <br>
+                                                        }
+                                @Html.Raw(pCity + ", " + pState + " " + pZip)
+                            </a>
+                        } else {
+                            <a target="_blank" href="http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=@Html.Raw(pStreet),@Html.Raw(pCity),@Html.Raw(pState),&sll=37.0625,-95.677068&sspn=47.838189,68.291016&ie=UTF8&t=h&z=17">
+                            @Html.Raw(pLabel) <br>
+                            @Html.Raw(pStreet) <br>
+                            @if (!String.IsNullOrEmpty(pStreet2)) {
+                                @Html.Raw(pStreet2) <br>
+                            }
+                            @Html.Raw(pCity + ", " + pState + " " + pZip)
+                            </a>
+                        }
+                     @if (Model.person.myAddresses.Length > 1) {
+                        <br><br><span class="profile-label">Other Addresses:</span><br>
+                        for (int i = 1; i < Model.person.myAddresses.Length; i++) {
+                            if (!String.IsNullOrEmpty(Model.person.myAddresses[i].url)) {
+                                <a target="_blank" href="@Html.Raw(Model.person.myAddresses[i].label)">
+                                    @Html.Raw(Model.person.myAddresses[i].label) <br>
+                                    @Html.Raw(Model.person.myAddresses[i].street) <br>
+                                    @if (!String.IsNullOrEmpty(Model.person.myAddresses[i].street2)) {
+                                        @Html.Raw(Model.person.myAddresses[i].street2) <br>
+                                    }
+                                    @Html.Raw(Model.person.myAddresses[i].city), @Html.Raw(Model.person.myAddresses[i].state + " ") @Html.Raw(Model.person.myAddresses[i].zip)
+                                </a><br><br>
+                            } else {
+                                <a target="_blank" href="http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=@Html.Raw(Model.person.myAddresses[i].street),@Html.Raw(Model.person.myAddresses[i].city),@Html.Raw(Model.person.myAddresses[i].state),&sll=37.0625,-95.677068&sspn=47.838189,68.291016&ie=UTF8&t=h&z=17">
+                                @Html.Raw(Model.person.myAddresses[i].label) <br>
+                                @Html.Raw(Model.person.myAddresses[i].street) <br>
+                                @if (!String.IsNullOrEmpty(Model.person.myAddresses[i].street2)) {
+                                    @Html.Raw(Model.person.myAddresses[i].street2) <br>
+                                }
+                                @Html.Raw(Model.person.myAddresses[i].city), @Html.Raw(Model.person.myAddresses[i].state + " ") @Html.Raw(Model.person.myAddresses[i].zip)
+                                </a> <br><br>
+                            }
+                        }
+                    }
+                </div>
+                <div class="column" id="gmap"></div>
+            </div>
+            }
+
+            @if (Model.person.myInsurances.Length > 0) {
+            <div class="pane" id="insurance">
+                <!-- Insurance -->
+                <h4>Insurances Accepted</h4>
+                <ul>
+                    @foreach (HealthIS.Apps.FacultyDirectory.insurance insurance in Model.person.myInsurances) {
+                        <li>@Html.Raw(insurance.name)</li>
+                    }
+                </ul>
+            </div>
+            }
+
+        </div>
+            </div>
+    }
+    </div>
+
+    if (Model.validId) {
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
+    <script>
+        var geocoder;
+        var map;
+        var markersArray = [];
+
+        //plot initial point using geocode instead of coordinates (works just fine)
+        function mapInitialize() {
+           geocoder = new google.maps.Geocoder();
+
+             var myOptions = {
+                 center: new google.maps.LatLng(27.698638,-82.404601),
+                 zoom: 9,
+                 mapTypeId: google.maps.MapTypeId.ROADMAP,
+                 navigationControlOptions: {
+                     style: google.maps.NavigationControlStyle.SMALL
+                 }
+             };
+             map = new google.maps.Map(document.getElementById("gmap"), myOptions);
+           plotMarkers();
+        }
+
+        // Everything below this line is for attempting to plot the markers
+
+        function plotMarkers() {
+            var locations = [];        
+            @{
+                string v_link = pUrl;
+                if (String.IsNullOrEmpty(pUrl)) {
+                    v_link = "http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=@Html.Raw(pStreet),@Html.Raw(pCity),@Html.Raw(pState),&sll=37.0625,-95.677068&sspn=47.838189,68.291016&ie=UTF8&t=h&z=17";
+                }
+            }
+            locations[0] = {
+                street: "@Html.Raw(pStreet + " <br> " + pCity + ", " + pState + " " + pZip)",
+                label: "@Html.Raw(pLabel)",
+                link: "@Html.Raw(v_link)"            
+            }
+                codeAddresses(locations[0].street,locations[0].label,locations[0].link,0);        
+        }
+
+        function codeAddresses(address,title,link,cnt) {
+         geocoder.geocode({
+                 'address': address
+             }, function (results, status) {
+                 if (status == google.maps.GeocoderStatus.OK) {
+                     map.setCenter(results[0].geometry.location);
+                     var marker = new google.maps.Marker({
+                         map: map,
+                         position: results[0].geometry.location
+                     });
+            var contentLink= encodeURI(link);
+            var infoWindow = new google.maps.InfoWindow({content:'<a target="_blank" href="'+ contentLink +'"><b>'+title+'</b><br/>'+address+'</a>'});
+            google.maps.event.addListener(marker,'click',function(){
+                    infoWindow.open(map,marker);
+             });
+             if(cnt === 0){
+                infoWindow.open(map,marker);
+             }
+                 } else {
+                     console.log("Geocode was not successful for the following reason: " + status);
+                 }
+             });
+        }
+
+    </script>
+    <script src="/layouts/scripts/tabs.js" type="text/javascript"></script>
+    }
+}

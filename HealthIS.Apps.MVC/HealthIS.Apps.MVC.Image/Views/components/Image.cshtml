@@ -1,0 +1,153 @@
+﻿@{
+    //unique id to use
+    string UID = "_" + Model.Rendering.UniqueId.ToString().Replace('-', '_');
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor && !Model.dsIsSet)
+{    
+    <h2 style="text-align:center">Image Config</h2>
+    <script>
+        function callSetDataSrc@(UID)() {
+            setDataSrc(
+                '@Html.Raw(Model.PageItem.ID.ToString())',                                              // itemID
+                'User Defined2/Component Template/Image',                                               // templatePath
+                '_IMG',                                                                                 // suffix
+                '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                           // renderingID
+                '@Html.Raw(Model.Item.Database.Name)',                                                  // dbName
+                '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                                     // deviceID
+                '@Html.Raw(Model.Rendering.UniqueId.ToString())',                                       // referenceID
+                'btnDSSet@(UID)',                                                                       // btnID
+                true                                                                                    // reload true
+            );
+        }
+    </script>
+    <div style="text-align:center" class="imgContainer">
+        <p>If you want to create a new Image, click 'Create New Image'.</p>
+        <input id="btnDSSet@(UID)" class="pe-button pe-green" type="button" value="Create New Image" onclick="callSetDataSrc@(UID)()" />
+        <script>if (typeof(autoSave) != "undefined"){ autoSave(); }</script>
+    </div>
+    return;
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor && (Model.dsEditable || (!Model.dsEditable && !Model.isInRestrictedPlaceholder))) 
+{
+    // Editing Mode when datasource is main root
+    <h2>Image Config</h2>
+    <script>
+        function imgFloatChange@(UID)() {
+            selOnChange('hidImgFloat@(UID)', 'selImgFloat@(UID)');
+            jQuery('#img@(UID)').attr('class', jQuery('#selImgFloat@(UID)').val());
+        }
+    </script>
+    if (Model.image != null && Model.image.MediaItem != null)
+    {
+        int imgWidth = 0;
+        Int32.TryParse(Model.image.Width, out imgWidth);
+        imgWidth = 22 + imgWidth;
+        <ul class="list-group" style="width:@(imgWidth)px;max-width:100%;">
+            <li class="list-group-item">
+                <img src="@(Sitecore.Resources.Media.MediaManager.GetMediaUrl(Model.image.MediaItem))" alt="@(Model.image.Alt)"/><br />
+                @{
+                Sitecore.Data.Items.Item ds = Sitecore.Context.Database.GetItem(Model.dataSourceID);
+                string linkURL = "";
+                string imageFloat = "";
+                string caption = "";
+                if (ds != null)
+                {
+                    linkURL = Sitecore.Web.UI.WebControls.FieldRenderer.Render(ds, "Link URL");
+                    caption = Sitecore.Web.UI.WebControls.FieldRenderer.Render(ds, "Caption");
+                    imageFloat = Sitecore.Web.UI.WebControls.FieldRenderer.Render(ds, "Image Float Class");
+                }
+                }
+                <b>Link URL:</b>&nbsp;@Html.Raw(linkURL)<br />
+                <b>Caption:</b>&nbsp;@Html.Raw(caption)<br />
+                <b>Image Float:</b>
+                <select id="selImgFloat@(UID)" onchange="imgFloatChange@(UID)()">
+                    <option value="">None</option>
+                    <option value="float-image-left">Left</option>
+                    <option value="float-image-center">Center</option>
+                    <option value="float-image-right">Right</option>
+                </select>
+                <div id="hidImgFloat@(UID)" style="display:none">@Html.Raw(imageFloat)</div>
+                <script>
+                    @{
+                        string imgFloat = HealthIS.Apps.MVC.Helpers.getStrField(ds, "Image Float Class");
+                        if (!String.IsNullOrEmpty(imgFloat))
+                        {
+                            @:jQuery('#selImgFloat@(UID)').val('@imgFloat');
+                        }
+                    }
+                </script>
+            </li>
+            <li class="list-group-item" style="text-align:right;">
+                <input class="pe-button pe-yellow" type="button" value="Edit" onclick='Sitecore.PageModes.PageEditor.postRequest("webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Image, id=@(Model.dataSourceID))");' />
+            </li>
+        </ul>
+    }
+    else
+    {
+        <ul class="list-group">
+            <li class="list-group-item">                    
+                <input class="pe-button pe-yellow" type="button" value="Set Image" onclick='Sitecore.PageModes.PageEditor.postRequest("webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Image, id=@(Model.dataSourceID))", "webedit:lock(id=@(Model.dataSourceID))", true);' />
+        </ul>
+    }
+}
+else  // preview mode
+{
+    if (Sitecore.Context.PageMode.IsExperienceEditor && !Model.dsEditable && Model.isInRestrictedPlaceholder)
+    {
+        /* currentPagePath is not the main root of image datasource && DS is in a restricted placeholder - datasource NOT editable from this page
+            display short message and show preview UI in Editing Mode */
+        @Html.Raw(HealthIS.Apps.MVC.Helpers.DisplayDatasourceUneditableMessage(Model.datasourcePath));
+    }
+    
+    if (Model.dsIsSet && Model.image != null && Model.image.MediaItem != null)
+    {
+        bool doLink = false;
+        string anchorSt = "";
+        string anchorEnd = "</a>";
+        string imgSrc = "", caption = "", imageFloat = "";
+        if (Model.Item != null)
+        {
+            string linkURL = HealthIS.Apps.MVC.Helpers.getStrField(Model.Item, "Link URL");            
+            string altText = !String.IsNullOrEmpty(Model.image.Alt) ? " alt='" + Model.image.Alt +"'": "";
+            if (!String.IsNullOrEmpty(linkURL))
+            {
+                anchorSt = "<a href='" + linkURL + "'" + altText + ">";
+                doLink = true;
+            }
+            caption = HealthIS.Apps.MVC.Helpers.getStrField(Model.Item, "Caption");
+            imageFloat = HealthIS.Apps.MVC.Helpers.getStrField(Model.Item, "Image Float Class");
+            if (!String.IsNullOrEmpty(imageFloat)) { imageFloat = " " + imageFloat; }
+        }        
+                
+        // get imgSrc url from image
+        int w = 0, h = 0;
+        Int32.TryParse(Model.image.Width, out w);
+        Int32.TryParse(Model.image.Height, out h);
+        imgSrc = Sitecore.Resources.Media.HashingUtils.ProtectAssetUrl(
+            Sitecore.Resources.Media.MediaManager.GetMediaUrl(Model.image.MediaItem,
+                new Sitecore.Resources.Media.MediaUrlOptions()
+                {
+                    Width = w,
+                    Height = h
+                }));
+
+        <div class="image-wrapper">
+            @Html.Raw(anchorSt)
+                <img id="img@(UID)" src="@(imgSrc)" alt="Image" class="img-responsive@(imageFloat)" />
+                @if (!String.IsNullOrEmpty(caption))
+                {
+                <div class="image-caption">
+                    <p>@caption</p>
+                </div>   
+                }
+            @if (doLink)
+            { @Html.Raw(anchorEnd) }
+        </div>
+    }
+    else
+    {
+        <span>No data source for image found.</span>
+    }
+}

@@ -1,0 +1,26 @@
+C:\Users\rbarkley\Downloads\RSSReaderSource\RSSReaderSource\bin\Sitecore.RSSReader.dll
+C:\Users\rbarkley\Downloads\RSSReaderSource\RSSReaderSource\bin\Sitecore.RSSReader.pdb
+C:\Users\rbarkley\Downloads\RSSReaderSource\RSSReaderSource\obj\Debug\Sitecore.RSSReader.dll
+C:\Users\rbarkley\Downloads\RSSReaderSource\RSSReaderSource\obj\Debug\Sitecore.RSSReader.pdb
+C:\Users\rbarkley\Downloads\RSSReaderSource\RSSReaderSource\obj\Debug\RSS Reader.csprojResolveAssemblyReference.cache
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\Sitecore.RSSReader.dll
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\Sitecore.RSSReader.pdb
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\Sitecore.Kernel.dll
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\Lucene.Net.dll
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\ITHit.WebDAV.Server.dll
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\HtmlAgilityPack.dll
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\Mvp.Xml.dll
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\ComponentArt.Web.UI.dll
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\Sitecore.Zip.dll
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\Sitecore.Logging.dll
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\Sitecore.NVelocity.dll
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\Newtonsoft.Json.dll
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\RadEditor.Net2.dll
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\Telerik.Web.UI.dll
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\Sitecore.Kernel.xml
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\Lucene.Net.xml
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\HtmlAgilityPack.xml
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\Newtonsoft.Json.xml
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\bin\Telerik.Web.UI.xml
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\obj\Debug\Sitecore.RSSReader.dll
+C:\Users\rbarkley\Desktop\projects\Sitecore\trunk\Source\RSSReaderSource\obj\Debug\Sitecore.RSSReader.pdb

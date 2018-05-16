@@ -1,0 +1,107 @@
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\obj\Debug\HealthIS.Apps.MVC.RSS.csprojResolveAssemblyReference.cache
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\HealthIS.Apps.MVC.RSS.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\HealthIS.Apps.MVC.RSS.pdb
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\EntityFramework.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\HealthIS.Apps.Util.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\Microsoft.Web.Infrastructure.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\Sitecore.Kernel.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\Sitecore.Mvc.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\System.Web.Helpers.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\System.Web.Mvc.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\System.Web.Providers.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\System.Web.Razor.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.Deployment.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.Razor.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\Oracle.DataAccess.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\Lucene.Net.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\ITHit.WebDAV.Server.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\HtmlAgilityPack.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\Mvp.Xml.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\ComponentArt.Web.UI.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\Sitecore.Zip.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\Sitecore.Logging.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\Sitecore.NVelocity.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\Newtonsoft.Json.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\RadEditor.Net2.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\Telerik.Web.UI.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\Sitecore.Kernel.xml
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\EntityFramework.xml
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\System.Web.Helpers.xml
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\System.Web.Mvc.xml
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\System.Web.Razor.xml
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.xml
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.Deployment.xml
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.Razor.xml
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\Lucene.Net.xml
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\HtmlAgilityPack.xml
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\Newtonsoft.Json.xml
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\bin\Telerik.Web.UI.xml
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\obj\Debug\HealthIS.Apps.MVC.RSS.dll
+c:\users\dkpainter\documents\visual studio 2012\Projects\HealthIS.Apps.MVC.RSS\HealthIS.Apps.MVC.RSS\obj\Debug\HealthIS.Apps.MVC.RSS.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\HealthIS.Apps.MVC.RSS.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\HealthIS.Apps.MVC.RSS.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\EntityFramework.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\HealthIS.Apps.Util.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Microsoft.Web.Infrastructure.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Sitecore.Kernel.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Sitecore.Mvc.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.Helpers.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.Mvc.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.Providers.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.Razor.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.Deployment.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.Razor.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Oracle.DataAccess.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Lucene.Net.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\ITHit.WebDAV.Server.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\HtmlAgilityPack.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Mvp.Xml.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\ComponentArt.Web.UI.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Sitecore.Zip.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Sitecore.Logging.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Sitecore.NVelocity.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Newtonsoft.Json.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\RadEditor.Net2.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Telerik.Web.UI.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Sitecore.Kernel.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\EntityFramework.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.Helpers.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.Mvc.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.Razor.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.Deployment.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.Razor.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Lucene.Net.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\HtmlAgilityPack.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Newtonsoft.Json.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Telerik.Web.UI.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\obj\Debug\HealthIS.Apps.MVC.RSS.csprojResolveAssemblyReference.cache
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\obj\Debug\HealthIS.Apps.MVC.RSS.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\obj\Debug\HealthIS.Apps.MVC.RSS.pdb
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\HealthIS.Apps.MVC.RSS.dll.config
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\HealthIS.Apps.MVC.RSS.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\HealthIS.Apps.MVC.RSS.pdb
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\EntityFramework.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\EntityFramework.SqlServer.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\Microsoft.Web.Infrastructure.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.Helpers.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.Mvc.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.Providers.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.Razor.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.Deployment.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.Razor.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\EntityFramework.xml
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\EntityFramework.SqlServer.xml
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.Helpers.xml
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.Mvc.xml
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.Providers.xml
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.Razor.xml
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.xml
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.Deployment.xml
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\bin\System.Web.WebPages.Razor.xml
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\obj\Debug\HealthIS.Apps.MVC.RSS.csprojResolveAssemblyReference.cache
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\obj\Debug\HealthIS.Apps.MVC.RSS.dll
+C:\Sitecore_SVN\Source\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RSS\obj\Debug\HealthIS.Apps.MVC.RSS.pdb

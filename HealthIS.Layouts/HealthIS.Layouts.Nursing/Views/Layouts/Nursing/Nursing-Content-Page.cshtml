@@ -1,0 +1,50 @@
+﻿@model HealthIS.Layouts.Models.Nursing
+@using Sitecore.Mvc
+@using HealthIS.Apps.MVC
+@{
+    if (Sitecore.Context.PageMode.IsExperienceEditor)
+    {
+        <script>
+            jQuery(document).ready(function () {
+                autoSave();
+            });
+        </script>
+        <style>.slick-shadow { margin-top: 40px; }</style>
+    }
+}
+<div class="site-content-con">
+    <h1>@Html.Sitecore().Placeholder("Headline for Standard")</h1> @Helpers.placeholderRequired("Headline for Standard")
+    @if (Sitecore.Context.PageMode.IsExperienceEditor)
+    {
+        <div class="content-area first">
+            @Html.Sitecore().Placeholder("Dynamic Placeholder1")
+        </div>
+        <div class="content-area break">
+            @Html.Sitecore().Placeholder("Dynamic Placeholder2")
+        </div>
+        <div class="content-area break">
+            @Html.Sitecore().Placeholder("Dynamic Placeholder3")
+        </div>
+    }
+    else
+    {
+        if (String.IsNullOrEmpty(Helpers.placeholderRequired("Dynamic Placeholder1").ToHtmlString()))
+        {
+            <div class="content-area first">
+                @Html.Sitecore().Placeholder("Dynamic Placeholder1")
+            </div>
+        }
+        if (String.IsNullOrEmpty(Helpers.placeholderRequired("Dynamic Placeholder2").ToHtmlString()))
+        {
+            <div class="content-area">
+                @Html.Sitecore().Placeholder("Dynamic Placeholder2")
+            </div>
+        }
+        if (String.IsNullOrEmpty(Helpers.placeholderRequired("Dynamic Placeholder3").ToHtmlString()))
+        {
+            <div class="content-area">
+                @Html.Sitecore().Placeholder("Dynamic Placeholder3")
+            </div>
+        }
+    }
+</div>

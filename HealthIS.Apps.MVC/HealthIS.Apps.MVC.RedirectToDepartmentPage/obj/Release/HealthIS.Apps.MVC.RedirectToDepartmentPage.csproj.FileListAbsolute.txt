@@ -1,0 +1,6 @@
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RedirectToDepartmentPage\bin\HealthIS.Apps.MVC.RedirectToDepartmentPage.dll.config
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RedirectToDepartmentPage\bin\HealthIS.Apps.MVC.RedirectToDepartmentPage.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RedirectToDepartmentPage\bin\HealthIS.Apps.MVC.RedirectToDepartmentPage.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RedirectToDepartmentPage\obj\Release\HealthIS.Apps.MVC.RedirectToDepartmentPage.csprojResolveAssemblyReference.cache
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RedirectToDepartmentPage\obj\Release\HealthIS.Apps.MVC.RedirectToDepartmentPage.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.RedirectToDepartmentPage\obj\Release\HealthIS.Apps.MVC.RedirectToDepartmentPage.pdb

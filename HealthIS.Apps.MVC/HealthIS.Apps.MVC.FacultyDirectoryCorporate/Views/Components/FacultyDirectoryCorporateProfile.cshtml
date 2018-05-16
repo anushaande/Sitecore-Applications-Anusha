@@ -1,0 +1,216 @@
+﻿@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    <h4>Faculty Directory Corporate Profile</h4>
+    <p>Faculty Directory Profile rendering has been added.</p>
+    <script>if(typeof(autoSave) != "undefined"){ autoSave(); }</script>
+    return;
+}
+<div class="faculty-profile">
+    @if(!Model.validId) {
+        <h2>Invalid Person ID.</h2>
+    }
+    else if (Model.person == null || String.IsNullOrEmpty(Model.personID.ToString()) || !String.IsNullOrEmpty(Model.person.error))
+    {
+        @*<h2>Person could not be found.</h2>*@
+        @Html.Raw("<h2>" + Model.showError + "</h2>");
+    }
+    else if (!String.IsNullOrEmpty(Model.showError))
+    {
+        @Html.Raw("<h2>" + Model.showError + "</h2>");
+    }
+    else
+    {
+        <div class="profile-sidebar">
+            <img class="profile-photo" src="/resources/root-elements/FacultyDirectoryGetFile.cshtml?method=picture&person_id=@Html.Raw(Model.personID)" alt="@Html.Raw(Model.person.firstName + " " + Model.person.lastName + " " + Model.person.researchid)" />
+            @if (!String.IsNullOrEmpty(Model.person.researchid))
+            {
+                <span id="badgeCont656831" style="width:126px">
+                    <script src="http://labs.researcherid.com/mashlets?el=badgeCont656831&amp;mashlet=badge&amp;showTitle=false&amp;className=a&amp;rid=@Html.Raw(Model.person.researchid)"></script>
+                </span>
+            }
+        </div>
+        <div class="profile-main">
+            @{string title = "";
+              if (!String.IsNullOrEmpty(Model.person.title))
+              {
+                  title = ", <span class=\"faculty-credentials\">" + Model.person.title + "</span>";
+              }
+            }
+            <h1>@Html.Raw(Model.person.firstName + " " + Model.person.lastName + title)</h1>
+
+            <!-- Appointments -->
+            @foreach (string appointment in Model.person.appointments)
+            {
+                string appt = HealthIS.Apps.MVC.Helpers.FormatString("Appt", appointment);
+                <h2 class="faculty-position">@(appt)</h2>
+            }
+
+            <!-- Contact Information -->
+            @if (!String.IsNullOrEmpty(Model.person.myAddresses[0].street))
+            {
+                <p>
+                    <span class="text-label">Contact Info</span>
+                    @Model.person.myAddresses[0].street<br />
+                    @if (!String.IsNullOrEmpty(Model.person.myAddresses[0].street2))
+                    {
+                        <text>@(Model.person.myAddresses[0].street2)<br /></text>
+                    }
+                    @Html.Raw(Model.person.myAddresses[0].city)&nbsp;@Html.Raw(Model.person.myAddresses[0].state)&nbsp;@Html.Raw(Model.person.myAddresses[0].zip)
+                </p>
+            }
+
+            @if (!String.IsNullOrEmpty(Model.person.email))
+            {
+                <p>
+                    <span class="text-label">Academic Email:</span> 
+                    <a href="mailto:@Html.Raw(Model.person.email)">@Html.Raw(Model.person.email)</a>
+                </p>
+            }
+
+            @if (!String.IsNullOrEmpty(Model.person.phone) || !String.IsNullOrEmpty(Model.person.fax))
+            {
+                <p>
+                    @if (!String.IsNullOrEmpty(Model.person.phone))
+                    {
+                        <span class="text-label">Academic Phone:</span>@Html.Raw(Model.person.phone)
+                    }
+            
+                    @if (!String.IsNullOrEmpty(Model.person.fax))
+                    {
+                        <span class="text-label">Fax:</span> @Html.Raw(Model.person.fax)
+                    }
+                </p>
+            }
+
+            @if (!String.IsNullOrEmpty(Model.person.cvSrc))
+            {
+                <p>
+                    <a href="/resources/root-elements/FacultyDirectoryGetFile.cshtml?method=resume&person_id=@Model.personID" target="_blank">View My C.V.</a>
+                </p>
+            }
+
+            <!-- Education -->
+            @if (Model.person.degrees != "")
+            {
+                string degree = HealthIS.Apps.MVC.Helpers.FormatString("Deg", Model.person.degrees);
+                <h3>Education</h3>
+                <div class="faculty-degrees">@Html.Raw(degree)</div>
+            }
+
+            <!-- Academic Philosophy -->
+            @if (!String.IsNullOrEmpty(Model.person.academic_philosophy))
+            {
+                <h3>Academic Philosophy</h3>
+                <div class="academic-philosophy">
+                    <p>"@Html.Raw(Model.person.academic_philosophy)"</p>
+                </div>
+            }
+
+            <!-- Interdisciplinary and Emerging Signature Programs  -->
+            @if (Model.person.signatureProgram.Length > 0)
+            {
+                <h3>Interdisciplinary and Emerging Signature Programs</h3>
+                <ul>
+                    @foreach (string program in Model.person.signatureProgram)
+                    {
+                        <li>@Html.Raw(program)</li>
+                    }
+                </ul>
+            }
+
+            <!-- Addresses Also need a test case that has addresses -->
+            @if (Model.person.addresses.Length > 0)
+            {
+                <h3>Locations</h3>
+                <ul>
+                    @foreach (string address in Model.person.addresses)
+                    {
+                        <li>@Html.Raw(address)</li>
+                    }
+                </ul>
+            }
+                
+            <!-- Clinical Interests -->
+            @if (Model.person.clinicalInterests.Length > 0)
+            {
+                <h3>Clinical Interests</h3>
+                <ul>
+                    @foreach (string interest in Model.person.clinicalInterests)
+                    {
+                        <li>@Html.Raw(interest)</li>
+                    }
+                </ul>
+            }
+
+            <!-- Research Interests -->
+            @if (Model.person.researchInterests.Length > 0)
+            {
+                <h3>Research Interests</h3>
+                <ul>
+                    @foreach (string interest in Model.person.researchInterests)
+                    {
+                        <li>@Html.Raw(interest)</li>
+                    }
+                </ul>
+            }
+
+            <!-- Healthcare Philosophy -->
+            @if (!String.IsNullOrEmpty(Model.person.philosophy))
+            {
+                <h3>Philosophy</h3>
+                <p>@Html.Raw(Model.person.philosophy)</p>
+            }
+
+            <!-- Memberships -->
+            @if (Model.person.memberships.Length > 0)
+            { 
+                <h3>Memberships</h3>
+                <ul>
+                    @foreach (string membership in Model.person.memberships)
+                    {
+                        <li>@Html.Raw(membership)</li>
+                    }
+                </ul>
+            }
+
+            <!-- Publications -->
+            @if (Model.person.publications.Length > 0)
+            {
+                <h3>Recent Publications</h3>
+                <ul data-pagination="5" class="pub-list">
+                @foreach (string publication in Model.person.publications)
+                {
+                    <li>@Html.Raw(publication)</li>
+                }
+                </ul>
+            }
+
+            <!-- Positions Held -->
+            @if (Model.person.otherPositions.Length > 0)
+            {
+                <h3>Positions Held</h3>
+                <ul>
+                @if (Model.person.otherPositions.Length > 0)
+                {
+                    foreach (string oposition in Model.person.otherPositions)
+                    {
+                        <li>@Html.Raw(oposition)</li>
+                    }
+                }
+                </ul>
+            }           
+
+            <!-- Awards/Honors -->
+            @if (Model.person.awards.Length > 0)
+            {
+                <h3>Awards/Honors</h3>
+                <ul data-pagination="5">
+                @foreach (string award in Model.person.awards)
+                {
+                    <li>@Html.Raw(award)</li>
+                }
+                </ul>
+            }
+        </div>
+    }
+</div>

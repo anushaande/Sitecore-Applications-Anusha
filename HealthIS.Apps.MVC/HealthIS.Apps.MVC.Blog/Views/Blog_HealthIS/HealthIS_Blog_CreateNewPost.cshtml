@@ -1,0 +1,158 @@
+﻿@model HealthIS.Apps.MVC.Blog.Models.CreateNewPost
+@using (Html.BeginForm())
+{
+    <div class="form-group">
+        <h2>@Html.LabelFor(x => x.Title, new { @style = "font-weight: normal;" })</h2>
+        @Html.EditorFor(x => x.Title, new { htmlAttributes = new { @class = "form-control", @id = "title", @placeholder = "Please type post title here..." } })
+        @Html.ValidationMessageFor(m => m.Title)
+    </div>
+    <input type="submit" class="btn btn-primary" value="Create New Post" />
+    <br /><br />
+}
+<hr />
+<style>
+    .publish-message, .title {
+        font-family: FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+</style>
+<div class="panel-group" id="accordion">
+    <button type="button" class="title btn btn-success" data-toggle="collapse" data-target="#myArticles">
+        &#xf007; My Articles
+    </button>
+    <button type="button" class="title btn btn-success" data-toggle="collapse" data-target="#latest10Articles">
+        &#xf0c0; Latest 10 Articles
+    </button>
+    <div class="">
+        <div id="myArticles" class="panel-collapse in">
+            <div class="panel-body">
+                <div class="list-group">
+                    <h3>My Articles</h3>
+                    @if (Model.GetCurrentUserArticles.Count() < 1)
+                    {
+                        <hr />
+                        <h4>You don't have any article. Please write your first article.</h4>
+                    }
+                    else
+                    {
+                        foreach (var item in Model.GetCurrentUserArticles)
+                        {
+                            string updatedDate = item.Statistics.Created.ToString("yyyy/MM/dd");
+                            <a href="@item.Paths.ContentPath" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h3 class="mb-1">@item.Fields["Title"].Value</h3>
+                                    <small style="color: gray;">Created by <b>@Model.GetUserFullName(item.Fields["__Created by"].Value)</b> on <b>@updatedDate</b></small>
+                                </div>
+                                <h5 class="mb-1">@Html.Raw(item.Fields["Description"].Value)</h5>
+                                @Html.Raw(Model.IsPublished(item))
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <div id="latest10Articles" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class="list-group">
+                    <h3>Latest 10 Articles</h3>
+                    @foreach (var item in Model.BlogArticleItems)
+                    {
+                        string updatedDate = item.Statistics.Created.ToString("yyyy/MM/dd");
+                        <a href="@item.Paths.ContentPath" target="_blank" class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h3 class="mb-1">@item.Fields["Title"].Value</h3>
+                                <small style="color: gray;">Created by <b>@Model.GetUserFullName(item.Fields["__Created by"].Value)</b> on <b>@updatedDate</b></small>
+                            </div>
+                            <h5 class="mb-1">@Html.Raw(item.Fields["Description"].Value)</h5>
+                            @Html.Raw(Model.IsPublished(item))
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var active = true;
+        $('#collapse-init').click(function () {
+            if (active) {
+                active = false;
+                $('.panel-collapse').collapse('show');
+                $('.title').attr('data-toggle', '');
+                //$(this).text('Enable accordion behavior');
+            } else {
+                active = true;
+                $('.panel-collapse').collapse('hide');
+                $('.title').attr('data-toggle', 'collapse');
+                //$(this).text('Disable accordion behavior');
+            }
+        });
+
+        $('#accordion').on('show.bs.collapse', function () {
+            if (active) $('#accordion .in').collapse('hide');
+        });
+
+    });
+</script>
+@*<div class="container">
+        <h3>My Articles</h3>
+        <div class="table-container">
+            <table class="table table-filter">
+                <tbody>
+                    @foreach (var item in Model.GetCurrentUserArticles)
+                    {
+                        string updatedDate = item.Statistics.Created.ToString("yyyy/MM/dd");
+                        <tr>
+                            <td>
+                                <div class="media">
+                                    <a href="@item.Paths.ContentPath" target="_blank" class="pull-left" style="width: 100%;">
+                                        <div class="media-body">
+                                            <span class="media-meta pull-right">@updatedDate</span>
+                                            <h4 class="title">
+                                                @item.Fields["Title"].Value
+                                            </h4>
+                                        </div>
+                                    </a>
+                                    <p class="summary">@item.Paths.ContentPath</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <hr />
+        <h3>List Last 10 Articles</h3>
+        <div class="table-container">
+            <table class="table table-filter">
+                <tbody>
+                    @foreach (var item in Model.BlogArticleItems)
+                    {
+                        string updatedDate = item.Statistics.Created.ToString("yyyy/MM/dd");
+                        <tr>
+                            <td>
+                                <div class="media">
+                                    <a href="@item.Paths.ContentPath" target="_blank" class="pull-left" style="width: 100%;">
+                                        <div class="media-body">
+                                            <span class="media-meta pull-right">@updatedDate</span>
+                                            <h4 class="title">
+                                                @item.Fields["Title"].Value
+                                            </h4>
+                                        </div>
+                                    </a>
+                                    <p class="summary">@item.Paths.ContentPath</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>
+                            <div class="media">
+                                <a href="@Model.ArticleRootPath.Paths.ContentPath" class="list-group-item">Move to main root of blog</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>*@

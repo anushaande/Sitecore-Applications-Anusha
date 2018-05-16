@@ -1,0 +1,6 @@
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.UserProfileDirectory\bin\HealthIS.Apps.MVC.UserProfileDirectory.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.UserProfileDirectory\bin\HealthIS.Apps.MVC.UserProfileDirectory.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.UserProfileDirectory\obj\Release\HealthIS.Apps.MVC.UserProfileDirectory.csprojResolveAssemblyReference.cache
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.UserProfileDirectory\obj\Release\HealthIS.Apps.MVC.UserProfileDirectory.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.UserProfileDirectory\obj\Release\HealthIS.Apps.MVC.UserProfileDirectory.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.UserProfileDirectory\bin\HealthIS.Apps.MVC.UserProfileDirectory.dll.config

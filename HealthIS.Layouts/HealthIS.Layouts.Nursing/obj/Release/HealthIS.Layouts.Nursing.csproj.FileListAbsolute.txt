@@ -1,0 +1,17 @@
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\bin\HealthIS.Layouts.Nursing.dll
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\bin\HealthIS.Layouts.Nursing.pdb
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\bin\Microsoft.Web.Infrastructure.dll
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\bin\System.Web.Helpers.dll
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\bin\System.Web.Razor.dll
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\bin\System.Web.Webpages.Deployment.dll
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\bin\System.Web.Webpages.dll
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\bin\System.Web.Webpages.Razor.dll
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\bin\System.Web.Razor.xml
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\bin\System.Web.Webpages.xml
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\bin\System.Web.Webpages.Deployment.xml
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\bin\System.Web.Webpages.Razor.xml
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\bin\System.Web.Helpers.xml
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\bin\System.Web.Mvc.xml
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\obj\Release\HealthIS.Layouts.Nursing.csprojResolveAssemblyReference.cache
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\obj\Release\HealthIS.Layouts.Nursing.dll
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Nursing\obj\Release\HealthIS.Layouts.Nursing.pdb

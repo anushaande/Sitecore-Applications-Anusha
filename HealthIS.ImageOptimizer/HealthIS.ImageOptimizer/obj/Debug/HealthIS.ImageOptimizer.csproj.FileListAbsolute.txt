@@ -1,0 +1,8 @@
+C:\SVN\Sources\HealthIS.ImageOptimizer\HealthIS.ImageOptimizer\obj\Debug\HealthIS.ImageOptimizer.csprojResolveAssemblyReference.cache
+C:\SVN\Sources\HealthIS.ImageOptimizer\HealthIS.ImageOptimizer\bin\Debug\HealthIS.ImageOptimizer.dll
+C:\SVN\Sources\HealthIS.ImageOptimizer\HealthIS.ImageOptimizer\bin\Debug\HealthIS.ImageOptimizer.pdb
+C:\SVN\Sources\HealthIS.ImageOptimizer\HealthIS.ImageOptimizer\bin\Debug\Sitecore.Kernel.dll
+C:\SVN\Sources\HealthIS.ImageOptimizer\HealthIS.ImageOptimizer\bin\Debug\Sitecore.Speak.Client.dll
+C:\SVN\Sources\HealthIS.ImageOptimizer\HealthIS.ImageOptimizer\bin\Debug\System.Web.Mvc.dll
+C:\SVN\Sources\HealthIS.ImageOptimizer\HealthIS.ImageOptimizer\obj\Debug\HealthIS.ImageOptimizer.dll
+C:\SVN\Sources\HealthIS.ImageOptimizer\HealthIS.ImageOptimizer\obj\Debug\HealthIS.ImageOptimizer.pdb

@@ -1,0 +1,371 @@
+﻿@model HealthIS.Apps.MVC.Models.HorizontalNavigation
+@using Sitecore.Mvc
+@{
+    HtmlString error = new HtmlString("<h2>Horizontal Navigation</h2><p>If re-using an existing navigation, click 'Use Existing Navigation'.<br />If you want to create a new navigation, click 'Create New Navigation'.</p>");
+    string headerItemTemplatePath = "User Defined2/Component Template/NavBarHorizontal/NavBarHeader";
+    string linkItemTemplatePath = "User Defined2/Component Template/NavBarHorizontal/NavBarLinkItem";
+    string verticalTemplatePath = "/sitecore/templates/Branches/Horizontal Navigation/NH_NewVerticalItem";
+    string sectionGroupTemplatePath = "/sitecore/templates/Branches/Horizontal Navigation/NH_NewSectionGroupItem";
+    string sectionTemplatePath = "/sitecore/templates/Branches/Horizontal Navigation/NH_NewSectionItem";
+    string linkUrl = ""; 
+
+    @*if (Sitecore.Context.PageMode.IsExperienceEditor && Model.Item.Template.StandardValues.Paths.Path.Contains("/User Defined/"))
+    {
+        <center>
+            <div>You selected a datasource using old template.<br />Please remove and update the datasource using new template under /sitecore/templates/User Defined2/...</div>
+        </center>
+        return;
+    }*@
+    if (Sitecore.Context.PageMode.IsExperienceEditor) {
+        <script>
+            jQuery(document).ready(function () {
+                autoSave();
+            });
+        </script>
+    }
+    // If datasource is empty, show error message
+    if (Sitecore.Context.PageMode.IsExperienceEditor && !Model.isDatasourceSet)
+    {
+        <center>
+            <div>@error</div>
+            <div>
+                <input type="button" id="btnExistingDS" class="pe-button pe-green" onclick="setDatasource()" value="Use Existing Navigation">
+                <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrc()" value="Create New Navigation">
+            </div>
+        </center>
+        <script>
+            // Set existing datasource
+            function setDatasource() {
+                Sitecore.PageModes.PageEditor.postRequest("webedit:setdatasource(referenceId={@Model.Rendering.UniqueId.ToString().ToUpper()},renderingId=@Model.Rendering.Properties["RenderingItemPath"],id=@Model.PageItem.ID)", null, false);
+            }
+
+            // Create new datasource with Branch
+            function callSetDataSrc() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                                      // itemID
+                    '/sitecore/templates/Branches/Horizontal Navigation/NavBarHorizontal',          // templatePath (Branch)
+                    '_HN',                                                                          // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                   // renderingID
+                    '@Html.Raw(Model.PageItem.Database.Name)',                                      // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                             // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',                               // referenceID
+                    ''                                                                              // btnID
+                );
+            }
+        </script>
+        return;
+    }
+    else if (!Sitecore.Context.PageMode.IsExperienceEditor && !Model.isDatasourceSet) 
+    {
+        <center><br /><div>Please add Horizontal Navigation</div><br /></center>
+        return;
+    }
+
+    bool dsEditable = HealthIS.Apps.MVC.Helpers.IsDatasourceEditable(Model.datasourceItem, Model.PageItem.Paths.Path.ToString());     
+}   
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor && dsEditable && Model.UserHasEditPermissions(Sitecore.Context.User))
+{   
+    <style>
+        .fa-input {
+            font-family: FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+    </style>
+    HtmlString itemType;
+    <div class="container toggle-slide">
+        <a class="toggle-nav" onclick="toggleNav('panel-group')" style="font-size: 25px;">Click Here to Edit Department Nav</a> @Model.addEditing(Model.Item.ID, "Update Nav CSS", "") @Model.sortingItems(Model.Item.ID, "Sort Main Items")
+        <script>
+            jQuery(document).ready(function () {
+                if (jQuery.cookie('panel') == 'panel-group') {
+                    jQuery(".toggle-nav").click();
+                }
+            });
+        </script>
+        @foreach (Sitecore.Data.Items.Item e1 in Model.Item.Children)
+        {
+            <div class="panel-group">
+                <div class="panel panel-default" style="padding-left: 15px;">
+                    @Model.renameItem(e1)
+                    @* Link Item without any sub-item *@
+                @if (e1.TemplateName == "NavBarLinkItem")
+                {
+                    <h4>
+                        @e1.Fields["Title"] @Model.deleteItem(e1.ID) @Model.addEditing(e1.ID)
+                        @if (@e1.Template.Name != @e1.Fields["Template Type"].Value)
+                        {
+                            Model.updateTemplate(e1, @e1.Fields["Template Type"].Value);
+                            <script>location.reload(true);</script>
+                        }
+                    </h4>
+                }
+
+                @* One-column Block with sub-items *@
+                else if (e1.TemplateName == "NavBarVerticalItem")
+                {
+                    <h4 class="@e1.ID">
+                        <a class="mainNav-@e1.ID.Guid" href="#" onclick="toggleNav('@e1.ID.Guid')"><span class="icon-caret-right"></span> @e1.Fields["Title"]</a> @Model.deleteItem(e1.ID) @Model.addEditing(e1.ID) @Model.sortingItems(e1.ID, "Sort Vertical Items")
+                        <script>
+                            jQuery(document).ready(function () {
+                                if (jQuery.cookie('panel') == '@e1.ID.Guid') {
+                                    jQuery(".mainNav-@e1.ID.Guid").click();
+                                }
+                            });
+                        </script>
+                        @if (@e1.Template.Name != @e1.Fields["Template Type"].Value)
+                        {
+                            Model.updateTemplate(e1, @e1.Fields["Template Type"].Value);
+                            <script>location.reload(true);</script>
+                        }
+                    </h4>
+                    <div class="panel-collapse collapse @e1.ID.Guid.ToString()">
+                        <ul class="list-group">
+                            @if (e1.HasChildren)
+                            {
+                                foreach (Sitecore.Data.Items.Item e2 in e1.Children)
+                                {
+                                    itemType = new HtmlString("LinkItem: ");
+                                    if (e2.TemplateName == "NavBarHeader") { itemType = new HtmlString("<strong>Header:</strong> "); }
+                                    @Model.renameItem(e2)
+                                    <li class="list-group-item @e2.ID">@itemType @e2.Fields["Title"] @Model.deleteItem(e2.ID) @Model.addEditing(e2.ID)</li>
+                                }
+                            }
+                            <li class="list-group-item @e1.ID">&nbsp; 
+                                <span style='float: right; padding-right: 15px;'>
+                                    <a name='edit_ @e1.ID' href='#' class='pe-button pe-green' onclick='addNewItems("@e1.ID.ToString()", "@headerItemTemplatePath");'>
+                                        &#43; Add Header Item</a>
+                                    <a name='edit_ @e1.ID' href='#' class='pe-button pe-green' onclick='addNewItems("@e1.ID.ToString()", "@linkItemTemplatePath");'>
+                                        &#43; Add Link Item</a>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                }
+
+                @* Two or more blocks with sections and its sub-items *@
+                else if (e1.TemplateName == "NavBarSectionItem")
+                {
+                    <h4>
+                        <a class="mainNav-@e1.ID.Guid" href="#" onclick="toggleNav('@e1.ID.Guid')"><span class="icon-caret-right"></span> @e1.Fields["Title"]</a> @Model.deleteItem(e1.ID) @Model.addEditing(e1.ID) @Model.sortingItems(e1.ID, "Sort Section Items")
+                        <script>
+                            jQuery(document).ready(function () {
+                                if (jQuery.cookie('panel') == '@e1.ID.Guid') {
+                                    jQuery(".mainNav-@e1.ID.Guid").click();
+                                }
+                            });
+                        </script> 
+                        @if (@e1.Template.Name != @e1.Fields["Template Type"].Value)
+                        {
+                            Model.updateTemplate(e1, @e1.Fields["Template Type"].Value);
+                                <script>location.reload(true);</script>
+                        }
+                    </h4>
+                    <div id="@e1.ID.Guid" class="panel-collapse collapse @e1.ID.Guid">
+                        <ul class="list-group">
+                            @if (e1.HasChildren)
+                            {
+                                foreach (Sitecore.Data.Items.Item e2 in e1.Children)
+                                {
+                                    itemType = new HtmlString("LinkItem: ");
+                                    if (e2.TemplateName == "Section") { itemType = new HtmlString("<strong>Section:</strong> "); } 
+                                    @Model.renameItem(e2)
+                                    <li class="list-group-item">@itemType @e2.Fields["Title"] @Model.deleteItem(e2.ID) @Model.addEditing(e2.ID) @Model.sortingItems(e2.ID, "Sort Section SubItems")</li>
+                        
+                                    <ul class="list-group">
+                                        @foreach (Sitecore.Data.Items.Item e3 in e2.Children)
+                                        {
+                                            itemType = new HtmlString("LinkItem: ");
+                                            if (e3.TemplateName == "NavBarHeader") { itemType = new HtmlString("<strong>Header:</strong> "); }
+                                            @Model.renameItem(e3)
+                                            <li class="list-group-item @e3.ID">@itemType @e3.Fields["Title"] @Model.deleteItem(e3.ID) @Model.addEditing(e3.ID)</li>
+                                        }
+                                        <li class="list-group-item @e2.ID">&nbsp; 
+                                            <span style='float: right; padding-right: 15px;'>
+                                                <a name='edit_ @e2.ID' href='#' class='pe-button pe-green' onclick='addNewItems("@e2.ID.ToString()", "@headerItemTemplatePath");'>
+                                                    &#43; Add Header Item</a>
+                                                <a name='edit_ @e2.ID' href='#' class='pe-button pe-green' onclick='addNewItems("@e2.ID.ToString()", "@linkItemTemplatePath");'>
+                                                    &#43; Add Link Item</a>
+                                            </span>
+
+                                        </li>
+                                    </ul>
+                                }
+                            }
+                            <li class="list-group-item">&nbsp;
+                                <span style='float: right; padding-right: 15px;'>
+                                    <a name='edit_ @e1.ID' href='#' class='pe-button pe-green' onclick='addNewItems("@e1.ID.ToString()", "@sectionTemplatePath");'>
+                                        &#43; Add Section Item</a>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @* Create main menu items *@
+    <div class="panel-group" style="padding-top: 10px;">
+        <div class="panel">
+            <span style='float: right; padding-right: 15px;'>
+                <a name='edit_vertical' href='#' class='pe-button pe-green' onclick='addNewItems("@Model.Item.Paths.Path.ToString()", "@verticalTemplatePath");'>
+                    &#43; Add Button Width Dropdown</a>
+            </span>
+                    
+            <span style='float: right; padding-right: 15px;'>
+                <a name='edit_section' href='#' class='pe-button pe-green' onclick='addNewItems("@Model.Item.Paths.Path.ToString()", "@sectionGroupTemplatePath");'>
+                    &#43; Add Full Width Dropdown</a>
+            </span>
+                    
+            <span style='float: right; padding-right: 15px;'>
+                <a name='edit_section' href='#' class='pe-button pe-green' onclick='addNewItems("@Model.Item.Paths.Path.ToString()", "@linkItemTemplatePath");'>
+                    &#43; Add Link Item</a>
+            </span>
+                
+            <script>
+                // Create new Item through javascript and controller
+                function addNewItems(parentPath, templatePath) {
+                    @*addNewNavItems(parentPath, templatePath, '@Url.Action("HorizontalNavigation", "Components")');*@
+                    addNewNavItems(parentPath, templatePath, window.location.href);
+                }
+
+                function toggleNav(className) {
+                    var isVisible = jQuery('.' + className).is(".opened");
+                    jQuery('.' + className).slideToggle().toggleClass('opened');
+                    if (isVisible === true) {
+                        jQuery('.' + className).parent().find("h4 a span").attr('class', "icon-caret-right");
+                        jQuery.cookie('panel', 'closed');
+                    }
+                    else {
+                        jQuery('.' + className).parent().find("h4 a span").attr('class', "icon-caret-down");
+                        jQuery.cookie('panel', className);
+                    }
+                }
+            </script>
+        </div>
+    </div>
+</div>
+<br />
+}
+else
+{
+    if (Sitecore.Context.PageMode.IsExperienceEditor && (!dsEditable))
+    {
+        /* currentPagePath is not the main root of horizontal nav datasource - datasource NOT editable from this page
+            display short message and show preview UI in Editing Mode */
+        @Html.Raw(HealthIS.Apps.MVC.Helpers.DisplayDatasourceUneditableMessage(Model.datasourceItem.Paths.Path.ToString()));
+    }
+        
+    <nav class='@Model.H_NavBarClass'>
+    <h1 class="@Model.H_LabelH1Class">
+        <i class="@Model.H_LabelIClass"></i>
+        @Model.H_NavBarLabel
+    </h1>
+
+    <ul class="@Model.H_UlClass">
+    @foreach (Sitecore.Data.Items.Item c2 in Model.Item.Children)
+    {
+        if (c2.TemplateName != "NavBarHorizontal")
+        {
+            <li class='@c2.Fields["li Class"]' id='@c2.Fields["li Id"]'>
+            @if (c2.TemplateName == "NavBarLinkItem" || c2.TemplateName == "NavBarVerticalItem")
+            {
+                Model.NewTab = (c2.Fields["openInNewTab"].Value == "1" ? " target=_blank" : "");
+                linkUrl = HealthIS.Apps.MVC.Helpers.getLinkUrl(c2.Fields["URL"]);
+            }
+            else if (c2.TemplateName == "NavBarSectionItem")
+            {
+                linkUrl = "#";
+            }
+            <a class='@c2.Fields["a Class"]' @Model.NewTab href='@linkUrl'>@Html.Raw(@c2.Fields["Title"]) <i class="icon-caret-down"></i></a>
+
+            @if (@c2.TemplateName == "NavBarVerticalItem")
+            {
+                <div class='@c2.Fields["Menu Class"]'>
+                    <div class='@c2.Fields["Menu Group Class"]'>
+                        @foreach (Sitecore.Data.Items.Item c3 in c2.Children)
+                        {
+                            if (@c3.TemplateName == "NavBarHeader")
+                            {
+                                if (!String.IsNullOrEmpty(@c3.Fields["Title"].Value.Trim()))
+                                {
+
+                                    Model.HsTag = new HtmlString("</ul><h2>" + @c3.Fields["Title"].Value + "</h2><ul>");
+                                    Model.LiList.Add(Model.HsTag);
+                                }
+                            }
+                            else if (@c3.TemplateName == "SubLinkItem" || @c3.TemplateName == "NavBarLinkItem")
+                            {
+                                linkUrl = HealthIS.Apps.MVC.Helpers.getLinkUrl(c3.Fields["URL"]);
+                                if (String.IsNullOrEmpty(linkUrl)) { linkUrl = "#"; }
+                                Model.NewTab = (c3.Fields["openInNewTab"].Value == "1" ? " target=\"_blank\"" : "");
+                                Model.HsTag = new HtmlString("<li><a href='" + linkUrl + "' " + @Model.NewTab + ">" + @c3.Fields["Title"] + "</a></li>");
+                                Model.LiList.Add(Model.HsTag);
+                            }
+                        }
+                        @if (Model.LiList != null)
+                        {
+                            string newHtml = "<ul>";
+                            foreach (HtmlString cc in Model.LiList)
+                            {
+                                newHtml += cc.ToString();
+                            }
+                            newHtml += "</ul>";
+                            newHtml = newHtml.Replace("<ul></ul>", "");
+                            @Html.Raw(newHtml)
+                            Model.LiList.Clear();
+                        }
+                    </div>
+                </div>
+            } 
+            @if (@c2.TemplateName == "NavBarSectionItem")
+            {
+                <div class='@c2.Fields["Outer Div Class"]'>
+
+                    @foreach (Sitecore.Data.Items.Item c3 in c2.Children)
+                    {
+                        <div class='@c3.Fields["Inner Div Class"]'>
+                        @if (@c3.TemplateName == "Section")
+                        {
+                            Model.ListCount = 0;
+                            <h2>@c3.Fields["Title"]</h2>
+
+                            foreach (Sitecore.Data.Items.Item c4 in c3.Children)
+                            {
+                                if (@c4.TemplateName == "NavBarHeader")
+                                {
+                                    if (Model.ListCount > 0)
+                                    {
+                                        Model.HsTag = new HtmlString("</ul><h2>" + @c4.Fields["Title"] + "</h2><ul>");
+                                        Model.LiList.Add(Model.HsTag);
+                                    }
+                                    Model.ListCount++;
+
+                                }
+                                else if (@c4.TemplateName == "SubLinkItem" || @c4.TemplateName == "NavBarLinkItem")
+                                {
+                                    linkUrl = HealthIS.Apps.MVC.Helpers.getLinkUrl(c4.Fields["URL"]);
+                                    if (String.IsNullOrEmpty(linkUrl)) { linkUrl = "#"; }
+                                    Model.NewTab = (c4.Fields["openInNewTab"].Value == "1" ? " target=\"_blank\"" : "");
+                                    Model.HsTag = new HtmlString("<li><a href='" + linkUrl + "' " + @Model.NewTab + ">" + @c4.Fields["Title"] + "</a></li>");
+                                    Model.LiList.Add(Model.HsTag);
+                                }
+                            }
+                            if (Model.LiList != null)
+                            {
+                                <ul>
+                                    @foreach (HtmlString cc in Model.LiList)
+                                    { @cc }
+                                </ul>
+                                    Model.LiList.Clear();
+                            }
+                        }
+                        </div>
+                    }
+                </div>
+            }
+            </li>
+        }
+    }
+    </ul>
+</nav>
+}

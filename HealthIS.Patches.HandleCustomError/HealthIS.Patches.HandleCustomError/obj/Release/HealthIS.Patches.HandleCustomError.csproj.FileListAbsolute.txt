@@ -1,0 +1,1 @@
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Patches.HandleCustomError\HealthIS.Patches.HandleCustomError\obj\Release\HealthIS.Patches.HandleCustomError.csprojResolveAssemblyReference.cache

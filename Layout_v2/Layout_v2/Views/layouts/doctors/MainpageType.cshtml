@@ -1,0 +1,28 @@
+﻿@using Sitecore.Mvc
+
+<div class="doctors-main-content">
+    <h1 class="doctors-page-title">@Html.Raw(Model.PageMainTitle) <span class="doctors-subtitle">@Html.Raw(Model.PageSubTitle)</span></h1>
+
+    <!-- This div will have dynamic content -->
+    <div class="doctors-content-top">
+        @Html.Sitecore().Placeholder("SlideShow")
+    </div>
+
+    <div class="row doctors-row">        @Html.Raw(Model.Content1)       
+    </div>
+
+    <!-- doctors two column row 1 -->
+    <div class="row doctors-row">
+        @Html.Raw(Model.Content2)
+    </div>
+
+    <!-- doctors two column row 2 -->
+    <div class="row doctors-row">
+        @Html.Raw(Model.Content3)
+    </div>
+
+    <!-- Extra Placeholder -->
+    <div class="row doctors-row">
+        @Html.Sitecore().Placeholder("DynamicPlaceholder")
+    </div>
+</div>

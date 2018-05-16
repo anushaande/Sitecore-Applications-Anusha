@@ -1,0 +1,103 @@
+﻿@using Sitecore.Data.Items
+
+<!-- if datasource is empty, show notice -->
+@if (Model.isEmpty) { <div>@Model.Error</div> return; }
+
+<nav class='@Model.H_NavBarClass'>
+    <h1 class="@Model.H_LabelH1Class">
+        <i class="@Model.H_LabelIClass"></i>
+        @Model.H_NavBarLabel
+    </h1>
+
+    <ul class="@Model.H_UlClass">
+    @foreach (Sitecore.Data.Items.Item c2 in Model.Item.Children)
+    {
+        if (c2.TemplateName != "NavBarHorizontal")
+        {
+            <li class='@c2.Fields["li Class"]' id='@c2.Fields["li Id"]'>
+            @{ 
+                Model.HsTag = new HtmlString(c2.Fields["Title"].Value);
+                if (c2.TemplateName == "NavBarLinkItem")
+                {
+                    Model.NewTab = (c2.Fields["openInNewTab"].Value == "1" ? " target=\"_blank\"" : "");
+                }
+            }
+            
+            <a class='@c2.Fields["a Class"]' href='@c2.Fields["URL"]' @Model.NewTab>@Model.HsTag<i class="icon-caret-down"></i></a>
+            
+            @if (@c2.TemplateName == "NavBarVerticalItem")
+            {
+                <div class='@c2.Fields["Menu Class"]'>
+                    <div class='@c2.Fields["Menu Group Class"]'>
+                        
+                        @foreach (Item c3 in c2.Children)
+                        {
+                            if (@c3.TemplateName == "NavBarHeader") 
+                            {
+                                Model.HsTag = new HtmlString("</ul><h2>" + @c3.Fields["Title"] + "</h2><ul>");
+                                Model.LiList.Add(Model.HsTag);
+                            }
+                            else if (@c3.TemplateName == "NavBarLinkItem")
+                            {
+                                Model.NewTab = (c3.Fields["openInNewTab"].Value == "1" ? " target=\"_blank\"" : "");
+                                Model.HsTag = new HtmlString("<li><a href='" + @c3.Fields["URL"] + "' " + @Model.NewTab + ">" + @c3.Fields["Title"] + "</a></li>");
+                                Model.LiList.Add(Model.HsTag);
+                            }
+                        }
+                        @if (Model.LiList != null)
+                        {
+                            <ul>
+                                @foreach (HtmlString cc in Model.LiList) { @cc }
+                            </ul>
+                            Model.LiList.Clear();
+                        }
+                    </div>
+                </div>
+            } 
+            else if (@c2.TemplateName == "NavBarSectionItem")
+            {
+                <div class='@c2.Fields["Outer Div Class"]'>
+
+                    @foreach (Sitecore.Data.Items.Item c3 in c2.Children) 
+                    {
+                        <div class='@c3.Fields["Inner Div Class"]'>
+                        @if (@c3.TemplateName == "Section")
+                        {
+                            Model.ListCount = 0;
+                            <h2>@c3.Fields["Title"]</h2>
+
+                            foreach (Sitecore.Data.Items.Item c4 in c3.Children)
+                            {
+                                if (@c4.TemplateName == "NavBarHeader") 
+                                {
+                                    if (Model.ListCount > 0)
+                                    {
+                                        Model.HsTag = new HtmlString("</ul><h2>" + @c4.Fields["Title"] + "</h2><ul>");
+                                        Model.LiList.Add(Model.HsTag);
+                                    }
+                                    Model.ListCount++;
+
+                                } else if (@c4.TemplateName == "NavBarLinkItem")
+                                {
+                                    Model.NewTab = (c4.Fields["openInNewTab"].Value == "1" ? " target=\"_blank\"" : "");
+                                    Model.HsTag = new HtmlString("<li><a href='" + @c4.Fields["URL"] + "' " + @Model.NewTab + ">" + @c4.Fields["Title"] + "</a></li>");
+                                    Model.LiList.Add(Model.HsTag);
+                                }
+                            }
+                            if (Model.LiList != null)
+                            {
+                                <ul>
+                                    @foreach (HtmlString cc in Model.LiList) { @cc }
+                                </ul>
+                                Model.LiList.Clear();
+                            }
+                        }
+                        </div>
+                    }
+                </div>
+            }
+            </li>
+        }
+    }
+    </ul>
+</nav>

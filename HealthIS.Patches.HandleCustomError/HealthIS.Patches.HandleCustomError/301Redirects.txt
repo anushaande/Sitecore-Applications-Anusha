@@ -1,0 +1,12 @@
+﻿****FORMAT IS AS BELOW
+****THIS IS DEV
+****requested page item path||redirected to destination (URL or item path)
+****DO NOT include sitecore item path extensions like .htm 
+****EXAMPLES
+****/sitecore/content/home/redirectMe||/sitecore/content/home/ShouldGoHere 
+****/sitecore/content/home/redirectMe||http://www.google.com
+****/sitecore/content/home/medicine/directoryToRedirect/<>||/sitecore/content/home/medicine/newDirectory/
+
+/sitecore/content/home/medicine/dermatology/bios/shenefelt||/sitecore/content/home/medicine/dermatology/bios
+/sitecore/content/home/medicine/dermatology/cosmetics/services_skin_care||/sitecore/content/home/medicine/dermatology/cosmetics
+/sitecore/content/home/medicine/dermatology/facilities/17davis||/sitecore/content/home/medicine/dermatology

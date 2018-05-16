@@ -1,0 +1,132 @@
+﻿@using System.Text.RegularExpressions;
+@if (Sitecore.Context.PageMode.IsPageEditor)
+{
+    if (Model.dsIsSet)
+    {
+        <h2> Video Config</h2>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <b>Youtube, Vimeo, or Panopto URL:</b><br />
+                    @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "URL"))
+                </li>
+                @if (Model.image != null && Model.image.MediaItem != null)
+                {
+                    <li class="list-group-item">
+                        <img src="@(Sitecore.Resources.Media.MediaManager.GetMediaUrl(Model.image.MediaItem))" alt="@(Model.image.Alt)" style="width=@(Model.image.Width)px;height=@(Model.image.Height)px"/><br />
+                    </li>
+                    <li class="list-group-item">
+                        <input class="pe-button pe-yellow" type="button" value="Edit Thumbnail Image" onclick='Sitecore.PageModes.PageEditor.postRequest("webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Thumbnail, id=@(Model.dataSourceID))");' />
+                    </li>
+                }
+                else
+                {
+                    <li class="list-group-item">
+                        <input class="pe-button pe-yellow" type="button" value="Set Thumbnail Image" onclick='Sitecore.PageModes.PageEditor.postRequest("webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Thumbnail, id=@(Model.dataSourceID))");' />
+                    </li>
+                }
+            </ul>
+    }
+    else
+    {
+        <h2 style="text-align:center;"> Video Config</h2>        
+        string UID = "_" + Model.Rendering.UniqueId.ToString().Replace('-', '_');
+        <script>
+            function callSetDataSrc@(UID)() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                                              // itemID
+                    'User Defined2/Component Template/Video',                                               // templatePath
+                    '_VID',                                                                                 // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                           // renderingID
+                    '@Html.Raw(Model.Item.Database.Name)',                                                  // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                                     // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',                                       // referenceID
+                    'btnDSSet@(UID)',                                                                                     // btnID
+                    true                                                                                    // reload true
+                );
+            }
+        </script>
+        <div style="text-align:center" class="imgContainer">    
+            <p>If you want to create a new  Video, click 'Create New  Video'.</p>
+            <input id="btnDSSet@(UID)" class="pe-button pe-green" type="button" value="Create New  Video" onclick="callSetDataSrc@(UID)()" />
+            <script>if(typeof(autoSave) != "undefined"){ autoSave(); }</script>
+        </div>
+    }
+}
+
+else
+{
+    if (Model.dsIsSet)
+    {
+        string src = Model.URL;
+        string autoPlay = string.Empty;
+        Regex YoutubeRegex = new Regex(@"youtu(?:\.be|be\.com)/(?:.*v(?:/|=)|(?:.*/)?)([a-zA-Z0-9-_]+)");
+        string vidID = string.Empty;
+        Match youtubeMatch = YoutubeRegex.Match(src);
+        if (youtubeMatch.Success)
+        {
+            vidID = youtubeMatch.Groups[1].Value;
+            src = @"https://www.youtube.com/embed/" + vidID;
+            autoPlay = src + "?autoplay=1";
+        }
+        else
+        {
+            //Regex VimeoRegex = new Regex(@"vimeo\.com/(?:.*#|.*video/)?([0-9]+)");
+            //Match vimeoMatch = VimeoRegex.Match(src);
+            if(src.ToLower().Contains("vimeo")){
+                var srcSplit = src.Split('/');
+                vidID = srcSplit[srcSplit.Length - 1];
+                //vidID = vimeoMatch.Groups[1].Value;
+                src = @"https://player.vimeo.com/video/" + vidID;
+                autoPlay = src + "?autoplay=1";
+            }
+            else{
+                if (src.ToLower().Contains("panopto") && src.ToLower().Contains("viewer.aspx"))
+                {
+                    src = src.Replace("Viewer", "Embed");
+                    autoPlay = src + "&autoplay=true";
+                }
+            }
+        }
+        <div class="iframe-embed">
+            @{
+        string imgSrc = "/images/videoPlaceholder.jpg";
+                if(Model.image != null && Model.image.MediaItem != null){
+                    imgSrc = Sitecore.Resources.Media.MediaManager.GetMediaUrl(Model.image.MediaItem);
+                }
+            }
+            <div class="iframeOverlay">
+                <img class="iframeThumbnail" src="@(imgSrc)" alt="@(Model.image.Alt)" />
+                <div class="playCir" onclick="playVid(this)">
+                    <div class="playTri"></div>
+                </div>
+            </div>
+            <iframe src="@(src)" data-src="@(autoPlay)" frameborder="0" allowfullscreen style="width:100%;height:100%;"></iframe>
+            
+            <script>
+                function playVid(sender){
+                    //jQuery(sender).parent().fadeOut(1000);
+                    jQuery(sender).parent().animate(
+                        {
+                            opacity:0
+                        }
+                        ,1000
+                        ,function(){
+                            var ytp = jQuery(jQuery(sender).parent().parent().find("iframe")[0]);
+                            ytp.css("z-index",3);
+                        }
+                    );
+                    var ytp = jQuery(jQuery(sender).parent().parent().find("iframe")[0]);
+                    ytp.attr("src",ytp.data("src"));
+                }
+
+                function fadeIn(){
+                    jQuery('.iframeOverlay').fadeIn();
+                }
+            </script>
+        </div>
+    }
+    else
+    {
+        <span>No data source for video found.</span>
+    }
+}

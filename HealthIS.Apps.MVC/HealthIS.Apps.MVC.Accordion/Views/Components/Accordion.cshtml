@@ -1,0 +1,86 @@
+﻿@*@model HealthIS.Apps.MVC.Models.Accordion
+*@
+@if (Sitecore.Context.PageMode.IsPageEditorEditing)
+{
+    if (Sitecore.Data.ID.IsID(Model.Rendering.DataSource))
+    {
+        if (Model.Item.HasChildren)
+        {
+            <div>
+                <br />
+                Accordion ID: @Html.Raw(Model.ID) <br />
+                Accordion Class: @Html.Raw(Model.Class) <br /><br />
+
+                @foreach (Sitecore.Data.Items.Item item in @Model.Item.Children)
+                {
+                    @:Header Title: @Html.Raw(Model.DataItems(item, "Header")) <br />
+                    @:Div ID: @Html.Raw(Model.DataItems(item, "Div id")) <br />
+                    @:Content: @Html.Raw(Model.DataItems(item, "Content")) <br />
+                    @Model.ActionItemButton("delete", "Remove This", item) @:&nbsp;
+                    @Model.MoveItemButton("moveup", "Move up", item) @:&nbsp;
+                    @Model.MoveItemButton("movedown", "Move down", item) 
+                    <hr />
+                }
+            </div>
+        }
+        else
+        {
+            <div><h2>Accordion Component</h2>Please add items</div><br />
+        }
+        <input type="button" class="btnAddDS2" value="Add New Item" onclick="callAddItemToDataSrc()" />
+    }
+    else
+    {
+        <div><h2>Accordion Component</h2>No Associated Datasource. Please Create New Datasource</div><br />
+        <input type="button" class="btnAddDS" value="Create DataSource" onclick="callSetDataSrc()" />
+    }
+    <script type="text/javascript">
+
+        Sitecore.PageModes.PageEditor.postRequest('webedit:save()');
+
+        // Create new datasource regarding to this component
+        function callSetDataSrc() {
+            setDataSrc(
+                '@Html.Raw(Model.PageItem.ID.ToString())',                      // itemID
+                'User Defined2/Component Template/Accordion',                   // templatePath
+                '_AC',                                                          // suffix
+                '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',   // renderingID
+                '@Html.Raw(Model.PageItem.Database.Name)',                      // dbName
+                '@Html.Raw(Sitecore.Context.Device.ID.ToString())',             // deviceID
+                '@Html.Raw(Model.Rendering.UniqueId.ToString())',               // renderingUID
+                ''                                                              // btnID
+            );
+        }
+
+        // Create new sub-items regarding to this component
+        function callAddItemToDataSrc() {
+            addItemToDataSrc(
+                '@Html.Raw(Model.PageItem.ID.ToString())',                              // itemID
+                'User Defined2/Component Template/Accordion/AccordionItem',             // templatePath
+                '_AC_Item',                                                             // suffix
+                '@Html.Raw(Model.PageItem.Database.Name)',                              // dbName
+                '@Html.Raw(Model.FolderItem)'                                           // dsFolderName
+            );
+        }
+    </script>
+}
+else
+{
+    <div class="accordion usf-accordion-doctors panel-group">
+    @foreach (Sitecore.Data.Items.Item item in @Model.Item.Children)
+    {
+        <div class='panel panel-default'>
+            <div class= 'panel-heading'>
+                <h4 class='panel-title'>
+                    <a data-toggle='collapse' data-parent='@item.Fields["ID"]' href='#@item.Fields["Div id"]' class='collapsed'>
+                        <span class="icon icon-caret-right"></span>@item.Fields["Header"]
+                    </a>
+                </h4>
+            </div>
+            <div id='@item.Fields["Div id"]' class='panel-collapse collapse' style="height: 0px;">
+                <div class='panel-body'>@Html.Raw(item.Fields["Content"].Value)</div>
+            </div>
+        </div>
+    }
+</div>
+}

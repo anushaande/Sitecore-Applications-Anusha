@@ -1,0 +1,203 @@
+﻿@model HealthIS.Apps.MVC.Models.FacultyDirectoryNursing
+@using Sitecore.Mvc
+
+@{
+    string sectionID = "";
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor && Model.isDatasourceNull)
+{
+    <center>
+        <h2>Faculty Directory Nursing</h2><p>If you want to create a Faculty Directory Nursing, click 'Create Faculty Directory Nursing'.</p>
+        <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrc()" value="Create Faculty Directory Nursing" />
+    </center>
+    <script>
+        jQuery(document).ready(function () {
+            autoSave();
+        });
+        // Create new datasource regarding to this component
+        function callSetDataSrc() {
+            setDataSrc(
+                '@Html.Raw(Model.PageItem.ID.ToString())',                                  // itemID
+                'User Defined2/Component Template/Faculty Directory Nursing',               // templatePath
+                '_FDN',                                                                     // suffix
+                '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',               // renderingID
+                '@Html.Raw(Model.PageItem.Database.Name)',                                  // dbName
+                '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                         // deviceID
+                '@Html.Raw(Model.Rendering.UniqueId.ToString())',                           // renderingUID
+                ''                                                                          // btnID
+            );
+        }
+    </script>
+    return;
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    if (!Model.isDatasourceNull)
+    {
+        <h2>Faculty Directory Nursing Config</h2>
+        <b>X20 Directory Listing:</b> <input type="checkbox" class="chX20" onmousedown="updateCheckValue(this,'X20')" @if (Model.chX20.Checked) { @Html.Raw("checked='checked'")   ; } else { @Html.Raw("")    } />
+        <script type="text/javascript">
+            // checkbox update
+            function updateCheckValue(e, tempID) {
+                var val = '';
+                if (!e.checked) { val = '1'; }
+                var itemURI = new Sitecore.ItemUri('@Model.Rendering.Item.ID.Guid.ToString().ToUpper()', 'en', '@Model.Rendering.Item.Version.ToString()', '@Model.Rendering.Item.Statistics.Revision');
+                if (tempID == 'X20') { Sitecore.WebEdit.setFieldValue(itemURI, '@Model.getTemplateID', val); }
+                if ($(e).prop("checked")) {
+                    $(e).removeAttr("checked");
+                } else {
+                    $(e).prop("checked", "true");
+                }
+            };
+        </script>
+    }
+}
+else
+{
+    // When page is not on Editing Mode
+    if (!Model.isDatasourceNull)
+    {
+        Model.LoadFacultyInfo();
+        sectionID = Model.chX20.Checked ? "nursing-directory-x20" : "nursing-directory";
+        string cssClass = Model.chX20.Checked ? "unstyled" : "directory-list";
+        string x20 = Model.chX20.Checked ? "-x20" : "";
+        <section id=@(sectionID)>
+            <div class="toolbar@(x20)">
+                <ul class="unstyled">
+                    <li class="toolbar-item@(x20)">
+                        <span class="toolbar-label@(x20)">Filter</span>
+                        <ul class="toolbar-menu@(x20) filter unstyled">
+                            <li><input checked value="faculty" type="checkbox" id="filter-faculty"><label for="filter-faculty">Faculty</label></li>
+                            <li><input checked value="staff" type="checkbox" id="filter-staff"><label for="filter-staff">Staff</label></li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="searchbox">
+                    <label class="searchbox-label" for="directory-search">Search</label>
+                    <input type="search" class="searchbox-input search" id="directory-search">
+                </div>
+                <ul class="pagination pagination-top"></ul>
+            </div>
+            <div class="directory-list@(x20)">
+                <ul class="list @(cssClass)">
+                    @foreach (HealthIS.Apps.MVC.Models.NursingPerson person in Model.StaffList)
+                    {
+                        string personid = person.PERSON_ID;
+                        string firstName = person.FIRST_NAME;
+                        string lastName = person.LAST_NAME;
+                        string fullName = firstName + " " + lastName;
+                        string cred = !String.IsNullOrEmpty(person.CREDENTIALS) ? ", " + person.CREDENTIALS : "";
+                        string role = person.ROLE;
+                        string email = person.EMAIL;
+                        string phone = person.PHONE;
+                        string primaryPosition = person.PRIMARY_POSITION;
+                        string building = person.BUILDING.ToUpper();
+                        string room = person.ROOM.ToUpper();
+
+                        <li class="directory-person@(x20)">
+                            @{ string last = @lastName.Replace(' ', '-'); }
+                            <a class="directory-person-link" href="/nursing/faculty-staff/directory@(x20)/@(personid)/@(last)">
+                                <img src="/resources/root-elements/FacultyDirectoryGetFile.cshtml?method=picture&person_id=@(personid)" alt="@(fullName)">
+                                <section class="name">
+                                    <span class="first">@(firstName)</span> <span class="last">@(lastName)</span>@if (!String.IsNullOrEmpty(cred))
+                                    {<span class="credentials">@(cred)</span>}
+                                </section>
+                            </a>
+                            <div class="directory-details">
+                                @if (!String.IsNullOrEmpty(primaryPosition))
+                                {
+                                    string pos = HealthIS.Apps.MVC.Helpers.FormatString("Appt", primaryPosition);
+                                    <section class="positions"><span class="primary">@(pos)</span></section>
+                                }
+                                @if (!String.IsNullOrEmpty(email))
+                                {
+                                    <section class="contact-email">
+                                        @if (!Model.chX20.Checked)
+                                        { <a href="mailto:@(email)"><i class="icon-envelope-alt">&nbsp;</i>@(email)</a> }
+                                        else
+                                        { <i class="icon-envelope-alt">&nbsp;</i>@(email) }
+                                    </section>
+                                }
+                                @if (!String.IsNullOrEmpty(phone))
+                                {
+                                    <section class="contact-phone">
+                                        <i class="icon-phone">&nbsp;</i><span class="phone">@(phone)</span>
+                                    </section>
+                                }
+                                @if (!String.IsNullOrEmpty(building))
+                                {
+                                    <section class="location">
+                                        <i class="icon-map-marker">&nbsp;</i><span class="building">@(building)</span> Building, Room <span class="room">@(room)</span>
+                                    </section>
+                                }
+                                <span class="role">@(role)</span>
+                                <a href="/nursing/faculty-staff/directory@(x20)/@(personid)/@(last)" class="read-more">Full Profile</a>
+                            </div>
+                        </li>
+                    }
+                </ul>
+                <ul class="pagination pagination-bottom"></ul>
+            </div>
+        </section>
+    }
+}
+<script type="text/javascript" src="/resources/root-elements/scripts/facdir-nursing-directory.js"></script>
+<!-- Enable this JS only if you want to enable features of the old nursing profiles -->
+<!-- <script type="text/javascript" src="/resources/root-elements/scripts/facdir-nursing-profilelib.js"></script> -->
+
+<script>
+    // Shared options for both pagination lists
+    var paginationOptions = {
+        customValue: function (i, list) {
+            var firstLetter = list.matchingItems[(i - 1) * list.page].values()['last'].charAt(0),
+                lastLetter  = list.matchingItems[i * list.page - 1 < list.matchingItems.length ? i * list.page - 1 : list.matchingItems.length - 1].values()['last'].charAt(0);
+
+            return firstLetter + ' - ' + lastLetter;
+        },
+        innerWindow: 10,
+    };
+
+    // Initialize List.JS with custom pagination and whatnot
+    var list = new List('@(sectionID)', {
+        valueNames: ['first', 'last', 'credentials', 'primary', 'email', 'role'],
+        page: 20,
+        plugins: [
+            ListPagination(jQuery.extend({
+                name: 'pagination-top',
+                paginationClass: 'pagination-top',
+            }, paginationOptions)),
+            ListPagination(jQuery.extend({
+                name: 'pagination-bottom',
+                paginationClass: 'pagination-bottom',
+            }, paginationOptions)) ,
+        ]
+    });
+
+    // Show only specific roles based on the filter drop down
+    jQuery(' .filter input').click(function () {
+        var values = [],
+            $inputs = $(' .filter input');
+
+        // If there aren't any checked inputs, check them all
+        if (!$inputs.filter(':checked').length) {
+            $inputs.prop('checked', true);
+        }
+
+        // Find all selected values
+        $inputs.filter(':checked').each(function () {
+            values.push($(this).val().toLowerCase());
+        });
+
+        // Filter the list based on the above selections
+        list.filter(function (item) {
+            for (var i = 0, vl = values.length; i < vl; i++) {
+                if (values[i].indexOf(item.values().role.toLowerCase()) === 0) {
+                    return true;
+                }
+            }
+            return false;
+        });
+    }) .trigger('change.@(sectionID)');
+</script>

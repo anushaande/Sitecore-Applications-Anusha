@@ -1,0 +1,68 @@
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\HealthIS.Apps.MVC.FAQ.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\HealthIS.Apps.MVC.FAQ.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\HealthIS.Apps.MVC.Helpers.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\HealthIS.Apps.Util.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Microsoft.Web.Infrastructure.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Sitecore.Kernel.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Sitecore.Mvc.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Helpers.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Mvc.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Razor.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Webpages.Deployment.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Webpages.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Webpages.Razor.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Sitecore.Client.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Oracle.DataAccess.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Lucene.Net.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\ITHit.WebDAV.Server.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Sitecore.Logging.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\HtmlAgilityPack.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Mvp.Xml.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\ComponentArt.Web.UI.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Sitecore.Zip.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Sitecore.NVelocity.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Newtonsoft.Json.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\RadEditor.Net2.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Telerik.Web.UI.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Sitecore.Analytics.Aggregation.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Sitecore.Analytics.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Stimulsoft.Report.WebDesign.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Stimulsoft.Report.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Stimulsoft.Report.Web.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Sitecore.Analytics.Model.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Sitecore.Analytics.DataAccess.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Sitecore.Analytics.Core.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Stimulsoft.Base.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Sitecore.Analytics.Processing.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Sitecore.Kernel.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Razor.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Webpages.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Webpages.Deployment.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Webpages.Razor.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Helpers.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Mvc.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Sitecore.Client.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Lucene.Net.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\HtmlAgilityPack.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Newtonsoft.Json.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Telerik.Web.UI.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\obj\Release\HealthIS.Apps.MVC.FAQ.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\obj\Release\HealthIS.Apps.MVC.FAQ.pdb
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\HealthIS.Apps.MVC.FAQ.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\HealthIS.Apps.MVC.FAQ.pdb
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Helpers.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Mvc.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Razor.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Webpages.Deployment.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Webpages.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Webpages.Razor.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Razor.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Webpages.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Webpages.Deployment.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Webpages.Razor.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Helpers.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\bin\System.Web.Mvc.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\obj\Release\HealthIS.Apps.MVC.FAQ.csprojResolveAssemblyReference.cache
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\obj\Release\HealthIS.Apps.MVC.FAQ.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.FAQ\obj\Release\HealthIS.Apps.MVC.FAQ.pdb

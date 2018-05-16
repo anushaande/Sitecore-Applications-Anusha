@@ -1,0 +1,15 @@
+﻿@using Sitecore.Mvc
+@{
+    if (Sitecore.Context.PageMode.IsPageEditor)
+    {
+        <script>
+            jQuery(document).ready(function () {
+                autoSave();
+            });
+        </script>
+        <style>.slick-shadow { margin-top: 40px; }</style>
+    }
+}
+<div>
+    @Html.Sitecore().Placeholder("Faculty Affairs Page Type")
+</div>

@@ -1,0 +1,92 @@
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\obj\Debug\HealthIS.Layouts.csprojResolveAssemblyReference.cache
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\HealthIS.Layouts.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\HealthIS.Layouts.pdb
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\HealthIS.Apps.Util.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Sitecore.Kernel.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Oracle.DataAccess.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Lucene.Net.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\ITHit.WebDAV.Server.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\HtmlAgilityPack.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Mvp.Xml.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\ComponentArt.Web.UI.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Sitecore.Zip.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Sitecore.Logging.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Sitecore.NVelocity.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Newtonsoft.Json.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\RadEditor.Net2.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Telerik.Web.UI.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Sitecore.Kernel.xml
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Lucene.Net.xml
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\HtmlAgilityPack.xml
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Newtonsoft.Json.xml
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Telerik.Web.UI.xml
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\obj\Debug\HealthIS.Layouts.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\obj\Debug\HealthIS.Layouts.pdb
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\HealthIS.Layouts.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\HealthIS.Layouts.pdb
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\HealthIS.Apps.Util.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\Sitecore.Kernel.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\Oracle.DataAccess.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\Lucene.Net.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\ITHit.WebDAV.Server.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\HtmlAgilityPack.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\Mvp.Xml.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\ComponentArt.Web.UI.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\Sitecore.Zip.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\Sitecore.Logging.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\Sitecore.NVelocity.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\Newtonsoft.Json.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\RadEditor.Net2.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\Telerik.Web.UI.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\Sitecore.Kernel.xml
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\Lucene.Net.xml
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\HtmlAgilityPack.xml
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\Newtonsoft.Json.xml
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\bin\Telerik.Web.UI.xml
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\obj\Debug\HealthIS.Layouts.csprojResolveAssemblyReference.cache
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\obj\Debug\HealthIS.Layouts.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\HealthIS.Layouts\obj\Debug\HealthIS.Layouts.pdb
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\HealthIS.Layouts.dll
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\HealthIS.Layouts.pdb
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Oracle.DataAccess.dll
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Lucene.Net.dll
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\ITHit.WebDAV.Server.dll
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\HtmlAgilityPack.dll
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Mvp.Xml.dll
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\ComponentArt.Web.UI.dll
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Sitecore.Zip.dll
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Sitecore.Logging.dll
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Sitecore.NVelocity.dll
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Newtonsoft.Json.dll
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\RadEditor.Net2.dll
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Telerik.Web.UI.dll
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Sitecore.Kernel.xml
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Lucene.Net.xml
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\HtmlAgilityPack.xml
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Newtonsoft.Json.xml
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Telerik.Web.UI.xml
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\obj\Debug\HealthIS.Layouts.csprojResolveAssemblyReference.cache
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\obj\Debug\HealthIS.Layouts.dll
+\\sitecoredev\c$\inetpub\wwwroot\Development\source\Sitecore VS Web Project\HealthIS.Layouts\obj\Debug\HealthIS.Layouts.pdb
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\HealthIS.Layouts.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\HealthIS.Layouts.pdb
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Oracle.DataAccess.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Lucene.Net.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\ITHit.WebDAV.Server.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\HtmlAgilityPack.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Mvp.Xml.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\ComponentArt.Web.UI.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Sitecore.Zip.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Sitecore.Logging.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Sitecore.NVelocity.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Newtonsoft.Json.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\RadEditor.Net2.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Telerik.Web.UI.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Sitecore.Kernel.xml
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Lucene.Net.xml
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\HtmlAgilityPack.xml
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Newtonsoft.Json.xml
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\bin\Telerik.Web.UI.xml
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\obj\Debug\HealthIS.Layouts.csprojResolveAssemblyReference.cache
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\obj\Debug\HealthIS.Layouts.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Layouts\obj\Debug\HealthIS.Layouts.pdb

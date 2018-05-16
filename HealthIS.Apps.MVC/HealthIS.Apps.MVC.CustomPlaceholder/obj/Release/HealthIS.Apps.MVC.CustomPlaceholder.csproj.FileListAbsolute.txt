@@ -1,0 +1,5 @@
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.CustomPlaceholder\obj\Release\HealthIS.Apps.MVC.CustomPlaceholder.csprojResolveAssemblyReference.cache
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.CustomPlaceholder\bin\Release\HealthIS.Apps.MVC.CustomPlaceholder.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.CustomPlaceholder\bin\Release\HealthIS.Apps.MVC.CustomPlaceholder.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.CustomPlaceholder\obj\Release\HealthIS.Apps.MVC.CustomPlaceholder.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.CustomPlaceholder\obj\Release\HealthIS.Apps.MVC.CustomPlaceholder.pdb

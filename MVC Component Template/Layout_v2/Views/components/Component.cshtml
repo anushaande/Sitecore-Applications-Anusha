@@ -1,0 +1,97 @@
+﻿@using Sitecore.Mvc
+
+@{
+    string btnID = "setDataSource" + Model.Rendering.UniqueId.ToString().Split('-')[0];
+    
+    //checkbox start
+    string uid = Model.Rendering.UniqueId.ToString().Replace('-','_');
+    string hiddenID = "hidden_" + uid;
+    string cbID = "cb_RichTextContent_" + uid;
+    string checkedAttr = Model.Rendering.Item["RichTextContent"] == "1" ? "checked='checked'" : "";
+    //checkbox end    
+    
+    Sitecore.Data.Items.Item data = Sitecore.Context.Item;
+    string jj = "";
+    if (data != null) {
+        if (data.Fields.Where(x => x.DisplayName == "Placeholder").ToList().Count > 0){
+            jj = data.Fields["Placeholder"].Value;
+        }
+        else{ jj = "n/a"; }
+    }
+     
+    string DynamicData = "";
+    string rtc = "<b>Data Source not yet set/approved.</b>";
+    if(Model.Item != null && Model.dsIsSet){
+        rtc = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Rendering.Item, "RichTextContent");
+    }
+
+    string name = Model.dsIsSet ? Model.Rendering.DataSource : "n/a";
+
+    if (name.Trim().Length == 0) { name = "0"; }
+
+    DynamicData += "<br/>Datasource ID: " + name
+        + "<br/>Datasource is set: " + Model.dsIsSet
+        + "<br/>Rendering UID: " + Model.Rendering.UniqueId.ToString()
+        + "<br/>Page ID: " + Model.PageItem.ID.ToString();
+
+    /*foreach (Sitecore.Links.ItemLink link in Model.PageItem.Links.GetAllLinks())
+    {
+        DynamicData += "<br/>&nbsp;&nbsp;&nbsp;&nbsp;TargetItemID: " + link.TargetItemID.ToString();
+    }*/
+    
+    if(Model.Item != null){
+        DynamicData += "<br/>Item ID: " + Model.Item.ID.ToString();
+    }
+    else{
+        DynamicData += "<br/>Item ID: Item not found";   
+    }
+} 
+
+<h3>XML:</h3>
+@foreach (HealthIS.Apps.MVC.RSSItem itm in Model.Feed)
+{
+    <h2>Title</h2>
+    <a href="@itm.Link" target="_blank">@itm.Title</a><br />
+    <h2>PublishDate</h2>
+    <span>@itm.PublishDate</span><br/>
+    <h2>Content</h2>
+    <p>@Html.Raw(itm.Content)</p>
+    <div style='clear:both;position:relative;'></div><br/>
+}
+
+@*
+<h3>Rich text area:</h3>
+<div class="richText" style="border:solid 1px black;min-height:1em;">@Html.Raw(rtc)</div>*@
+
+<div id="@hiddenID" style="display:none;">
+    @Html.Raw(rtc)
+</div>
+
+@if (Sitecore.Context.PageMode.IsPageEditor){
+    <script type="text/javascript" src="/resources/scripts/HealthIS.Apps.Util.js"></script>
+    <div style="width:100%;">
+        <label for="@(cbID)">Checkbox:</label><input type="checkbox" id="@cbID" @checkedAttr onmousedown="cbOnChange('@(hiddenID)', '@(cbID)')"/>
+    
+        <div class="divData">@Html.Raw(DynamicData)</div>
+        @if (Model.Error != null)
+        {
+            if (Model.Error.Length > 0)
+            {
+            <div class="err" style="color:red;">
+                <h3>Error(s):</h3>
+                <div class="errorContent">@Html.Raw(Model.Error)</div>
+            </div>
+            }
+        }
+    </div>
+    <input type="button" id="@btnID" class="btnAddDS" value="Create DataSource" 
+        onclick="setDataSrc('@Html.Raw(Model.PageItem.ID.ToString())',
+            '@Html.Raw(Model._myDataSourceTemplatePath)',
+            '_CO',
+            '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',
+            '@Html.Raw(Model.PageItem.Database.Name)',
+            '@Html.Raw(Sitecore.Context.Device.ID.ToString())',
+            '@Html.Raw(Model.Rendering.UniqueId.ToString())',
+            '@(btnID)')" 
+    />
+}

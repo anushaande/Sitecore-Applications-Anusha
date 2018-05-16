@@ -1,0 +1,18 @@
+﻿@model HealthIS.Layouts.Models.Byrd
+@using Sitecore.Mvc
+
+@Html.Sitecore().Placeholder("Top Header")
+<header class="container block-center" id="dept-header" role="banner">
+    <a id="health-logo" class="text-hide" href="http://health.usf.edu">USF Health</a>
+    @Html.Sitecore().Placeholder("BreadCrumbs")
+    <h4>@Model.currentItem["Page Title"]</h4>
+    <div class="template-options"></div>
+</header>
+
+@Html.Sitecore().Placeholder("Horizontal Navigation")
+
+<main class="container block-center site-content" role="main">
+    @Html.Sitecore().Placeholder("Byrd Page Type")
+</main>
+ 
+@Html.Sitecore().Placeholder("Bottom Footer")

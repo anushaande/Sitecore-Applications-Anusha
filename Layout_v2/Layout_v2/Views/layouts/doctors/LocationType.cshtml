@@ -1,0 +1,17 @@
+﻿@using Sitecore.Mvc
+@using Layout_v2.Models
+
+<h1 class="doctors-page-title">@Html.Raw(Model.PageMainTitle)</h1>
+<div class="doctors-box">
+    <div class="locations">        @Html.Sitecore().Placeholder("Location")    </div>
+</div>
+
+<div class="row doctors-row">    @Html.Sitecore().Placeholder("DynamicPlaceholder")
+</div>
+
+<script type="text/javascript">
+    function call(id) {
+        $("#phoneList-" + id).toggle("slow", function () {
+        });
+    }
+</script>

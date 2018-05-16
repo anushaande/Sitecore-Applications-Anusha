@@ -1,0 +1,122 @@
+﻿@model HealthIS.Layouts.Models.Corporate
+@using Sitecore.Mvc
+
+<header role="banner" id="corp-header">
+    <div class="container block-center">
+        <h1><span class="welcome">Welcome</span> to USF Health at the <br /><span class="university">University of South Florida</span>, Tampa</h1>
+        <a href="http://health.usf.edu" id="corp-logo"><img src="/layouts/images/corp-logo.png" alt="USF Health" height="174" width="247" /></a>
+        <!-- Placeholder: health links -->
+        <nav class="health-links menu-hidden">
+            <button class="text-hide icon-reorder" id="health-menu-toggle">Menu</button>
+            <ul class="clearfix">
+              <li><a href="http://health.usf.edu/news">News</a></li>
+              <li><a href="http://health.usf.edu/education">Education</a></li>
+              <li><a href="http://health.usf.edu/research">Research</a></li>
+              <li><a href="http://health.usf.edu/doctors/">Patient Care</a></li>
+            </ul>
+        </nav>
+        <!-- end health links -->
+        <!-- Placeholder: usf links -->
+        <nav class="usf-links">
+            <ul class="clearfix">
+                <li><a href="http://health.usf.edu"><i class="icon-home">&nbsp;</i>USF Health</a></li>
+                <li><a href="http://www.usf.edu">USF</a></li>
+                <li><a href="http://search.usf.edu/search?btnG=USF+Health+Search&amp;access=p&amp;btng=Search&amp;client=health&amp;proxystylesheet=health&amp;output=xml_no_dtd&amp;sort=date%3AD%3AL%3Ad1&amp;oe=UTF-8&amp;ie=UTF-8&amp;ud=1&amp;exclude_apps=1&amp;site=health">Search</a></li>
+            </ul>
+        </nav>
+        <!-- end usf links -->
+    </div>
+</header>
+ 
+<!-- BEGIN_REPLACE|breadCrumbs -->
+<section id="breadcrumbs" class="container block-center">
+    <!-- Placeholder: breadcrumbs -->
+    @Html.Sitecore().Placeholder("BreadCrumbs")
+    <!-- end breadcrumbs -->
+</section>
+<!-- END_REPLACE|breadCrumbs -->
+ 
+<!-- BEGIN_REMOVE|horizontalNavigation -->
+<!-- Placeholder: department navigation -->
+@Html.Sitecore().Placeholder("Horizontal Navigation")
+<!-- end department navigation -->
+<!-- END_REMOVE|horizontalNavigation -->
+ 
+<main role="main" class="container block-center site-content">
+    @if (Sitecore.Context.PageMode.IsExperienceEditor)
+    {
+        @*<input type="button" id="addNewChildItemTop" class="pe-button pe-green" onclick="addChildPage();" style="float: right; margin-bottom: 20px; margin-right: 15px;" value="Add a Child Page" />*@
+            <script>
+                jQuery(document).ready(function () {
+                    autoSave();
+                    var currentUrl = '@Request.Url.AbsoluteUri';
+                    msgEmptyPlaceholder(currentUrl);
+                });
+            </script>
+        }
+        @Html.Sitecore().Placeholder("Corporate Page Type")
+    </main>
+
+    <!-- BEGIN Social Media Layout -->
+    <section class="social-media-giving container block-center">
+        <div class="social-icons-small">
+            <a href="https://www.facebook.com/usfhealth" target="_blank"><em class="icon-facebook"></em></a>
+            <a href="https://twitter.com/USFHealth" target="_blank"><em class="icon-twitter"></em></a>
+            <a href="https://www.youtube.com/usfhealth" target="_blank"><em class="icon-youtube-play"></em></a>
+            <a href="https://www.instagram.com/usfhealth/" target="_blank"><em class="icon-instagram"></em></a>
+            <a href="https://www.linkedin.com/company/usf-health" target="_blank"><em class="icon-linkedin"></em></a>
+        </div>
+        <div class="give-connect-section">
+            <div class="give-button">
+                <a href="http://health.usf.edu/giving/">
+                    <span>GIVE</span>
+                    <img src="/layouts/images/corporate/corp-build-usf-health.jpg">
+                </a>
+            </div>
+            <div class="connect-button">
+                <a href="http://health.usf.edu/social_media">
+                    <span>MORE WAYS TO CONNECT <i class="icon-caret-right"></i></span>
+                </a>
+            </div>
+        </div>
+    </section>
+    <!-- END Social Media Layout -->
+
+    <footer role="contentinfo" id="corp-footer">
+        <div class="container block-center">
+            <div class="left">
+                <img src="/layouts/images/usf-corp-wordmark.png" alt="University of South Florida" width="296" height="84" class="usf-wordmark" />
+                <!-- BEGIN_REPLACE|footer  -->
+                <div itemscope itemtype="http://schema.org/CollegeOrUniversity">
+                    <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                        <p>
+                            <span itemprop="streetAddress">@Html.Raw(Model.vCardAddress)</span>
+                        </p>
+                    </div>
+                    <p>
+                        @if (!String.IsNullOrEmpty(Model.vCardPhoneNumber)) { <b>Phone:</b> <span itemprop="telephone">@Html.Raw(Model.vCardPhoneNumber)</span><br /> }
+                        @if (!String.IsNullOrEmpty(Model.vCardFaxNumber)) { <b>Fax:</b> <span itemprop="faxNumber">@Html.Raw(Model.vCardFaxNumber)</span><br /> }
+                    </p>
+                </div>
+                <!-- END_REPLACE|footer  -->
+            </div>
+            <div class="site-map">
+                <!-- BEGIN_REPLACE|footerLinks -->
+                @Html.Raw(Model.FooterLinks)
+                <!-- END_REPLACE|footerLinks  -->
+            </div>
+            <span id="modified">This page was last modified on: @Html.Sitecore().Field("__Updated", new { format = "MM/dd/yyyy" })</span>
+            <div id="corporate-info">
+                <div class="credits">
+                    <a href="http://health.usf.edu/is"><img src="/layouts/images/health_is.png" width="62" height="62" alt="USF Health Information Systems"/></a>
+                    <a href="http://health.usf.edu/is" id="powered">Powered by<br />
+                    USF Health Information Systems</a>
+                </div>
+                <div class="copyright">Copyright &copy; 2016, University of South Florida. All rights reserved.</div>
+                <div class="contact">12901 Bruce B. Downs Blvd, Tampa, Florida, USA
+                    <!--<a href="http://hsccf.hsc.usf.edu/hscanswers/contact_form.cfm" target="_blank">Ask USF Health</a>-->
+                </div>
+            </div>
+        </div>
+    </footer>
+    <footer id="health-tagline"><strong>USF Health:</strong> To envision and implement the future of health.</footer>

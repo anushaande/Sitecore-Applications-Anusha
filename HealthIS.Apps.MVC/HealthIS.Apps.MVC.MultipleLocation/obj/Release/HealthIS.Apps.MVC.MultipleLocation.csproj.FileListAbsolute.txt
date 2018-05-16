@@ -1,0 +1,17 @@
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\bin\HealthIS.Apps.MVC.MultipleLocation.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\bin\HealthIS.Apps.MVC.MultipleLocation.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\bin\Microsoft.Web.Infrastructure.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\bin\System.Web.Helpers.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\bin\System.Web.Razor.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\bin\System.Web.Webpages.Deployment.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\bin\System.Web.Webpages.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\bin\System.Web.Webpages.Razor.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\bin\System.Web.Razor.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\bin\System.Web.Webpages.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\bin\System.Web.Webpages.Deployment.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\bin\System.Web.Webpages.Razor.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\bin\System.Web.Helpers.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\obj\Release\HealthIS.Apps.MVC.MultipleLocation.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\obj\Release\HealthIS.Apps.MVC.MultipleLocation.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\obj\Release\HealthIS.Apps.MVC.MultipleLocation.csprojResolveAssemblyReference.cache
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.MultipleLocation\bin\HealthIS.Apps.MVC.MultipleLocation.dll.config

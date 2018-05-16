@@ -1,0 +1,85 @@
+﻿@model HealthIS.Apps.MVC.Models.RSS2
+@using Sitecore.Mvc
+
+@if (Model.isDatasourceSet)
+{
+    if (Sitecore.Context.PageMode.IsPageEditor)
+    {
+        <div>
+            Feed Title: @Html.Raw(Model.FeedTitle) <br />
+            Feed URL: @Html.Raw(Model.FeedURL) <br />
+            Number of Items: @Html.Raw(Model.NumberOfItems) <br />
+            Number of Images: @Html.Raw(Model.NumberOfImages) <br />
+            Item Description Character Limit: @Html.Raw(Model.ItemDescriptionCharacterLimit) <br />
+            <label for="DisplayFeedTitle">Display Feed Title: </label>
+            <select name="DisplayFeedTitle" id="DisplayFeedTitle" onclick="javascript:dlOnChangeUpdate('DisplayFeedTitle');">
+                <option value="True" @(!String.IsNullOrEmpty(Model.DisplayFeedTitle) ? "selected" : "")>Enable</option>
+                <option value="False" @(String.IsNullOrEmpty(Model.DisplayFeedTitle) ? "selected" : "")>Disable</option>
+            </select> <br />
+            <label for="DisplayTitleFirst">Display Title First: </label>
+            <select name="DisplayTitleFirst" id="DisplayTitleFirst" onclick="javascript:dlOnChangeUpdate('DisplayTitleFirst');">
+                <option value="True" @(!String.IsNullOrEmpty(Model.DisplayTitleFirst) ? "selected" : "")>Enable</option>
+                <option value="False" @(String.IsNullOrEmpty(Model.DisplayTitleFirst) ? "selected" : "")>Disable</option>
+            </select> <br />
+            <label for="DisplayFeedDescription">Display Feed Description: </label>
+            <select name="DisplayFeedDescription" id="DisplayFeedDescription" onclick="javascript:dlOnChangeUpdate('DisplayFeedDescription');">
+                <option value="True" @(!String.IsNullOrEmpty(Model.DisplayFeedDescription) ? "selected" : "")>Enable</option>
+                <option value="False" @(String.IsNullOrEmpty(Model.DisplayFeedDescription) ? "selected" : "")>Disable</option>
+            </select> <br />
+
+            <script>
+                function dlOnChangeUpdate(fieldName) {
+                    dlOnChange(fieldName, '@Url.Action("RSS2", "Components")');
+                }
+            </script>
+
+            Feed CSS Class: @Html.Raw(Model.FeedCSSClass) <br />
+            Feed Item CSS Class: @Html.Raw(Model.FeedItemCSSClass) <br />
+            Feed Title CSS Class: @Html.Raw(Model.FeedTitleCSSClass) <br />
+            Feed Description CSS Class: @Html.Raw(Model.FeedDescriptionCSSClass) <br />
+            Feed Item Title CSS Class: @Html.Raw(Model.FeedItemTitleCSSClass) <br />
+            Feed Item Description CSS Class: @Html.Raw(Model.FeedItemDescriptionCSSClass) <br />
+            Feed Item Publication Date CSS Class: @Html.Raw(Model.FeedItemPublicationDateCSSClass) <br />
+            Feed Item Image CSS Class: @Html.Raw(Model.FeedItemImageCSSClass) <br />
+        </div>
+    }
+    else
+    {
+        <div class="@Html.Raw(Model.FeedCSSClass)">
+            @Html.Raw(Model.sbItems.ToString())
+        </div>
+    }
+}
+else
+{
+    if (Sitecore.Context.PageMode.IsPageEditor)
+    {
+        <div><h2>RSS Feed Component</h2>No Associated Datasource. Please Create New Datasource</div><br />
+        <input type="button" class="btnAddDS" value="Create DataSource" onclick="callSetDataSrc()" />
+
+        <script type="text/javascript">
+
+            Sitecore.PageModes.PageEditor.postRequest('webedit:save()');
+
+            // Create new datasource regarding to this component
+            function callSetDataSrc() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                      // itemID
+                    'User Defined2/Component Template/RSS Reader MVC',                   // templatePath
+                    '_RSS',                                                         // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',   // renderingID
+                    '@Html.Raw(Model.PageItem.Database.Name)',                      // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',             // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',               // renderingUID
+                    ''                                                              // btnID                                                          // btnID
+                );
+            }
+        </script>
+    
+    }
+    else
+    {
+        <div>You don't have datasource</div>
+    }
+}
+

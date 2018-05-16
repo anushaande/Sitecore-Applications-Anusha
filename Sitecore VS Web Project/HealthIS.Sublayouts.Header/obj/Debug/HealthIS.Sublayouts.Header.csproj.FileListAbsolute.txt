@@ -1,0 +1,5 @@
+Y:\source\Sitecore VS Web Project\HealthIS.Sublayouts.Header\bin\HealthIS.Sublayouts.Header.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Sublayouts.Header\bin\HealthIS.Sublayouts.Header.pdb
+Y:\source\Sitecore VS Web Project\HealthIS.Sublayouts.Header\obj\Debug\HealthIS.Sublayouts.Header.dll
+Y:\source\Sitecore VS Web Project\HealthIS.Sublayouts.Header\obj\Debug\HealthIS.Sublayouts.Header.pdb
+Y:\source\Sitecore VS Web Project\HealthIS.Sublayouts.Header\obj\Debug\HealthIS.Sublayouts.Header.csprojResolveAssemblyReference.cache

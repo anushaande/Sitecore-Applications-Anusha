@@ -1,0 +1,10 @@
+C:\SVN\Sources\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\bin\Release\HealthIS.WorkflowEmailNotification.dll
+C:\SVN\Sources\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\bin\Release\HealthIS.WorkflowEmailNotification.pdb
+C:\SVN\Sources\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\obj\Release\HealthIS.WorkflowEmailNotification.dll
+C:\SVN\Sources\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\obj\Release\HealthIS.WorkflowEmailNotification.pdb
+C:\SVN\Sources\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\obj\Release\HealthIS.WorkflowEmailNotification.csprojResolveAssemblyReference.cache
+C:\Sitecore_SVN\Source\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\bin\Release\HealthIS.WorkflowEmailNotification.dll
+C:\Sitecore_SVN\Source\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\bin\Release\HealthIS.WorkflowEmailNotification.pdb
+C:\Sitecore_SVN\Source\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\obj\Release\HealthIS.WorkflowEmailNotification.csprojResolveAssemblyReference.cache
+C:\Sitecore_SVN\Source\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\obj\Release\HealthIS.WorkflowEmailNotification.dll
+C:\Sitecore_SVN\Source\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\obj\Release\HealthIS.WorkflowEmailNotification.pdb

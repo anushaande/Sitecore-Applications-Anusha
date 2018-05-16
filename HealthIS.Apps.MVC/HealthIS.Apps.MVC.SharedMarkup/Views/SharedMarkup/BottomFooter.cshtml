@@ -1,0 +1,42 @@
+﻿@using Sitecore.Mvc
+
+<!--**** START Custom Footer ****-->
+<footer role="contentinfo" id="dept-footer">
+    <div class="container block-center">
+        <div itemscope itemtype="//schema.org/CollegeOrUniversity">
+            <div class="col-md-4 responsive-footer-main">
+                <section class="vCard">
+                    <img alt="University of South Florida" src="/layouts/images/usf-wordmark.png" />
+                    <h3><span itemprop="name">@Html.Raw(Model.vCardTitle)</span></h3>
+                    <div itemprop="address" itemscope itemtype="//schema.org/PostalAddress">
+                        <p><span itemprop="streetAddress">@Html.Raw(Model.vCardAddress)</span></p>
+                    </div>
+                    <p>
+                        @if (!String.IsNullOrEmpty(Model.vCardPhoneNumber))
+                        { <span class="text-label" itemprop="telephone">Phone:</span> @Html.Raw(Model.vCardPhoneNumber) <br /> }
+                        @if (!String.IsNullOrEmpty(Model.vCardFaxNumber))
+                        { <span class="text-label" itemprop="faxNumber">Fax:</span> @Html.Raw(Model.vCardFaxNumber) <br /> }
+                        @if (!String.IsNullOrEmpty(Model.vCardEmail))
+                        { <span class="text-label" itemprop="email">Email:</span> @Html.Raw(Model.vCardEmail) <br /> }
+                    </p>
+                    @if (!String.IsNullOrEmpty(Model.SocialIcons))
+                    {
+                        <div class="academic-footer-social">
+                            @Html.Raw(Model.SocialIcons)
+                        </div>
+                    }
+                </section>
+                <div id="credits">
+                    <a id="powered" href="http://health.usf.edu/is">Powered By USF Information Technology</a>
+                </div>
+                <span id="modified">This page was last modified on: @Html.Sitecore().Field("__Updated", new { format = "MM/dd/yyyy" })</span>
+            </div>
+            @Html.Raw(Model.FooterLinks)
+        </div>
+    </div>
+</footer>
+<div id="dept-footer-bottom" class="block-center">
+    <div class="container bottom-section">
+        <h2><strong>USF Health:</strong> To envision and implement <span>the future of health.</span></h2>
+    </div>
+</div>

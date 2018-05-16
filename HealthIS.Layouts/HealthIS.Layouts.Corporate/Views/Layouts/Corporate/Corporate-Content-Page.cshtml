@@ -1,0 +1,51 @@
+﻿@using Sitecore.Mvc
+@using HealthIS.Apps.MVC
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    <script>
+        jQuery(document).ready(function () {
+            autoSave();
+        });
+    </script>
+}
+<div class="slick-shadow">
+    @if (String.IsNullOrEmpty(Helpers.placeholderRequired("Headline for Standard").ToHtmlString()))
+    {
+        @Html.Raw("<h1 class='standard-header corporate-standard'>");
+        @Html.Sitecore().Placeholder("Headline for Standard") @Helpers.placeholderRequired("Headline for Standard")
+        @Html.Raw("</h1>");
+    }
+    @if (Sitecore.Context.PageMode.IsExperienceEditor)
+    {
+        <div class="content-area first">
+            @Html.Sitecore().Placeholder("Dynamic Placeholder1")
+        </div>
+        <div class="content-area break">
+            @Html.Sitecore().Placeholder("Dynamic Placeholder2")
+        </div>
+        <div class="content-area break">
+            @Html.Sitecore().Placeholder("Dynamic Placeholder3")
+        </div>
+    }
+    else
+    {
+        if (String.IsNullOrEmpty(Helpers.placeholderRequired("Dynamic Placeholder1").ToHtmlString()))
+        {
+            <div>
+                @Html.Sitecore().Placeholder("Dynamic Placeholder1")
+            </div>
+        }
+        if (String.IsNullOrEmpty(Helpers.placeholderRequired("Dynamic Placeholder2").ToHtmlString()))
+        {
+            <div>
+                @Html.Sitecore().Placeholder("Dynamic Placeholder2")
+            </div>
+        }
+        if (String.IsNullOrEmpty(Helpers.placeholderRequired("Dynamic Placeholder3").ToHtmlString()))
+        {
+            <div>
+                @Html.Sitecore().Placeholder("Dynamic Placeholder3")
+            </div>
+        }
+    }
+</div>

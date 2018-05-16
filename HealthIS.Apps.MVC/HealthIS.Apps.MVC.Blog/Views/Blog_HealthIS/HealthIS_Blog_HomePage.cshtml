@@ -1,0 +1,111 @@
+﻿@model HealthIS.Apps.MVC.Blog.Models.ListPage
+
+<style>
+    .blog-content-right {
+        margin-top: 66px;
+    }
+</style>
+
+<div class="blog-home-page">
+    <h1 class="blog-header-large">
+        <i class="icon-switch"></i> Health IS <strong>Technology</strong> Blog
+    </h1>
+    @if (Model.AllArticles != null && Model.AllArticles.Count() > 0)
+    {
+        // List Pagination
+        string blogRoot = HealthIS.Apps.MVC.Blog.BlogSettings.ArticleRootPath.Paths.GetFriendlyUrl();
+        Sitecore.Data.Items.Item firstArticle = Model.AllArticles.First();
+        Model.AllArticles.Remove(firstArticle);
+        int activePage;
+        int.TryParse(Request.QueryString["Page"], out activePage);
+        var pager = new HealthIS.Apps.MVC.Blog.Models.Pager(Model.AllArticles.Count(), activePage, Model.PageSize);
+        var pagination = new HealthIS.Apps.MVC.Blog.Models.Pagination
+        {
+            Items = Model.AllArticles.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize),
+            Pager = pager
+        };
+
+        if (activePage == null || activePage <= 1)
+        {
+            string title = firstArticle.Fields["Title"].Value;
+            string description = firstArticle.Fields["Description"].Value;
+            Sitecore.Data.Fields.ImageField ThumbnailImageField = firstArticle.Fields["ThumbnailImage"];
+            string ThumbnailImageUrl = ThumbnailImageField != null && !String.IsNullOrEmpty(ThumbnailImageField.Value) ? Sitecore.Resources.Media.MediaManager.GetMediaUrl(ThumbnailImageField.MediaItem) : "/~/media/Images/Root Element/no-photo";
+            Sitecore.Data.Fields.DateField publishedDateField = (Sitecore.Data.Fields.DateField)firstArticle.Fields["pubDate"];
+            DateTime publishedDate = publishedDateField.DateTime;
+
+            <!--====  Begin TOP STORY Item  ====-->
+            <div class="top-story">
+                <div class="hero-img blog-img-hover">
+                    <a href="@firstArticle.Paths.GetFriendlyUrl()">
+                        <img src="@(ThumbnailImageUrl)" class="attachment-single-thumb size-single-thumb wp-post-image" alt="@(title)">
+                    </a>
+                </div>
+                <div class="blog-post-global">
+                    <h4><strong>NEW STORY</strong></h4>
+                    <h3 class="post-title">
+                        <a href="@firstArticle.Paths.GetFriendlyUrl()">@(title)</a>
+                    </h3>
+                    <div class="post-time">
+                        <i class="icon-time"> </i> <strong> Posted on </strong> @Sitecore.DateUtil.FormatIsoDate(Sitecore.DateUtil.ToIsoDate(publishedDate), "MMMM dd, yyyy")
+                    </div>
+                    <div class="post-excerpt">
+                        @Html.Raw(string.Join("", description.Take(342)))...
+                    </div>
+                </div>
+            </div>
+            <!--====  End of TOP STORY Item  ====-->
+        }
+
+        // Get all articles
+        int count = 1;
+        Sitecore.Data.Items.Item isLastItme = pagination.Items.Last();
+        foreach (Sitecore.Data.Items.Item item in pagination.Items)
+        {
+            if (item != null && !String.IsNullOrEmpty(item.Fields["Title"].Value))
+            {
+                string title = item.Fields["Title"].Value;
+                string description = item.Fields["Description"].Value;
+                Sitecore.Data.Fields.ImageField ThumbnailImageField = item.Fields["ThumbnailImage"];
+                string ThumbnailImageUrl = ThumbnailImageField != null && !String.IsNullOrEmpty(ThumbnailImageField.Value) ? Sitecore.Resources.Media.MediaManager.GetMediaUrl(ThumbnailImageField.MediaItem) : "/~/media/Images/Root Element/no-photo";
+                Sitecore.Data.Fields.DateField publishedDateField = (Sitecore.Data.Fields.DateField)item.Fields["pubDate"];
+                DateTime publishedDate = publishedDateField.DateTime;
+
+                if (count % 2 != 0)
+                {
+                    @:<div class="row search-results-row">
+                }
+                <div class="col-md-6 search-results-col">
+                    <div class="blog-search-img blog-img-hover">
+                        <a href="@item.Paths.GetFriendlyUrl()">
+                            <img src="@(ThumbnailImageUrl)" class="attachment-single-thumb size-single-thumb wp-post-image" alt="@(title)">
+                        </a>
+                    </div>
+                    <div class="blog-post-global">
+                        <h3 class="post-title">
+                            <a href="@item.Paths.GetFriendlyUrl()">@(title)</a>
+                        </h3>
+                        <div class="post-time">
+                            <i class="icon-time"> </i> <strong> Posted on </strong> @Sitecore.DateUtil.FormatIsoDate(Sitecore.DateUtil.ToIsoDate(publishedDate), "MMMM dd, yyyy")
+                        </div>
+                        <div class="post-excerpt">
+                            @Html.Raw(string.Join("", description.Take(150)))...
+                        </div>
+                    </div>
+                </div>
+                if (item.Equals(isLastItme) || count % 2 == 0)
+                {
+                    @:</div>
+                }
+                count++;
+            }
+        }
+        <!-- Pagination -->
+        if (pagination.Pager.EndPage > 1)
+        {
+            <div class="pagination-section">
+                @Html.Raw(Model.GetPagination.HtmlMarkup(pagination.Pager, blogRoot, pagination.Pager.CurrentPage.ToString()))
+            </div>
+        }
+    }
+</div>

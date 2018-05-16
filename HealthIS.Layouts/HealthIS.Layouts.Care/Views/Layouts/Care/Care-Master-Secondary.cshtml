@@ -1,0 +1,90 @@
+﻿@using Sitecore.Mvc
+@model HealthIS.Layouts.Models.Care
+
+<!-- START Header -->
+<script src="/resources/scripts/USFHealthSearch.js"></script>
+<div id="care-header-02">
+    <div class="care-header-upper-wrap">
+        <div class="care-header-upper-wrap-inner care-container">
+            <div class="care-header-upper">
+                <header role="banner">
+                    <nav class="usf-links-desktop">
+                        <ul>
+                            <li><a href="http://health.usf.edu/education">Academics</a></li>
+                            <li><a href="http://health.usf.edu/research">Research</a></li>
+                            <li><a href="http://health.usf.edu/news">News</a></li>
+                        </ul>
+                    </nav>
+                    <div class="care-search">
+                        <input type="checkbox" class="font-icon">
+                        <label><span></span></label>
+                        <div class="care-container">
+                            @{
+                                string disabled = Sitecore.Context.PageMode.IsExperienceEditor ? "disabled" : "";
+                            }
+                            <form>
+                                <input type="text" class="care-form-control" name="care-search-bar" placeholder="">
+                                <button type="submit" class="icon-search" @disabled onclick='CareSearch(); return false'></button>
+                            </form>
+                        </div>
+                    </div>
+                </header>
+            </div>
+            <div class="care-header-main-menu">
+                <header role="banner">
+                    <div class="main-menu-wrap">
+                        <input type="checkbox">
+                        <div class="hamburger-menu-wrap">
+                            <div class="hamburger-menu">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <ul class="main-menu">
+                                <li><a href="/care/services">Our Services</a></li>
+                                <li><a href="/care/find-a-provider">Find a Provider</a></li>
+                                <li><a href="/care/locations">Locations</a></li>
+                                <li><a href="/care/patient-resources">Quick Help</a></li>
+                                <li><a class="custom-link" href="/care/my-chart">My<span>Chart</span></a></li>
+                                <li class="usf-links-mobile">
+                                    <ul>
+                                        <li><a href="http://health.usf.edu/education">Academics</a>&#8226;</li>
+                                        <li><a href="http://health.usf.edu/research">Research</a>&#8226;</li>
+                                        <li><a href="http://health.usf.edu/news">News</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </header>
+            </div>
+        </div>
+    </div>
+    <div class="care-header-lower-wrap care-container">
+        <header role="banner">
+            <div class="health-logo-wrap">
+                <a class="health-logo" href="http://health.usf.edu">
+                    <img alt="USF Health Logo" src="/layouts/images/health_logo_2017.png">
+                </a>
+                <!-- <div class="care-breadcrumbs">
+                   @Html.Sitecore().Placeholder("BreadCrumbs")
+                </div> -->
+                <h1 class="service-name">@Model.currentItem["Page Title"]</h1>
+            </div>
+            <div class="appointment-info">
+                @Html.Sitecore().Placeholder("Request Appointment Number")
+            </div>
+        </header>
+    </div>
+</div>
+<!-- END Header -->
+@Html.Sitecore().Placeholder("Horizontal Navigation")
+<div class="care-container care-breadcrumbs">
+    @Html.Sitecore().Placeholder("BreadCrumbs")
+</div>
+
+<div class="content-section-wrap care-container">
+    @Html.Sitecore().Placeholder("Care Page Type")
+</div>
+
+@Html.Sitecore().Placeholder("Care Footer")

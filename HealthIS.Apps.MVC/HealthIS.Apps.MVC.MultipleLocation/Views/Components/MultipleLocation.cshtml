@@ -1,0 +1,383 @@
+﻿@model HealthIS.Apps.MVC.Models.MultipleLocation
+@using Sitecore.Mvc
+
+@if (@Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    <script>
+        jQuery(document).ready(function () {
+            autoSave();
+        });
+    </script>
+    if (!Model.setDatasource)
+    {
+        <center>
+            <div><h2>Multiple Location</h2><p>If you want to create a new Multiple Location, click 'Create New Multiple Location'.</p></div>
+            <div>
+                <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrc()" value="Create New Multiple Location">
+            </div>
+        </center>
+
+        <script type="text/javascript">
+            // Create new datasource regarding to this component
+            function callSetDataSrc() {
+                setDataSrc(
+                    '@Html.Raw(Model.pageItem.ID.ToString())',                                      // itemID
+                    'User Defined2/Component Template/Multiple Location',                           // templatePath
+                    '_ML',                                                                          // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                   // renderingID
+                    '@Html.Raw(Model.pageItem.Database.Name)',                                      // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                             // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',                               // renderingUID
+                    ''                                                                              // btnID
+                );
+            }
+        </script>
+        return;
+    }
+    else
+    {
+        <script>
+            // Create new Thumbnail Type section
+            function addNewThumbnailType(parentPath) {
+                addNewChildItem(
+                    parentPath,
+                    'User Defined2/Component Template/Multiple Location/Multiple Location Item',
+                    'Thumbnail',
+                    'Heading|Description|Location List',
+                    window.location.href
+                );
+            }
+            function addNewListType(parentPath) {
+                addNewChildItem(
+                    parentPath,
+                    'User Defined2/Component Template/Multiple Location/Multiple Location Item',
+                    'List',
+                    'Heading|Description|Location List',
+                    window.location.href
+                );
+            }
+        </script>
+        <div class="multi-location-container">
+            @if (Model.Item.HasChildren)
+            {
+                <div style="text-align:right"><input type="button" id="btnSortMultipleLocation" class="pe-button pe-gray1 fa-input" onclick='Sitecore.PageModes.PageEditor.postRequest("webedit:sortcontent(id=@(Model.Item.ID.ToString()))")' value="<> Sort Location Groups" /></div>        
+                foreach (Sitecore.Data.Items.Item item in Model.Item.Children)
+                {
+                    if (item.Name.Contains("Thumbnail"))
+                    {
+                        <h2 class="multi-location-section-heading">@Model.fieldRender(item, "Heading")</h2>
+                        <p>@Model.fieldRender(item, "Description")</p>
+                        Sitecore.Data.Fields.MultilistField locations = item.Fields["Location List"];
+                        <ul class="multi-location-details">
+                            @foreach (Sitecore.Data.ID id in locations.TargetIDs)
+                            {                                
+                                if(!id.IsNull)
+                                {
+                                    Sitecore.Data.Items.Item loc = Sitecore.Context.Database.Items[id];
+                                    if (loc != null)
+                                    {
+                                        Sitecore.Data.Fields.ImageField imageField = loc.Fields["Image"];
+                                        <li itemscope itemtype="http://schema.org/MedicalOrganization" class="clearfix">
+                                            @if (imageField == null || imageField.MediaItem == null)
+                                            {
+                                                <img alt="@loc.Fields["Location Name"].ToString()" width="150" src="/~/media/Images/Root Element/usf-health-building-logo" />
+                                            }
+                                            else
+                                            {
+                                                @Html.Sitecore().Field("Image", loc, new { @style = "width: 150px; float: left; margin-right: 20px;", DisableWebEdit = true })
+                                            }
+                                            <h3 itemprop="name" class="multi-location-title">@loc.Fields["Location Name"]</h3>
+                                            <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress" class="multi-location-contact">
+                                                <span class="icon-map-marker">
+                                                    <span itemprop="streetAddress">@loc.Fields["Address"]</span>
+                                                    <br>
+                                                    <span itemprop="addressRegion">@loc.Fields["City"]</span>, @loc.Fields["State"] @loc.Fields["ZIP"]
+                                                    <br>
+                                                    @if (loc.HasChildren)
+                                                    {
+                                                        int countHourOfOperations = 1;
+                                                        int countPhone = 1;
+                                                        <span itemprop="telephone">
+                                                            @foreach (Sitecore.Data.Items.Item extraData in loc.Children)
+                                                            {
+                                                                if (extraData.TemplateName.ToLower() == "business information")
+                                                                {
+                                                                    if (countHourOfOperations == 1)
+                                                                    { <br /> }
+                                                                    string hourOfOperationTitle = (!String.IsNullOrEmpty(@extraData.Fields["Title"].ToString()) ? @extraData.Fields["Title"].ToString() + ": " : "");
+                                                                    @Html.Raw(hourOfOperationTitle + extraData.Fields["Hour of Operation"])
+                                                                    <br />
+                                                                    countHourOfOperations++;
+                                                                }
+                                                                if (Model.isPatientCarePage && extraData.TemplateName.ToLower() == "doctors phone number")
+                                                                {
+                                                                    @Html.Raw(extraData.Fields["List of Doctors Phone Number"].Value)
+                                                                }
+                                                                if (!Model.isPatientCarePage && extraData.TemplateName.ToLower() == "phone number")
+                                                                {
+                                                                    if (countPhone == 1)
+                                                                    { <br /> }
+                                                                    string phoneNumberTitle = (!String.IsNullOrEmpty(@extraData.Fields["Title"].ToString()) ? @extraData.Fields["Title"].ToString() + ": " : "");
+                                                                    @Html.Raw(phoneNumberTitle)<a href="tel:@extraData.Fields["Phone Number"]">@extraData.Fields["Phone Number"]</a>
+                                                                    <br />
+                                                                    countPhone++;
+                                                                }
+                                                            }
+                                                        </span>
+                                                    }
+                                                    @if (!String.IsNullOrEmpty(loc.Fields["Link URL - Thumbnail"].Value))
+                                                    {
+                                                        string linkTitleThumbnail = (!String.IsNullOrEmpty(loc.Fields["Link Title - Thumbnail"].Value) ? loc.Fields["Link Title - Thumbnail"].Value + ": " : "");
+                                                        @linkTitleThumbnail<a href="@loc.Fields["Link URL - Thumbnail"].Value">@loc.Fields["Link URL - Thumbnail"].Value</a>
+                                                    }
+                                                </span>
+                                                <br><!-- Important for keeping Google Map link at bottom of phone list -->
+                                                @if (!String.IsNullOrEmpty(loc.Fields["Map URL"].ToString()))
+                                                {
+                                                    <a class="gmap-link" href="@loc.Fields["Map URL"].ToString()" target="_blank">
+                                                        <img alt="View Google Map" src="/~/media/5B49FB8CCB064EC5BBA1378F43B7186E.ashx"><br>
+                                                        View Map
+                                                    </a>
+                                                }
+                                            </div><!-- END address -->
+                                        </li>
+                                    }
+                                }                                
+                            }
+                        </ul><!-- END UL multi-location-details -->
+                        <input type="button" class="pe-button pe-yellow" onclick="javascript:Sitecore.PageModes.PageEditor.postRequest('webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Heading|Description|Location List, id=@item.ID)')" value="Update Location List">
+                        @Model.ActionItemButton("pe-button pe-red", "delete", "- Remove Location Group", item)
+                    } // End Thumbnail Folder
+                }
+            }
+            <hr />
+            <input type="button" class="pe-button pe-green" style="float: right;" onclick="addNewThumbnailType('@Model.Item.ID.ToString()')" value="+ Add New Thumbnail Group">
+        </div><!-- END multi-location-container -->
+
+        <div class="multi-location-container">
+            @if (Model.Item.HasChildren)
+            {
+                foreach (Sitecore.Data.Items.Item item in Model.Item.Children)
+                {
+                    if (item.Name.Contains("List"))
+                    {
+                        <h2 class="multi-location-section-heading">@Model.fieldRender(item, "Heading")</h2>
+                        <p>@Model.fieldRender(item, "Description")</p>
+                        Sitecore.Data.Fields.MultilistField locations = item.Fields["Location List"];
+                        <ul class="multi-location-listing">
+                            @foreach (Sitecore.Data.ID id in locations.TargetIDs)
+                            {
+                                if(!id.IsNull)
+                                {
+                                    Sitecore.Data.Items.Item loc = Sitecore.Context.Database.Items[id];
+                                    if (loc != null)
+                                    {
+                                        string newTab = (@loc.Fields["Open in New Tab"].ToString() == "1" ? " target='_blank' " : "");
+                                        <li style="clear: both;">
+                                            <a href="@loc.Fields["Link URL"].ToString()" @newTab>
+                                                @loc.Fields["Location Name"]
+                                                @if (loc.HasChildren)
+                                                {
+                                                   foreach (Sitecore.Data.Items.Item extraData in loc.Children)
+                                                   {
+                                                       if (Model.isPatientCarePage && extraData.TemplateName.ToLower() == "doctors phone number")
+                                                       {
+                                                           @Html.Raw(extraData.Fields["List of Doctors Phone Number"].Value)
+                                                           break;
+                                                       }
+                                                       if (!Model.isPatientCarePage && extraData.TemplateName.ToLower() == "phone number")
+                                                       {
+                                                           @Html.Raw(":") <a class="vnav-link" onclick="_gaq.push(['_trackEvent','Phone Call Tracking','Click/Touch','Flyout']);" href="tel:@extraData.Fields["Phone Number"]">@extraData.Fields["Phone Number"]</a>
+                                                           break;
+                                                       }
+                                                  }
+                                                }
+                                                else
+                                                {
+                                                    @Html.Raw(": No phone number found");
+                                                }
+                                            </a>
+                                        </li>
+                                        // Show only first phone information
+                                    }                                    
+                                }                                
+                            }
+                        </ul><!-- END UL multi-location-listing -->
+                        <hr>
+                        <input type="button" class="pe-button pe-yellow" onclick="javascript:Sitecore.PageModes.PageEditor.postRequest('webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Heading|Description|Location List, id=@item.ID)')" value="Update Location List">
+                        @Model.ActionItemButton("pe-button pe-red", "delete", "- Remove Location Group", item)
+                    } // End Thumbnail Folder
+                }
+            }
+            <hr />
+            <input type="button" class="pe-button pe-green" style="float: right;" onclick="addNewListType('@Model.Item.ID.ToString()')" value="+ Add New List Group">            
+        </div><!-- END multi-location-container -->
+    }
+}
+else // Preview/Live Mode
+{
+    if (Model.Item.HasChildren)
+    {
+        int countList = 0;
+        foreach (Sitecore.Data.Items.Item item in Model.Item.Children)
+        {
+            if (item.Name.Contains("Thumbnail"))
+            {
+                @:<div class="multi-location-container">
+
+                if (!String.IsNullOrEmpty(@item.Fields["Heading"].ToString()))
+                { <h2 class="multi-location-section-heading">@Model.fieldRender(item, "Heading")</h2> }
+                if (!String.IsNullOrEmpty(@item.Fields["Description"].ToString()))
+                { <p>@Model.fieldRender(item, "Description")</p> }                
+
+                Sitecore.Data.Fields.MultilistField locations = item.Fields["Location List"];
+                <ul class="multi-location-details">
+                    @foreach (Sitecore.Data.ID id in locations.TargetIDs)
+                    {
+                        if(!id.IsNull)
+                        {
+                            Sitecore.Data.Items.Item loc = Sitecore.Context.Database.Items[id];
+                            if (loc != null)
+                            {
+                                Sitecore.Data.Fields.ImageField imageField = loc.Fields["Image"];
+                                <li itemscope itemtype="http://schema.org/MedicalOrganization" class="clearfix">
+                                    @if (imageField == null || imageField.MediaItem == null)
+                                    {
+                                        <img alt="@loc.Fields["Location Name"].ToString()" width="150" src="/~/media/Images/Root Element/usf-health-building-logo">
+                                    }
+                                    else
+                                    {
+                                        @Model.fieldRender(loc, "Image", "style=width:150px;")
+                                    }
+                                    <h3 itemprop="name" class="multi-location-title">@Model.fieldRender(loc, "Location Name")</h3>
+                                    <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress" class="multi-location-contact">
+                                        <span class="icon-map-marker">
+                                            <span itemprop="streetAddress">@Model.fieldRender(loc, "Address")</span>
+                                            <br>
+                                            <span itemprop="addressRegion">@Model.fieldRender(loc, "City")</span>, @Model.fieldRender(loc, "State") @Model.fieldRender(loc, "ZIP")
+                                            <br />
+                                            @if (loc.HasChildren)
+                                            {
+                                                int countHourOfOperations = 1;
+                                                int countPhone = 1;
+                                                <span itemprop="telephone">
+                                                    @foreach (Sitecore.Data.Items.Item extraData in loc.Children)
+                                                    {
+                                                        if (extraData.TemplateName.ToLower() == "business information")
+                                                        {
+                                                            if (countHourOfOperations == 1)
+                                                            { <br /> }
+                                                            string hourOfOperationTitle = (!String.IsNullOrEmpty(@extraData.Fields["Title"].ToString()) ? @extraData.Fields["Title"].ToString() + ": " : "");
+                                                            @Html.Raw(hourOfOperationTitle + extraData.Fields["Hour of Operation"])
+                                                            <br />
+                                                            countHourOfOperations++;
+                                                        }
+                                                        if (Model.isPatientCarePage && extraData.TemplateName.ToLower() == "doctors phone number")
+                                                        {
+                                                            @Html.Raw(extraData.Fields["List of Doctors Phone Number"].Value)
+                                                        }
+                                                        if (!Model.isPatientCarePage && extraData.TemplateName.ToLower() == "phone number")
+                                                        {
+                                                            if (countPhone == 1)
+                                                            { <br /> }
+                                                            string phoneNumberTitle = (!String.IsNullOrEmpty(@extraData.Fields["Title"].ToString()) ? @extraData.Fields["Title"].ToString() + ": " : "");
+                                                            @Html.Raw(phoneNumberTitle)<a class="vnav-link" onclick="_gaq.push(['_trackEvent','Phone Call Tracking','Click/Touch','Flyout']);" href="tel:@Model.fieldRender(extraData, "Phone Number")">@extraData.Fields["Phone Number"]</a>
+                                                            <br />
+                                                            countPhone++;
+                                                        }
+                                                    }
+                                                </span>
+                                            }
+                                            @if (!String.IsNullOrEmpty(loc.Fields["Link URL - Thumbnail"].Value))
+                                            {
+                                                string linkTitleThumbnail = (!String.IsNullOrEmpty(loc.Fields["Link Title - Thumbnail"].Value) ? loc.Fields["Link Title - Thumbnail"].Value + ": " : "");
+                                                @linkTitleThumbnail<a href="@loc.Fields["Link URL - Thumbnail"].Value">@loc.Fields["Link URL - Thumbnail"].Value</a>
+                                            }
+                                        </span>
+                                        <br><!-- Important for keeping Google Map link at bottom of phone list -->
+                                        @if (!String.IsNullOrEmpty(loc.Fields["Map URL"].ToString()))
+                                        {
+                                            <a class="gmap-link" href="@loc.Fields["Map URL"].ToString()" target="_blank">
+                                                <img alt="View Google Map" src="/~/media/5B49FB8CCB064EC5BBA1378F43B7186E.ashx"><br>
+                                                View Map
+                                            </a>
+                                        }
+                                    </div><!-- END address -->
+                                </li>
+                                        countList++;
+                            }
+                        }                        
+                    }
+                </ul><!-- END UL multi-location-details -->
+                @:</div><!-- END multi-location-container -->
+            } // End Thumbnail Folder
+        }
+
+        // List Types
+        countList = 0;
+        bool isDataset = false;
+        foreach (Sitecore.Data.Items.Item item in Model.Item.Children)
+        {
+            if (item.Name.Contains("List"))
+            {
+                isDataset = true;
+            }
+        }
+        
+        if (isDataset)
+        { @Html.Raw("<div class='multi-location-container'>") }
+        foreach (Sitecore.Data.Items.Item item in Model.Item.Children)
+        {
+            if (item.Name.Contains("List"))
+            {
+                if (countList != 0)
+                { <hr /> }
+                if (!String.IsNullOrEmpty(@item.Fields["Heading"].ToString()))
+                { <h2 class="multi-location-section-heading">@Model.fieldRender(item, "Heading")</h2> }
+                if (!String.IsNullOrEmpty(@item.Fields["Description"].ToString()))
+                { <p>@Model.fieldRender(item, "Description")</p> }
+
+                Sitecore.Data.Fields.MultilistField locations = item.Fields["Location List"];
+                <ul class="multi-location-listing">
+                    @foreach (Sitecore.Data.ID id in locations.TargetIDs)
+                    {
+                        if(!id.IsNull)
+                        {
+                            Sitecore.Data.Items.Item loc = Sitecore.Context.Database.Items[id];
+                            if(loc != null)
+                            {
+                                string newTab = (@loc.Fields["Open in New Tab"].ToString() == "1" ? " target='_blank' " : "");
+                                <li style="clear: both;">
+                                    @if (!String.IsNullOrEmpty(@loc.Fields["Link URL"].ToString()))
+                                    {
+                                        <a href="@loc.Fields["Link URL"].ToString()" @newTab>@loc.Fields["Location Name"]</a>
+                                    }
+                                    else
+                                    {
+                                        @Model.fieldRender(loc, "Location Name")
+                                    }                            
+                                    @foreach (Sitecore.Data.Items.Item extraData in loc.Children)
+                                    {
+                                        if (Model.isPatientCarePage && extraData.TemplateName.ToLower() == "doctors phone number")
+                                        {
+                                            @Html.Raw(extraData.Fields["List of Doctors Phone Number"].Value)
+                                            break;
+                                        }
+                                        if (!Model.isPatientCarePage && extraData.TemplateName.ToLower() == "phone number")
+                                        {
+                                            @Html.Raw(":") <a class="vnav-link" onclick="_gaq.push(['_trackEvent','Phone Call Tracking','Click/Touch','Flyout']);" href="tel:@extraData.Fields["Phone Number"]">@extraData.Fields["Phone Number"]</a>
+                                            break;
+                                        }
+                                    }
+                                </li>
+                                    countList++;
+                            }                            
+                        }                        
+                    }
+                </ul><!-- END UL multi-location-listing -->
+            } // End Thumbnail Folder
+        }
+        if (isDataset)
+        { @Html.Raw("</div>") }
+    }
+}

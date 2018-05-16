@@ -1,0 +1,55 @@
+﻿@using Sitecore.Mvc
+@model HealthIS.Layouts.Models.Care
+
+<!-- START Header -->
+<script src="/resources/scripts/USFHealthSearch.js"></script>
+<div id="care-header-01">
+    <div class="care-header-upper-wrap care-container">
+        <header role="banner" class="care-header-upper">
+            <div>
+                <nav class="care-usf-links">
+                    <ul>
+                        <li><a href="http://health.usf.edu/education">Academics</a></li>
+                        <li><a href="http://health.usf.edu/research">Research</a></li>
+                        <li><a href="http://health.usf.edu/news">News</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <header role="banner" class="care-header-lower">
+            <a class="health-logo" href="http://health.usf.edu">
+                <img alt="USF Health Logo" src="/layouts/images/health_logo_2017.png">
+            </a>
+            <p class="care-slogan">Begin here to<br>schedule your care</p>
+            <!-- Hide this menu on mobile - may require further discussion -->
+            <nav class="care-links">
+                <!-- <button class="text-hide icon-reorder" id="health-menu-toggle">&nbsp;Menu</button> -->
+                <ul>
+                    <li><a href="/care/services">Our Services</a></li>
+                    <li><a href="/care/find-a-provider">Find a Provider</a></li>
+                    <li><a href="/care/locations">Locations</a></li>
+                    <li><a href="/care/patient-resources">Quick Help</a></li>
+                    <li><a class="custom-link" href="/care/my-chart">My<span>Chart</span></a></li>
+                </ul>
+            </nav>
+        </header>
+    </div>
+    <div class="care-search">
+        <div class="care-container">
+            @{
+                string disabled = Sitecore.Context.PageMode.IsExperienceEditor ? "disabled" : "";
+            }
+            <form>
+                <input type="text" class="care-form-control" name="care-search-bar" placeholder="Search...">
+                <button type="submit" class="icon-search" @disabled onclick='CareSearch(); return false'></button>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- END Header -->
+
+<div class="content-section-wrap care-container width">
+    @Html.Sitecore().Placeholder("Care Page Type")
+</div>
+
+@Html.Sitecore().Placeholder("Care Footer")

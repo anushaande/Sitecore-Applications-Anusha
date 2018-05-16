@@ -1,0 +1,708 @@
+﻿@using Sitecore.Mvc
+
+@{  
+    //unique id to use 
+    string UID = "_" + Model.Rendering.UniqueId.ToString().Replace('-', '_');
+    HealthIS.Apps.MVC.FacultyDirectory.person pDetail = new HealthIS.Apps.MVC.FacultyDirectory.person();
+    //HealthIS.Apps.MVC.FacultyDirectory.FacultyDirectoryList pDetail = new HealthIS.Apps.MVC.FacultyDirectory.FacultyDirectoryList();
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditorEditing)
+{
+	<div class="row" id="row@(UID)">
+    @if (!Model.dsSet)
+    {user-profile-view
+        <h2 style="text-align:center;">Faculty Directory List Config</h2>
+        <script>
+            function callSetDataSrc@(UID)() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                                              // itemID
+                    'User Defined2/Component Template/Faculty Directory Root/List',                         // templatePath
+                    '_FDL',                                                                                 // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                           // renderingID
+                    '@Html.Raw(Model.Item.Database.Name)',                                                  // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                                     // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',                                       // referenceID
+                    '',                                                                                     // btnID
+                    true                                                                                    // reload true
+                );
+            }
+        </script>
+        <div style="text-align:center">    
+            <p>If you want to create a new Faculty Directory List, click 'Create New Faculty Directory List'.</p>
+            <input id="btnDSSet@(UID)" class="pe-button pe-green" type="button" value="Create New Faculty Directory List" onclick="callSetDataSrc@(UID)    ()" />
+            <script>if(typeof(autoSave) != "undefined"){ autoSave(); }</script>
+        </div>
+    }
+    else
+    {
+        <script>
+            function addDirectorySection@(UID)(){
+                @if (Model.Root != null)
+                {
+                    <text>
+                addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/Faculty Directory Root/List/Section', '_FDS', 'master', '@(Model.Root.ID.Guid.ToString())', false, 
+                  function(data){showEditDialog(data,"Section Title");}
+                )
+                    </text>
+                }
+                else
+                {
+                    <text>
+                console.log('ERROR: Datasource not found.');
+                    </text>
+                }
+            }
+
+            
+            function addItemToSection@(UID)(folderID){
+                addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/Faculty Directory Root/List/Section/Item', '_FDI', 'master', folderID, true, null);
+            }
+        </script>
+        <style>
+            .tblProfileInfo {
+                width:100%;
+            }
+                .tblProfileInfo th {
+                    width: 1%;
+                    white-space: nowrap;
+                }
+
+                .tblProfileInfo td input {
+                    width: 100%;
+                }
+
+            .tblProfileInfo th {
+                text-align:right;
+            }
+
+            .searchResults li:hover {
+                cursor:pointer;
+                background-color:#DDD;
+            }
+
+            .textInputs {
+                padding-bottom:5px;
+            }
+
+                .textInputs:last-child {
+                    padding-bottom: 0px;
+                }
+
+            .textInputs label{ float: left; }
+            
+            .textInputs span
+            {
+                display: block;
+                overflow: hidden;
+                padding-right: 5px;
+                padding-left: 10px;
+            }
+                   
+            .textInputs span > input{ width: 100%; }
+
+        </style>
+        <script>
+            var ppls;
+            var ul;
+
+            function togglePIDEntry(showIt, num){
+                if(showIt != false){//show
+                    jQuery('#tbPersonID' + num).prop('disabled','')
+                    jQuery('#divOtherSearch' + num).show();
+                }
+                else{//hide
+                    jQuery('#tbPersonID' + num).prop("disabled","disabled");
+                    jQuery('#divOtherSearch' + num).hide();
+                }
+            }
+
+            function searchFacDir(num){
+                var _fname = jQuery('#iFName' + num).val();
+                var _lname = jQuery('#iLName' + num).val();
+                var j = "";
+
+
+                jQuery('#searchErr' + num).text("");
+                togglePIDEntry(false, num);
+                /*if(typeof(_hscid) == 'undefined' || _hscid.length == 0){
+                    _hscid = jQuery('#iHSCID' + num).val();
+                }
+                _hscid = _hscid.split('@@')[0];*/
+                
+                console.log("Searching for: " + _fname + " " + _lname);
+                jQuery.ajax({
+                    url:"/Sublayouts/components/FacultyDirectory.aspx",
+                    timeout: 30000,
+                    data:{
+                        method: "searchhd",
+                        fname: _fname,
+                        lname: _lname
+                    },
+                    success: function(e){
+                        j = JSON.parse(e);
+                        ppls = j;
+                        if(typeof j.Table == 'undefined' || j.Table[0] == null){
+                            jQuery('#searchErr' + num).text("Could not find person");
+                        }
+                        else{
+                            ul = jQuery('#searchModal' + num + " .searchResults").get(0);
+                            ul.innerHTML = "";
+
+                            for(i=0;i<j.Table.length;i++){
+                                // get another ajax to call additional data
+                                var _person_id = j.Table[i].PERSON_ID;
+                                var _hsc_id = j.Table[i].HSCNET_ID;
+                                getListField(_person_id, num, _hsc_id);
+                            }
+                            jQuery('#searchModal' + num).modal("show");
+                        }
+                    }
+                });
+            }
+
+            var appt;
+
+            function applyChosenSearchResult(li){
+                if(typeof jQuery(li) != 'undefined'){
+                    var num = jQuery(li).data("num");
+                    var fname = jQuery(li).data("fname");
+                    var lname = jQuery(li).data("lname");
+                    var credentials = jQuery(li).data("credentials");
+                    var personid = jQuery(li).data("personid");
+                    var hscid = jQuery(li).data("hscid");
+                    var email = jQuery(li).data("email");
+                    var link = jQuery(li).data("link");
+
+                    //getApptPositions(personid, num);
+
+                    jQuery('#tbFName' + num).val(fname);
+                    jQuery('#tbLName' + num).val(lname);
+                    jQuery('#tbCredentials' + num).val(credentials);
+                    jQuery('#tbPersonID' + num).val(personid);
+                    jQuery('#imgProfilePic' + num).attr("src", "http://hsccf.hsc.usf.edu/facultydirectory/clinicalDirectory/viewFile.cfc?method=viewPic&person_id=" + personid);
+                    jQuery('#tbHSCID' + num).val(hscid);
+                    jQuery('#tbEmail' + num).val(email);
+                    updateHiddenField("hidPersonID" + num, personid);
+                    updateHiddenField("hidFName" + num, fname);
+                    updateHiddenField("hidLName" + num, lname);
+                    updateHiddenField("hidCredentials" + num, credentials);
+                    //if(typeof jQuery('#tbLink' + num) != 'undefined'){
+                    if(jQuery('#tbLink' + num).length > 0){
+                        var pp = jQuery('#hidProfilePage' + num).val();
+                        var link = pp + personid + "/" + lname;
+                        jQuery('#tbLink' + num).val(link);
+                        updateHiddenField("hidLink" + num, link);
+                    }else{
+                        updateHiddenField("hidEmail" + num, email);
+                        updateHiddenField("hidHSCID" + num, hscid);
+                    }
+                    getApptPositions(personid, num);
+                    jQuery('#searchModal' + num).modal('hide');
+                }
+            }
+
+            function getApptPositions(personID, num){
+                jQuery.ajax({
+                    url:"/Sublayouts/components/FacultyDirectory.aspx",
+                    data:{
+                        method: "getapptpositions",
+                        person_id: personID
+                    },
+                    success: function(e){
+                        appt = JSON.parse(e);
+                        if(typeof appt != 'undefined' && appt != null && typeof appt.Table != 'undefined' && appt.Table.length > 0){
+                            var dept = appt.Table[0].GLOBAL_DEPT_NAME;
+                            dept = toTitleCase(dept).replace('Of', 'of');
+                            jQuery('#tbJTitle' + num).val(appt.Table[0].TITLE + " " + dept);
+                        }
+                        else{
+                            jQuery('#tbJTitle' + num).val("");
+                        }
+                        updateHiddenField('hidJTitle' + num, jQuery('#tbJTitle' + num).val())
+                    }
+                });
+            }
+
+            function getListField(personID, num, hsc_id){
+                jQuery.ajax({
+                    url:"/Sublayouts/components/FacultyDirectory.aspx",
+                    data:{
+                        method: "listfields",
+                        person_id: personID
+                    },
+                    success: function(e){
+                        appt = JSON.parse(e);                        
+                        if (personID != null && typeof personID != 'undefined') {
+                            for (i = 0; i < appt.Table.length; i++) {
+                                jQuery(ul).append("<li onclick='applyChosenSearchResult(this)' data-num='" + num + "' data-fname='" + appt.Table[i].FIRST_NAME.replace(/'/g, "&apos;") + "' data-lname='" + appt.Table[i].LAST_NAME.replace(/'/g, "&apos;") + "' data-personid='" + personID + "' data-credentials='" + appt.Table[i].TITLE + "' data-hscid='" + hsc_id + "' data-email='" + appt.Table[i].EMAIL + "'>" + hsc_id + ": " + appt.Table[i].FIRST_NAME + " " + appt.Table[i].LAST_NAME + "</li>");
+                            }
+                        }
+                    }
+                });
+            }
+
+            function toTitleCase(str)
+            {
+                return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+            }
+        </script>
+        <h2>Faculty Directory Config</h2>
+        <ul class="list-group">
+            @if (Model.Sections != null && Model.Sections.Count > 0)
+            {
+                int sectionCt = 0;
+                foreach (HealthIS.Apps.MVC.FacultyDirectory.FacultyDirectoryListSection section in Model.Sections)
+                {
+                    sectionCt++;
+                    int listingCt = 0;
+                    bool isLV = HealthIS.Apps.MVC.Helpers.getCBField(section.SCItem, "Display as List View").Checked;
+                    string strLV = isLV ? "Yes" : "No";
+                    string disabled = isLV ? "" : "disabled=\"disabled\"";
+                    bool enableProfileImages = section.chEnableProfileImages.Checked;
+                    string strEPI = enableProfileImages ? "Enabled" : "Disabled";
+                    <li class="list-group-item">						
+                        @if (isLV)  // list view
+                        {
+                            <div style="float:left;padding-bottom:10px;">
+                                <h3>Section Title: @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(section.SCItem, "Section Title"))</h3>
+                                <b>Profile Page:</b>&nbsp;@Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(section.SCItem, "Profile Page"))&nbsp;&nbsp;
+                                <b>Display as list view:</b>&nbsp;@(strLV)&nbsp;&nbsp;
+                                <b>Profile Images:</b>&nbsp;@(strEPI)&nbsp;&nbsp;
+                                <input class="pe-button pe-yellow" type="button" value="Edit" onclick="showEditDialog('@(section.SCItem.ID)','Profile Page|Display as List View|Enable Profile Images')">
+                            </div>
+                        }
+                        else { // thumbnail view                    
+                            <div style="float:left;padding-bottom:10px;">
+                                <h3>Section Title: @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(section.SCItem, "Section Title"))</h3>
+                                <b>Profile Page:</b>&nbsp;@Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(section.SCItem, "Profile Page"))&nbsp;&nbsp;
+                                <b>Display as list view:</b>&nbsp;@(strLV)&nbsp;&nbsp;
+                                <input class="pe-button pe-yellow" type="button" value="Edit" onclick="showEditDialog('@(section.SCItem.ID)','Profile Page|Display as List View')">
+                            </div>
+                        }
+                        <div style="float:right;text-align:right;">
+                            @if (Model.Sections.Count > 1)
+                            {
+                                if (sectionCt > 1)
+                                {
+                                    <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:moveup(id=@(section.SCItem.ID))",function(){location.reload(true);},false)' value="&#x25B2;" />
+                                }
+                                if (sectionCt < Model.Sections.Count)
+                                {
+                                    <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:movedown(id=@(section.SCItem.ID))",function(){location.reload(true);},false)' value="&#x25BC;" />
+                                }
+                            }
+                            <input class="pe-button pe-red" type="button" value="&#120;" onclick="deleteItem('@(section.SCItem.ID)')" />
+                        </div>                    
+						<div style="clear:both;"></div>
+                        <ul class="list-group">
+                            @foreach (HealthIS.Apps.MVC.FacultyDirectory.FacultyDirectoryListItem listing in section.Listings)
+                            {
+                                listingCt++;
+                                string num = UID + "_" + sectionCt + "_" + listingCt;
+                                string pid = listing.PersonID == -1 ? "" : listing.PersonID.ToString();
+                                string fullName = "";
+                                if (listing.Person != null) { fullName = listing.Person.first_name + " " + listing.Person.last_name; }
+                                if (!isLV) { Model.doTest(pid, listing); }
+                                <li class="list-group-item">
+                                    <div style="float:left;width:95%;">
+                                        <h3>Search Health Directory</h3>
+                                        <div style="line-height:2em;width:100%;margin-bottom:10px;border-bottom:solid 1px #ddd;">
+                                            <div class="col-sm-10" style="padding-left:15px;">
+                                                <div class="row textInputs">
+                                                    <label style="font-size:1.25em">First Name:</label>
+                                                    <span><input type="text" id="iFName@(num)" /></span>
+                                                </div>
+                                                <div class="row textInputs">
+                                                    <label style="font-size:1.25em">Last Name:</label>
+                                                    <span><input type="text" id="iLName@(num)" /></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2" style="text-align:left;padding:0 0 0 5px;">
+                                                <input style="font-size: 1.25em;line-height: 4em;padding: 0px 10px;" class="pe-button pe-blue" type="button" value="Search" onclick="searchFacDir('@(num)    ')" />
+                                            </div>
+                                            <span id="searchErr@(num)" class="row" style="font-size:1.25em;color:red;"></span>
+                                        </div>
+                                        <div id="searchModal@(num)" class="modal fade" style="z-index:9999;" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        <span class="modal-title">Search Results</span>
+                                                    </div>
+                                                    <div class="modal-body" style="text-align: center;">
+                                                        <h4>Chose a search result below:</h4>
+                                                        <ul class="searchResults" style="list-style-type: none;padding-left: 0;">
+                                                            <li></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="float: right; width: 5%; text-align: right; padding-top: 20px;">
+                                        <input class="pe-button pe-red" type="button" value="&#120;" onclick="deleteItem('@(listing.SCItem.ID)    ')" />
+                                        <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:moveup(id=@(listing.SCItem.ID))",function(){location.reload(true);},false)' value="&#x25B2;" />
+                                        <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:movedown(id=@(listing.SCItem.ID))",function(){location.reload(true);},false)' value="&#x25BC;" />
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                    <div class="col-sm-3">                                                                        
+                                        @if (isLV && string.IsNullOrEmpty(pid)) // list view
+                                        {
+                                            if (enableProfileImages) {
+                                                string lname = HealthIS.Apps.MVC.Helpers.getStrField(listing.SCItem, "Last Name");
+                                                fullName = HealthIS.Apps.MVC.Helpers.getStrField(listing.SCItem, "First Name") + " " + lname;
+                                                Sitecore.Data.Fields.ImageField img = HealthIS.Apps.MVC.Helpers.getImgField(listing.SCItem, "Profile Image");
+                                                if (img != null && img.MediaItem != null)
+                                                {
+                                                    <img alt="Profile Picture of @(fullName)" src="@(Sitecore.Resources.Media.MediaManager.GetMediaUrl(img.MediaItem))" />
+                                                }
+                                                else
+                                                {
+                                                    <img id="imgProfilePic@(num)" src="http://hsccf.hsc.usf.edu/facultydirectory/clinicalDirectory/viewFile.cfc?method=viewPic&person_id=@(pid)" alt="Profile Picture Not Available)" />
+                                                }
+                                                <input class="pe-button pe-green" style="margin-top: 5px" type="button" value="Upload Profile Image" onclick="showEditDialog('@(listing.SCItem.ID)','Profile Image')" />                                               
+                                            }
+                                            else {
+                                                <img id="imgProfilePic@(num)" src="http://hsccf.hsc.usf.edu/facultydirectory/clinicalDirectory/viewFile.cfc?method=viewPic&person_id=@(pid)" alt="Profile Picture of Not Available" />
+                                            }
+                                        }
+                                        else {  // thumbnail view
+                                            <img alt="Profile Picture of @(fullName)" src="http://hsccf.hsc.usf.edu/facultydirectory/clinicalDirectory/viewFile.cfc?method=viewPic&person_id=@(pid)">
+                                        }
+                                    </div>                                  
+                                        <div class="col-sm-9">
+                                            <table class="tblProfileInfo">
+                                                <tr>
+                                                    <th>
+                                                        <b>First Name:</b>
+                                                    </th>
+                                                    <td>
+                                                        <input type="text" id="tbFName@(num)" @(disabled) value='@(HealthIS.Apps.MVC.Helpers.getStrField(listing.SCItem, "First Name"))'  onkeyup="updateHiddenField('hidFName@(num)', jQuery('#tbFName@(num)').val())"/>
+                                                        <div id="hidFName@(num)" style="display:none;">
+                                                            @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(listing.SCItem, "First Name"))
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>
+                                                        <b>Last Name:</b>
+                                                    </th>
+                                                    <td>
+                                                        <input type="text" id="tbLName@(num)" @(disabled) value='@(HealthIS.Apps.MVC.Helpers.getStrField(listing.SCItem, "Last Name"))'  onkeyup="updateHiddenField('hidLName@(num)', jQuery('#tbLName@(num)').val())"/>
+                                                        <div id="hidLName@(num)" style="display:none;">
+                                                            @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(listing.SCItem, "Last Name"))
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>
+                                                        <b>Credentials:</b>
+                                                    </th>
+                                                    <td>
+                                                        <input type="text" id="tbCredentials@(num)" value='@listing.Credentials' @(disabled) onkeyup="updateHiddenField('hidCredentials@(num)', jQuery('#tbCredentials@(num)').val())"/>
+                                                        <div id="hidCredentials@(num)" style="display:none;">
+                                                            @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(listing.SCItem, "Credentials"))
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>
+                                                        <b>Job Title:</b>
+                                                    </th>
+                                                    <td>
+                                                        <textarea id="tbJTitle@(num)" style="width:100%;" rows="3" onkeyup="updateHiddenField('hidJTitle@(num)', jQuery('#tbJTitle@(num)').val())">@listing.JobTitle</textarea>
+                                                        <div id="hidJTitle@(num)" style="display:none;">
+                                                            @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(listing.SCItem, "Job Title"))
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>
+                                                        <b>Person ID:</b>
+                                                    </th>
+                                                    <td>
+                                                        <input type="text" id="tbPersonID@(num)" disabled="disabled" value="@pid"/>
+                                                        <div id="hidPersonID@(num)" style="display:none;">
+                                                            @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(listing.SCItem, "Person ID"))
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                @if (isLV) // list view
+                                                {                                                    
+                                                    <tr>
+                                                        <th>
+                                                            <b>Link:</b>
+                                                        </th>
+                                                        <td>
+                                                            <input type="text" id="tbLink@(num)" value="@(HealthIS.Apps.MVC.Helpers.getStrField(listing.SCItem, "Link URL"))" onkeyup="updateHiddenField('hidLink@(num)', jQuery('#tbLink@(num)').val())" />
+                                                            <div id="hidLink@(num)" style="display:none;">
+                                                                @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(listing.SCItem, "Link URL"))
+                                                                <input type="hidden" id="hidProfilePage@(num)" value="@(section.ProfilePage)" />
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                else // thumbnail view
+                                                {
+                                                    <tr>
+                                                        <th>
+                                                            <b>HSC ID:</b>
+                                                        </th>
+                                                        <td>
+                                                            <input type="text" id="tbHSCID@(num)" disabled="disabled" value="@(listing.HSCID)" />
+                                                            <div id="hidHSCID@(num)" style="display:none;">
+                                                                @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(listing.SCItem, "HSCID"))
+                                                            </div>
+                                                        </td>
+                                                    </tr>                                                    
+                                                    <tr>
+                                                        <th>
+                                                            <b>Email:</b>
+                                                        </th>
+                                                        <td>
+                                                            <input type="text" id="tbEmail@(num)" disabled="disabled" value='@(HealthIS.Apps.MVC.Helpers.getStrField(listing.SCItem, "EMail"))' />
+                                                            <div id="hidEmail@(num)" style="display:none;">
+                                                                @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(listing.SCItem, "EMail"))
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </table>
+                                        </div>                                 
+                                    <div style="clear:both"></div>
+                                </li>
+                            }
+                            <li class="list-group-item">
+                                <span style="float:right;">
+                                    <input class="pe-button pe-green" type="button" value="&#43; Add New Profile" onclick="addItemToSection@(UID)    ('@(section.SCItem.ID)    ')"/>
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                        </ul>
+                    </li>
+                }
+            }
+            <li class="list-group-item">
+                <span style="float:right;">
+                    <input class="pe-button pe-green" type="button" value="&#43; Add New Section" onclick="addDirectorySection@(UID)    ()"/>
+                </span>
+                <div style="clear:both;"></div>
+            </li>
+        </ul>
+    }
+    <span style="color:red;">@Html.Raw(Model.Errors)</span>
+	</div>
+}
+else{
+    if(Model.dsSet)
+    {    
+        if (Model.Sections != null && Model.Sections.Count > 0)
+        { 
+            foreach (HealthIS.Apps.MVC.FacultyDirectory.FacultyDirectoryListSection section in Model.Sections)
+            {
+                Sitecore.Data.Fields.CheckboxField cbf = HealthIS.Apps.MVC.Helpers.getCBField(section.SCItem, "Display as List View");
+                if(cbf != null){
+                    bool isLV = cbf.Checked;
+                    string cssClassWrapper = "";
+                    if (isLV)  // list view
+                    {                                
+                        foreach (HealthIS.Apps.MVC.FacultyDirectory.FacultyDirectoryListItem listing in section.Listings)
+                        {
+                            if (section.chEnableProfileImages.Checked && listing.PersonID == -1)
+                            {
+                                section.gridView = true;
+                            }
+                            else {                                        
+                                section.gridView = section.gridView ? true: false;
+                            }
+                        }
+                        cssClassWrapper = section.gridView ? "user-profile-view" : "user-list-view";                        
+                    }
+                    else
+                    {
+                        cssClassWrapper = "user-profile-view"; // thumbnail view
+                    }                    
+                    <div class="row">
+                        <div class="@(cssClassWrapper)">
+                            @if (!string.IsNullOrEmpty(section.SectionTitle)) { <h2>@Html.Raw(section.SectionTitle)</h2> }                            
+                            <ul>
+                                @foreach (HealthIS.Apps.MVC.FacultyDirectory.FacultyDirectoryListItem listing in section.Listings)
+                                {
+                                    string lname = HealthIS.Apps.MVC.Helpers.getStrField(listing.SCItem, "Last Name");
+                                    string fullName = HealthIS.Apps.MVC.Helpers.getStrField(listing.SCItem, "First Name") + " " + lname;
+                                    string pid = listing.PersonID == -1 ? "" : listing.PersonID.ToString();
+                                    if (!String.IsNullOrEmpty(HealthIS.Apps.MVC.Helpers.getStrField(listing.SCItem, "Credentials"))) { fullName += ", " + HealthIS.Apps.MVC.Helpers.getStrField(listing.SCItem, "Credentials"); }
+                                    string email = HealthIS.Apps.MVC.Helpers.getStrField(listing.SCItem, "EMail");
+                                    string href = HealthIS.Apps.MVC.Helpers.getStrField(listing.SCItem, "Link URL");                                    
+                                    if (!isLV) // thumbnail view
+                                    {
+                                        if (listing.PersonID != -1)
+                                        {
+                                            string profileLink = string.IsNullOrEmpty(section.ProfilePage) ? "" : section.ProfilePage + listing.PersonID + "/" + lname;
+                                            <li>
+                                                <a href="@(profileLink)">
+                                                    <img alt="Profile Picture of @(fullName)" src="http://hsccf.hsc.usf.edu/facultydirectory/clinicalDirectory/viewFile.cfc?method=viewPic&person_id=@(pid)">
+                                                    <span>@(fullName)</span>
+                                                </a><br>
+                                                <p>
+                                                    @Html.Raw(listing.JobTitle.Replace("\n", "<br/>"))<br />
+                                                    <a href="mailto:@(email)">@(email)</a>
+                                                </p>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <p>ERROR: Person (@fullName) not found in Faculty Directory<br>Please add profile information using 'Display as List View' option</p>
+                                        }
+                                    }
+                                    else 
+                                    {
+                                        if (!section.gridView) // list view - link list
+                                        {
+                                            if (string.IsNullOrEmpty(href))
+                                            {
+                                                <li class="no-link">
+                                                    <p>@(fullName)</p>
+                                                    <span>@Html.Raw(listing.JobTitle.Replace("\n", "<br/>"))</span>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li>
+                                                @if (href.Contains("@"))
+                                                {
+                                                    <a href="mailto:@(href)">@(fullName)</a>
+                                                }
+                                                else
+                                                {
+                                                    <a href='@Html.Raw(href)'>@(fullName)</a>
+                                                }
+                                                    <span>@Html.Raw(listing.JobTitle.Replace("\n", "<br/>"))</span>
+                                                </li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (section.gridView) // list view - grid view
+                                            {
+                                                if (listing.PersonID != -1)
+                                                {
+                                                        
+                                                    if (string.IsNullOrEmpty(href))
+                                                    {
+                                                        <li class="no-link">
+                                                            <img alt="Profile Picture of @(fullName)" src="http://hsccf.hsc.usf.edu/facultydirectory/clinicalDirectory/viewFile.cfc?method=viewPic&person_id=@(pid)">
+                                                                <span>@(fullName)</span>
+                                                            <br>
+                                                            <p>@Html.Raw(listing.JobTitle.Replace("\n", "<br/>"))</p>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li>
+                                                        @if (href.Contains("@"))
+                                                        {
+                                                            <a href="mailto:@(href)">
+                                                                <img alt="Profile Picture of @(fullName)" src="http://hsccf.hsc.usf.edu/facultydirectory/clinicalDirectory/viewFile.cfc?method=viewPic&person_id=@(pid)">
+                                                                <span>@(fullName)</span>
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href='@Html.Raw(href)'>
+                                                                <img alt="Profile Picture of @(fullName)" src="http://hsccf.hsc.usf.edu/facultydirectory/clinicalDirectory/viewFile.cfc?method=viewPic&person_id=@(pid)">
+                                                            <span>@(fullName)</span>
+                                                            </a>
+                                                        }
+                                                            <br>
+                                                            <p>@Html.Raw(listing.JobTitle.Replace("\n", "<br/>"))</p>
+                                                        </li>
+                                                    }
+
+                                                }
+                                                else
+                                                {
+                                                    Sitecore.Data.Fields.ImageField img = HealthIS.Apps.MVC.Helpers.getImgField(listing.SCItem, "Profile Image");
+                                                    if (img != null && img.MediaItem != null)
+                                                    {
+                                                        if (string.IsNullOrEmpty(href))
+                                                        {
+                                                            <li class="no-link">
+                                                                <img alt="Profile Picture of @(fullName)" src="@Sitecore.Resources.Media.MediaManager.GetMediaUrl(img.MediaItem)">
+                                                                    <span>@(fullName)</span>
+                                                                <br>
+                                                                <p>@Html.Raw(listing.JobTitle.Replace("\n", "<br/>"))</p>
+                                                            </li>
+                                                        }
+                                                        else
+                                                        {
+                                                            <li>
+                                                            @if (href.Contains("@"))
+                                                            {
+                                                                <a href="mailto:@(href)">
+                                                                    <img alt="Profile Picture of @(fullName)" src="@Sitecore.Resources.Media.MediaManager.GetMediaUrl(img.MediaItem)">
+                                                                    <span>@(fullName)</span>
+                                                                </a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a href='@Html.Raw(href)'>
+                                                                <img alt="Profile Picture of @(fullName)" src="@Sitecore.Resources.Media.MediaManager.GetMediaUrl(img.MediaItem)">
+                                                                <span>@(fullName)</span>
+                                                                </a>
+                                                            }
+                                                                <br>
+                                                                <p>@Html.Raw(listing.JobTitle.Replace("\n", "<br/>"))</p>
+                                                            </li>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (string.IsNullOrEmpty(href))
+                                                        {
+                                                            <li class="no-link">
+                                                                <img alt="Profile Picture Not Available" src="http://hsccf.hsc.usf.edu/facultydirectory/clinicalDirectory/viewFile.cfc?method=viewPic&person_id=@(pid)">
+                                                                <span>@(fullName)</span>
+                                                            <br>
+                                                            <p>@Html.Raw(listing.JobTitle.Replace("\n", "<br/>"))</p>
+                                                        </li>                                
+                                                        }
+                                                        else
+                                                        {
+                                                            <li>
+                                                            @if (href.Contains("@"))
+                                                            {
+                                                                <a href="mailto:@(href)">
+                                                                    <img alt="Profile Picture Not Available" src="http://hsccf.hsc.usf.edu/facultydirectory/clinicalDirectory/viewFile.cfc?method=viewPic&person_id=@(pid)">
+                                                                    <span>@(fullName)</span>
+                                                                </a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a href='@Html.Raw(href)'>
+                                                                    <img alt="Profile Picture Not Available" src="http://hsccf.hsc.usf.edu/facultydirectory/clinicalDirectory/viewFile.cfc?method=viewPic&person_id=@(pid)">
+                                                                    <span>@(fullName)</span>
+                                                                </a>
+                                                            }                                                            
+                                                            <br>
+                                                            <p>@Html.Raw(listing.JobTitle.Replace("\n", "<br/>"))</p>
+                                                        </li>
+                                                        }                                                       
+                                                    } 
+                                                        
+                                                }
+                                            }   
+                                        }
+                                    }
+                                }                            
+                            </ul>
+                        </div>
+			        </div>
+                } else {
+                    <p>ERROR: 'Display as List View' field not found on @(section.SCItem.Name)</p>   
+                }
+            }
+        }
+    }
+}

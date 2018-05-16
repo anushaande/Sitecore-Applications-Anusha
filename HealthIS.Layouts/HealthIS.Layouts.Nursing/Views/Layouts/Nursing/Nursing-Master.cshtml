@@ -1,0 +1,46 @@
+﻿@model HealthIS.Layouts.Models.Nursing
+@using Sitecore.Mvc
+
+@Html.Sitecore().Placeholder("Top Header")        
+<!--**** START - CON Master Header ****-->
+<header class="container block-center" id="dept-header" role="banner">
+    <a id="health-logo" class="text-hide" href="http://health.usf.edu">USF Health</a>
+    @Html.Sitecore().Placeholder("BreadCrumbs")
+    <h4>@Model.currentItem["Page Title"]</h4>
+    <div class="template-options">
+        <span class="contagline">
+            Transforming Healthcare Transforming Lives:<br>Creating the Nursing Leaders of Tomorrow and the Research that Improves Health
+        </span>
+    </div>
+</header>
+<!--**** END - CON Master Header ****-->
+        
+<!--**** START - CON Main Horizontal Navigation ****-->
+@Html.Sitecore().Placeholder("Horizontal Navigation")
+<!--**** END - CON Main Navigation ****-->
+
+<main class="container block-center site-content clearfix" role="main">
+    @if (Sitecore.Context.PageMode.IsExperienceEditor)
+    {
+        <input type="button" id="addNewChildItemTop" class="pe-button pe-green" onclick="addChildPage();" style="float: right; margin-bottom: 20px; margin-right: 15px;" value="Add a Child Page" />
+        <script>
+            jQuery(document).ready(function () {
+                autoSave();
+                var currentUrl = '@Request.Url.AbsoluteUri';
+                msgEmptyPlaceholder(currentUrl);
+            });
+        </script>
+    }
+    @Html.Sitecore().Placeholder("Nursing Page Type")
+    <div style="margin-top: 25px" class="social-icons-small">
+        <h3>Connect with us!</h3>
+        <a href="https://www.facebook.com/USFHealthNurse" target="_blank"><em class="icon-facebook"></em></a>
+        <a href="https://twitter.com/usfhealthnurse" target="_blank"><em class="icon-twitter"></em></a>
+        <a href="https://www.youtube.com/playlist?list=PL6AC3213B7CE72CED&feature=plcp" target="_blank"><em class="icon-youtube-play"></em></a>
+        <a href="https://www.pinterest.com/USFHealthNurse/" target="_blank"><em class="icon-pinterest"></em></a>
+        <a href="https://instagram.com/usfhealthnurse/" target="_blank"><em class="icon-instagram"></em></a>
+        <a href="http://hscweb3.hsc.usf.edu/nursingnews/" target="_blank"><em class="icon-rss"></em></a>
+    </div>
+</main>
+
+@Html.Sitecore().Placeholder("Bottom Footer")

@@ -1,0 +1,94 @@
+﻿@model HealthIS.Apps.MVC.Models.Tabs
+@using Sitecore.Mvc
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor && Model.IsDatasourceNull)
+{
+    <center>
+        <div><h2>Tabs</h2><p>If you want to create a Tab, click 'Create New Tab'.</p></div>
+        <div>
+            <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrc()" value="Create New Tab">
+        </div>
+    </center>
+    <script>
+        jQuery(document).ready(function () {
+            autoSave();
+        });
+        // Create new datasource with Branch
+        function callSetDataSrc() {
+            setDataSrc(
+                '@Html.Raw(Model.PageItem.ID.ToString())',                          // itemID
+                'User Defined2/Component Template/Tabs',                            // templatePath
+                '_TABS',                                                             // suffix
+                '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',       // renderingID
+                '@Html.Raw(Model.PageItem.Database.Name)',                          // dbName
+                '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                 // deviceID
+                '@Html.Raw(Model.Rendering.UniqueId.ToString())',                   // referenceID
+                ''                                                                  // btnID
+            );
+        }
+    </script>
+    return;
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    if (!Model.IsDatasourceNull)
+    {
+        if (Model.Rendering.Item.HasChildren)
+        {
+                foreach (Sitecore.Data.Items.Item child in Model.Rendering.Item.Children)
+                {
+                    <h3>Title</h3>
+                    @Html.Raw(Model.DataItems(child, "Tab Title"))
+                    <h3>Content</h3>
+                    @Html.Raw(Model.DataItems(child, "Tab Content"))<br /><br />
+                    @Model.MoveItemButton("pe-button pe-gray1", "moveup", "&#x25B2; Move Up", child) @:&nbsp;
+                    @Model.MoveItemButton("pe-button pe-gray1", "movedown", "&#x25BC; Move Down", child) @:&nbsp;
+                    @Model.ActionItemButton("pe-button pe-red", "delete", "X Delete", child)
+                    <hr />
+                }
+        }
+        <input type="button" class="pe-button pe-green" style="float: right;" value="+ Add Tab" onclick="callAddItemToDataSrc()" />
+        <BR>
+        <script>
+            // Create new sub-items regarding to this component
+            function callAddItemToDataSrc() {
+                addItemToDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                  // itemID
+                    'User Defined2/Component Template/Tabs/Tab List',           // templatePath
+                    '_TAB',                                                     // suffix
+                    '@Html.Raw(Model.PageItem.Database.Name)',                  // dbName
+                    '@Html.Raw(Model.Rendering.Item.ID)'                        // dsFolderName
+                );
+            }
+        </script>
+    }
+}
+else
+{
+    if (!Model.IsDatasourceNull)
+    {
+        if (Model.Rendering.Item.HasChildren)
+        {
+            <div id="usfhealth-tabs" class="tabNavigatorify">
+                <div class="nav-wrap">
+			        <ul class="tabNavigatorify-tabs">
+                    @foreach (Sitecore.Data.Items.Item child in Model.Rendering.Item.Children)
+                    {
+                        <li><a href="#@child.ID.ToGuid().ToString()">@Html.Raw(Model.DataItems(child, "Tab Title"))</a></li>
+                    }
+                    </ul>
+                </div>
+                <div class="tabNavigatorify-panes">
+                    @foreach (Sitecore.Data.Items.Item child in Model.Rendering.Item.Children)
+                    {
+                        <div class="pane" id="@child.ID.ToGuid().ToString()">
+				            <p>@Html.Raw(Model.DataItems(child, "Tab Content"))</p>
+			            </div>
+                    }
+                </div>
+	        </div>
+            <script src="/layouts/scripts/tabs.js" type="text/javascript"></script>
+        }
+    }
+}

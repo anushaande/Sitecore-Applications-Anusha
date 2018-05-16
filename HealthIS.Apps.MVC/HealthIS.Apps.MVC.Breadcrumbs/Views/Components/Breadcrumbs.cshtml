@@ -1,0 +1,47 @@
+﻿@{
+    Sitecore.Data.Items.Item item = Model.Item;
+    List<Sitecore.Data.Items.Item> list = new List<Sitecore.Data.Items.Item>();
+    HtmlString beginSpan = new HtmlString("<span class=\"sr-only\">");
+    HtmlString endSpan = new HtmlString("</span>");
+    string threeDeep = "three-deep";
+    string noDeep = "not-deep";
+    string crumbtacularHidden = "crumbtacular--hidden";
+    string usfHealth = "USF Health";
+    var itemList = list;
+}
+
+@while (item.Key != "home" && item.Parent != null)
+{
+    // Ignore wildcards
+    if (item.Key != "*")
+    {
+        list.Add(item);
+    }
+    item = item.Parent;
+}
+
+@if (list != null)
+{
+    list.Reverse();
+
+    <nav class="crumbtacular crumbtacular-- @if (list.Count() > 1) { @threeDeep } else { @noDeep } ">
+        <ul class="crumbtacular__list">
+            <li class="crumbtacular__crumb">
+                <a class="crumbtacular__link" href="/">
+                    <i class="icon-home"></i>@if (list.Count() > 1) { @beginSpan; }@usfHealth@if (list.Count() > 1) { @endSpan; }
+                </a>
+            </li>
+            @for (int i = 0; i < list.Count(); i++)
+            {
+                <li class="crumbtacular__crumb @if (i > 1) { @crumbtacularHidden } ">
+                    <i class="icon-caret-right"></i>
+                    <a class="crumbtacular__link" href="@itemList[i].Paths.Path.Replace("/sitecore/content/Home", "")">
+                        @itemList[i].DisplayName
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
+
+    

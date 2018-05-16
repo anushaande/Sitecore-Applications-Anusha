@@ -1,0 +1,31 @@
+﻿@using Sitecore.Mvc
+@using HealthIS.Apps.MVC
+@{
+    if (Sitecore.Context.PageMode.IsExperienceEditor)
+    {
+        <script>
+            jQuery(document).ready(function () {
+                autoSave();
+            });
+        </script>
+        <style>.col-right-adjust { margin-top: 40px; }</style>
+    }
+}
+<div class="row">
+    <div>
+        @Html.Sitecore().Placeholder("Dynamic Placeholder1")
+    </div>
+    <div class="col-sm-9 col-right-adjust">
+        @Html.Sitecore().Placeholder("Headline for Homepage")
+        @Html.Sitecore().Placeholder("RichText Editor 1")
+        @Html.Sitecore().Placeholder("RSS")
+    </div>
+    <div class="col-sm-3 col-left-adjust">
+        <!-- left nav root element goes here -->
+        @Html.Sitecore().Placeholder("RichText Editor 2") @Helpers.placeholderRequired("Vertical Navigation")
+<h4>Events</h4>
+<div class="ai1ec-widget-placeholder" data-widget="ai1ec_agenda_widget" data-events_seek_type="events" data-events_per_page="5"></div>
+<a href="https://hscweb3.hsc.usf.edu/nursingnews/calendar-2/" class="events-viewall">view all events</a>
+        @Html.Sitecore().Placeholder("RichText Editor 3")
+    </div>
+</div>

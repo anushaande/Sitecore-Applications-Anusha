@@ -1,0 +1,285 @@
+﻿@using Sitecore.Mvc
+
+@{  
+    //unique id to use 
+    string UID = "_" + Model.Rendering.UniqueId.ToString().Replace('-', '_');   
+}
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    //START EDIT VIEW
+    try
+    {
+        string addressFR = "";
+        string latFR = "";
+        string lngFR = "";
+        string zoomFR = "";
+
+        //set field renderers
+        if (Model.Item != null)
+        {
+            addressFR = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Address");
+            latFR = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Latitude");
+            lngFR = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Longitude");
+            zoomFR = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Zoom");
+        }    
+        
+        <div style="display:none;">
+            <div id="hidAddr@(UID)">@Html.Raw(addressFR)</div>
+            <div id="hidLat@(UID)">@Html.Raw(latFR)</div>
+            <div id="hidLong@(UID)">@Html.Raw(lngFR)</div>
+            <div id="hidZoom@(UID)">@Html.Raw(zoomFR)</div>
+        </div>    
+
+        <div id="divGoogleMap@(UID)">
+            @if (Model.dsIsSet)
+            {
+                <h2>Google Map Config</h2>
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <b>Location Title:</b> @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Location Title"))<br />
+                        <b>Location Description:</b> @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.Item, "Location Description"))<br />
+                        <b>Address:</b><br />
+                        <div style="width:100%;margin-bottom:10px;">
+                            <input id="iAddress@(UID)" style="width:89%;border:solid #ddd 1px;border-radius:4px;box-shadow: inset 0px 0px 4px rgba(0,0,0,0.15);" type="text" value="@Model.Address" />
+                            <input type="button" class="pe-button pe-green" style="width:10%;float:right;" value="Search" onclick="getLatLong@(UID)()"/>
+                        </div>
+                        <div id="map@(UID)" style="width:100%;height:300px;"></div>
+                        <div style="clear:both;font-style: italic;text-align: right;width: 100%;">Note: Zoom level will be saved.</div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    var mapData, marker;
+                    var markerListenerSet = false;
+                    var zoomListenerSet = false;
+                    var doMarker = false;
+                    var zoom@(UID) = 10;
+                    @if (string.IsNullOrEmpty(Model.Latitude) || string.IsNullOrEmpty(Model.Longitude) || string.IsNullOrEmpty(Model.Address))
+                    {
+                        @:var latLng@(UID) = { lat: 28.0670413, lng:-82.4219263 };
+                    }
+                    else
+                    {
+                        @:var latLng@(UID) = { lat: @(Model.Latitude), lng: @(Model.Longitude) };
+                                                                @:doMarker = true;
+                        if (!string.IsNullOrEmpty(Model.Zoom))
+                        {
+                            @: zoom@(UID) = @(Model.Zoom);   
+                        }
+                    }
+                    var map@(UID);
+                    whenAvailable("google",function(){
+                        map@(UID) = new google.maps.Map(document.getElementById('map@(UID)'),{
+                            center : latLng@(UID),
+                            scrollwheel : true,
+                            zoom : zoom@(UID)
+                        });
+                        setZoomListener@(UID)();
+                        if(doMarker){
+                            marker = new google.maps.Marker({
+                                map: map@(UID),
+					            position: latLng@(UID),
+					            title: '@(Model.Address)',
+					            draggable: true
+					        });
+                            setMarkerListener@(UID)();
+					    }
+                    });
+					
+                    function setMarkerListener@(UID)(){
+                        if(!markerListenerSet){
+                            google.maps.event.addListener(marker, "dragend",function(e){
+                                var geocoder = geocoder = new google.maps.Geocoder();
+                                var lat, lng, address;
+                                geocoder.geocode({ 'latLng@(UID)': marker.getPosition() }, function (results, status) {
+                                    if (status == google.maps.GeocoderStatus.OK) {
+                                        lat = marker.getPosition().lat();
+                                        lng = marker.getPosition().lng();
+                                        address = results[0].formatted_address;
+                                        console.log("Latitude: " + lat + "\nLongitude: " + lng + "\nAddress: " + address);
+                                        jQuery('#iAddress@(UID)').val(address)
+                                        updateHiddenField('hidAddr@(UID)',address);
+                                        updateHiddenField('hidLat@(UID)',lat);
+                                        updateHiddenField('hidLong@(UID)',lng);
+                                    }
+                                });
+                            });
+                            markerListenerSet = true;
+                        }
+                    }
+
+                    function setZoomListener@(UID)(){
+                        if(!zoomListenerSet && typeof map@(UID) != 'undefined'){
+                            map@(UID).addListener('zoom_changed', function(){
+                                updateHiddenField('hidZoom@(UID)',map@(UID).zoom);
+                            });
+                        }
+                    }
+
+                    function getLatLong@(UID)(){
+                        var mapAPI@(UID) = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+                        var addr = jQuery('#iAddress@(UID)').val().replace(/ /g,'+');
+                        var apiKey = "";//"&key=AIzaSyClWSzzJUD1lvB83k2rD_pvFI8aD_6bQT0";
+                        var latitude;
+                        var longitude;
+                        mapAPI@(UID) += addr + apiKey;
+                        jQuery.get(mapAPI@(UID), function(data){
+                            console.dir(data);
+                            console.log(mapAPI@(UID));
+                            mapData = data;
+                            try{
+                                latitude = mapData.results[0].geometry.location.lat;
+                                longitude = mapData.results[0].geometry.location.lng;
+                                addr = mapData.results[0].formatted_address;
+                                jQuery('#iAddress@(UID)').val(addr);
+                                console.log("Latitude: " + latitude);
+                                console.log("Longitude: " + longitude);
+                                console.log("Address: " + addr);
+                            }catch(e){console.log("Error retreiving latitude and/or longitude. " + e.message);}
+
+                            if(typeof latitude != 'undefined' && typeof longitude != 'undefined'){
+                                var latLng@(UID) = { lat: latitude, lng: longitude };
+                                map@(UID) = new google.maps.Map(document.getElementById('map@(UID)'),{
+                                    center : latLng@(UID),
+                                    scrollwheel : true,
+                                    zoom : 15
+                                });
+                                marker = new google.maps.Marker({
+                                    map: map@(UID),
+                                    position: latLng@(UID),
+                                    title: addr,
+                                    draggable: true
+                                });
+                                setMarkerListener@(UID)();
+                                updateHiddenField('hidAddr@(UID)',addr);
+                                updateHiddenField('hidLat@(UID)',latitude);
+                                updateHiddenField('hidLong@(UID)',longitude);
+                            }
+                            else{
+                                console.log("Lat/Lng undefined");
+                            }
+                        });
+                    }
+                </script>
+            }
+            else
+            {
+                <h2 style="text-align:center;">Google Map Config</h2>
+                <script>
+                    function callSetDataSrc@(UID)() {
+                        setDataSrc(
+                            '@Html.Raw(Model.PageItem.ID.ToString())',                                              // itemID
+                            'User Defined2/Component Template/Google Map',                                            // templatePath
+                            '_GM',                                                                                 // suffix
+                            '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                           // renderingID
+                            '@Html.Raw(Model.Item.Database.Name)',                                                  // dbName
+                            '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                                     // deviceID
+                            '@Html.Raw(Model.Rendering.UniqueId.ToString())',                                       // referenceID
+                            '',                                                                                     // btnID
+                            true                                                                                    // reload true
+                        );
+                    }
+                </script>
+                <div style="text-align:center">    
+                    <p>If you want to create a new Google Map, click 'Create New Google Map'.</p>
+                    <input id="btnDSSet@(UID)" class="pe-button pe-green" type="button" value="Create New Google Map" onclick="callSetDataSrc@(UID)()" />
+                    <script>if(typeof(autoSave) != "undefined"){ autoSave(); }</script>
+                </div>
+            }
+        </div>
+    }
+    catch (Exception ex)
+    {
+        <h2>Error: </h2>
+        <p>@ex.Message</p>
+    }
+    //END EDIT VIEW
+}
+
+else
+{   //not in edit mode - show Google Map
+    if (Model.dsIsSet)
+    {      
+        <div class="map_container">
+            <div id="map_canvas@(UID)" class="map_canvas">
+            </div>
+            @if (!String.IsNullOrEmpty(Model.LocationTitle) || !String.IsNullOrEmpty(Model.LocationDescription))
+            {
+                <style>
+                    div[id^="save-widget"] {
+                        width: 220px;
+                        box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+                        background-color: white;
+                        padding: 10px;
+                        font-family: Roboto, Arial;
+                        font-size: 13px;
+                        margin: 15px;
+                    }
+                </style>
+                <div id="save-widget@(UID)">
+                  @if (!String.IsNullOrEmpty(Model.LocationTitle))
+                  { <strong>@Html.Raw(Model.LocationTitle)</strong> }
+                  @if (!String.IsNullOrEmpty(Model.LocationDescription))
+                  { <p style="margin: 0 auto;">@Html.Raw(Model.LocationDescription)</p> }
+                </div>
+            }
+        </div>
+        <script>
+            //window.onload = function () {
+                @if (string.IsNullOrEmpty(Model.Zoom))
+                {
+                    @: var zoom@(UID) = 10;
+                                }
+                else
+                {
+                    @: var zoom@(UID) = @(Model.Zoom);
+                }
+            var latLng@(UID) = { lat: @(Model.Latitude), lng: @(Model.Longitude) };
+            
+            var map@(UID) = new google.maps.Map(document.getElementById('map_canvas@(UID)'),{
+                center : latLng@(UID),
+                    scrollwheel : true,
+                    zoom : zoom@(UID),
+                    mapTypeControlOptions: {
+                        mapTypeIds: [
+                          google.maps.MapTypeId.ROADMAP,
+                          google.maps.MapTypeId.SATELLITE
+                        ],
+                        @if (!String.IsNullOrEmpty(Model.LocationTitle) || !String.IsNullOrEmpty(Model.LocationDescription))
+                        {
+                            <text>position: google.maps.ControlPosition.BOTTOM_LEFT</text>
+                        }
+                    }
+                });     
+            
+                var marker@(UID) = new google.maps.Marker({
+                map: map@(UID),
+                    position: latLng@(UID),
+                    title: '@(Model.Address)',
+                    draggable: false
+                });
+
+                var widgetDiv@(UID) = document.getElementById('save-widget@(UID)');
+            map@(UID).controls[google.maps.ControlPosition.TOP_LEFT].push(widgetDiv@(UID));
+
+            @*// Append a Save Control to the existing save-widget div.
+                var saveWidget = new google.maps.SaveWidget(widgetDiv, {
+                    place: {
+                        // ChIJN1t_tDeuEmsRUsoyG83frY4 is the place Id for Google Sydney.
+                        placeId: '',
+                        location: {lat: @(Model.Latitude), lng: @(Model.Longitude)}
+                    },
+                    attribution: {
+                        source: 'USF Health',
+                        webUrl: 'http://health.usf.edu/'
+                    }
+                });*@
+            //}
+            
+        </script>
+        
+    }
+    else
+    {
+        <h2>No Google Map datasource found</h2>   
+    }
+}

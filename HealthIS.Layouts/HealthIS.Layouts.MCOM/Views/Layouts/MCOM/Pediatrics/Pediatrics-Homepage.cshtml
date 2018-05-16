@@ -1,0 +1,28 @@
+﻿@model HealthIS.Layouts.Models.MCOM
+@using Sitecore.Mvc
+@using HealthIS.Apps.MVC
+@Model.executeAutosave()
+
+<div class="slick-shadow">
+    @Html.Sitecore().Placeholder("Media") @Helpers.placeholderRequired("Media")
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="content-area">
+                @Html.Sitecore().Placeholder("Welcome Letter") @Helpers.placeholderRequired("Welcome Letter")
+            </div>
+        </div>
+        <div class="col-sm-4">
+            @Html.Sitecore().Placeholder("Multiple Location") @Helpers.placeholderRequired("Multiple Location")
+        </div>
+         
+        <div class="col-sm-4">
+            @Html.Sitecore().Placeholder("MCOM Homepage Dynamic1") @Helpers.placeholderRequired("MCOM Homepage Dynamic1")
+        </div>
+        <div class="col-sm-4">
+            @Html.Sitecore().Placeholder("MCOM Homepage Dynamic2") @Helpers.placeholderRequired("MCOM Homepage Dynamic2")
+        </div>
+    </div>
+    <div class="content-area">
+        @Html.Sitecore().Placeholder("RSS Feed") @Helpers.placeholderRequired("RSS Feed")
+    </div>
+</div>

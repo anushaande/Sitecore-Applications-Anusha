@@ -1,0 +1,58 @@
+﻿@{
+    string type = Request.Params["method"];
+    string personId = Request.Params["person_id"];
+    
+    if (String.IsNullOrEmpty(type) || String.IsNullOrEmpty(personId)) {
+        Response.Redirect("/");
+        return;
+    }
+    
+    HealthIS.Apps.FacultyDirectory.profileFile getFile = new HealthIS.Apps.FacultyDirectory.profileFile();
+    
+    if (getFile != null) {
+        if (type == "picture")
+        {
+            try {
+                getFile = HealthIS.Apps.FacultyDirectory.getPicture(personId);
+                if (getFile.person_id != "-1")
+                {
+                    Context.Response.ContentType = getFile.mimeType;
+                    Context.Response.OutputStream.Write(getFile.fileContent, 0, getFile.fileContent.Length);
+                }
+                else
+                {
+                    Response.Redirect("/~/media/Images/Root Element/no-photo");
+                }
+            } catch {
+                Sitecore.Diagnostics.Log.Error("Faculty Directory/Profile - Can't get profile picture", this);
+                Response.Redirect("/~/media/Images/Root Element/no-photo");
+            }
+        }
+        else if (type == "resume")
+        {
+            try {
+                getFile = HealthIS.Apps.FacultyDirectory.getResume(personId);
+                if (getFile.person_id != "-1")
+                {
+                    // Download the file
+                    Response.Clear();
+                    MemoryStream ms = new MemoryStream(getFile.fileContent);
+
+                    Response.ContentType = "application/" + getFile.extension;
+                    Response.AddHeader("content-disposition", "attachment;filename=" + getFile.person_id + "." + getFile.extension);
+                    Response.Buffer = true;
+                    ms.WriteTo(Response.OutputStream);
+                    //Response.End();
+
+                    HttpContext.Current.Response.Flush(); // Sends all currently buffered output to the client.
+                    HttpContext.Current.Response.SuppressContent = true;  // Gets or sets a value indicating whether to send HTTP content to the client.
+                    HttpContext.Current.ApplicationInstance.CompleteRequest(); // Causes ASP.NET to bypass all events and filtering in the HTTP pipeline**
+                }
+            } catch {
+                Sitecore.Diagnostics.Log.Error("Faculty Directory/Profile - Can't get profile picture", this);
+                Response.Redirect("/404");
+            }
+        }
+    }
+    
+}

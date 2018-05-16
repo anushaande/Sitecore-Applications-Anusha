@@ -1,0 +1,68 @@
+﻿@model HealthIS.Apps.MVC.Models.RichTextEditor
+@{
+    string rtc = Model.richTextEditor;
+    if (!Model.dsIsSet)
+    {
+        if (Sitecore.Context.PageMode.IsExperienceEditor)
+        {
+            <script>
+                $(document).ready(function () {
+                    autoSave();
+                });
+            </script>
+            <center>
+                <div><h2>RichText Editor</h2><p>If you want to create a new RichText Editor, click 'Create New RichText Editor'.</p></div>
+                <div>
+                    <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrc()" value="Create New RichText Editor">
+                </div>
+            </center>
+            
+            <script type="text/javascript">
+                // Create new datasource regarding to this component
+                function callSetDataSrc() {
+                    setDataSrc(
+                        '@Html.Raw(Model.PageItem.ID.ToString())',                          // itemID
+                        'User Defined2/Component Template/Rich Text Editor',                // templatePath
+                        '_RTE',                                                             // suffix
+                        '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',       // renderingID
+                        '@Html.Raw(Model.PageItem.Database.Name)',                          // dbName
+                        '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                 // deviceID
+                        '@Html.Raw(Model.Rendering.UniqueId.ToString())',                   // renderingUID
+                        ''                                                                  // btnID
+                    );
+                }
+            </script>
+        }
+        return;
+    }
+}
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    <script>
+        $(document).ready(function () {
+            autoSave();
+        });
+    </script>
+    <ul class="list-group">
+        <li class="list-group-item" style="text-align:right;">
+            <input type="button" class="pe-button pe-yellow" onclick="javascript:Sitecore.PageModes.PageEditor.postRequest('webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=CSS Class, id=@(Model.Item.ID))')" value="Add CSS Class">
+        </li>
+        <li class="list-group-item">
+            @Html.Raw(rtc + "<br class=\"rtc-re-br\">")
+        </li>
+    </ul>
+}
+else
+{
+    string cssClass = !String.IsNullOrEmpty(Model.Item.Fields["CSS Class"].Value) ? Model.Item.Fields["CSS Class"].Value : "";
+    if (!String.IsNullOrEmpty(cssClass))
+    {
+        <div class="@(cssClass)">
+            @Html.Raw(HealthIS.Apps.MVC.Helpers.GenerateContents(rtc) + "<br class=\"rtc-re-br\">")
+        </div>
+    }
+    else
+    {
+        @Html.Raw(HealthIS.Apps.MVC.Helpers.GenerateContents(rtc) + "<br class=\"rtc-re-br\">")
+    }
+}

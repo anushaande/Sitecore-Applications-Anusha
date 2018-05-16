@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/layouts/styles/health.css" />
+        <link rel="stylesheet" href="/layouts/styles/root-elements.css">
+        <style>            
+            img {
+                vertical-align: text-bottom;
+                width: 16px;
+                height: 16px;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                border: 1px solid lightgray;
+            }
+
+            th, td {
+                text-align: left;
+                padding: 8px;
+            }
+
+            tr:nth-child(even){background-color: #f2f2f2}
+            th {
+                background-color: #4CAF50;
+                color: white;
+            }
+            .table {
+                padding: 10px;
+            }
+            h3, p {
+                padding-left: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <h3><b>Editor's markup cheatsheet</b></h3>
+        <p>
+            These examples cover the formatting needed most often when editing contents.
+        </p>
+        <div class="table">
+            <table>
+                <tr>
+                    <th>Tools</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td><img src="/temp/IconCache/WordProcessing/16x16/bold_blue_a.png" /></td>
+                    <td>Make Text Bold</td>
+                </tr>
+                <tr>
+                    <td><img src="/temp/IconCache/WordProcessing/16x16/italic_blue_a_h.png" /></td>
+                    <td>Make Text Italic</td>
+                </tr>
+                <tr>
+                    <td><img src="/temp/IconCache/WordProcessing/32x32/decrease_indent.png" /></td>
+                    <td>Decrease Indent</td>
+                </tr>
+                <tr>
+                    <td><img src="/temp/IconCache/WordProcessing/32x32/increase_indent.png" /></td>
+                    <td>Increase Indent</td>
+                </tr>
+                <tr>
+                    <td><img src="/temp/IconCache/WordProcessing/16x16/show_symbols_h.png" /></td>
+                    <td>Add paragraph tag</td>
+                </tr>
+                <tr>
+                    <td><img src="/temp/IconCache/Network/16x16/link_add.png" /></td>
+                    <td>Add Sitecore Link</td>
+                </tr>
+                <tr>
+                    <td><img src="/temp/IconCache/Network/16x16/environment_add.png" /></td>
+                    <td>Add Web Link</td>
+                </tr>
+                <tr>
+                    <td><img src="/temp/IconCache/Network/16x16/environment_delete.png" /></td>
+                    <td>Remove Web Link</td>
+                </tr>
+                <tr>
+                    <td><img src="/temp/IconCache/WordProcessing/16x16/bullets_h.png" /></td>
+                    <td>Bullets</td>
+                </tr>
+                <tr>
+                    <td>
+                        <select>
+                            <option>Normal</option>
+                            <option>Heading 2</option>
+                            <option>Heading 3</option>
+                            <option>Heading 4</option>
+                            <option>Heading 5</option>
+                            <option>Heading 6</option>
+                            <option>Paragraph</option>
+                        </select>
+                    </td>
+                    <td>List of Heading Tag</td>
+                </tr>
+                <tr>
+                    <td><img src="/temp/IconCache/Software/16x16/element_edit.png" /></td>
+                    <td>Add New Button(*)</td>
+                </tr>
+                <tr>
+                    <td><img src="/temp/IconCache/Core2/16x16/whats_this.png" /></td>
+                    <td>What is this?</td>
+                </tr>
+            </table>
+        </div>
+        <div class="table">
+            <b>Add New Button(*)</b><br />
+            <span>
+                [[Text|Link<i>::New</i>|Button_Style<i>|Show_Right_Arrow</i>]]
+            </span><br /><br />
+            <table>
+                <tr>
+                    <th>Location</th>
+                    <th>Expected Value</th>
+                </tr>
+                <tr>
+                    <td>Text</td>
+                    <td>Button Text (eg. Click Here)</td>
+                </tr>
+                <tr>
+                    <td>Link</td>
+                    <td>Target location (eg. http://health.usf.edu)</td>
+                </tr>
+                <tr>
+                    <td>::New <i>(optional)</i></td>
+                    <td>Open target location in a new tab (eg. http://health.usf.edu<b>::New</b>)</td>
+                </tr>
+                <tr>
+                    <td>Button_Style</td>
+                    <td>
+                        Available Styles:<br />
+                        <ul>
+                            <li><i>bg-usfGreen</i></li>
+                            <li><i>bg-usfApple</i></li>
+                            <li><i>bg-usfSky</i></li>
+                            <li><i>bg-usfStorm</i></li>
+                            <li><i>bg-usfTealGreen</i></li>
+                            <li><i>bg-usfSlate</i></li>
+                            <li><i>bg-usfSeaGlass</i></li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Show_Right_Arrow <i>(optional)</i></td>
+                    <td>
+                        Enable "Right Arrow" symbol (True or False)<br />
+                        <i>Default is True</i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="table">
+            <table>
+                <tr>
+                    <th>Sample Code - [[Text|Link<i>::New</i>|Button_Style<i>|Show_Right_Arrow</i>]]</th>
+                    <th>Output</th>
+                </tr>
+                <tr>
+                    <td><b>[[USF Green|http://yourTargetURL::New|bg-usfGreen|True]]</b></td>
+                    <td>
+                        <a href="javascript:return false;" target="_blank" class="btn btn-usf-health btn-icon bg-usfGreen" role="button">USF Green
+                            <span class="icon-chevron-right"></span>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>[[USF Apple|http://yourTargetURL::New|bg-usfApple|True]]</b></td>
+                    <td>
+                        <a href="javascript:return false;" target="_blank" class="btn btn-usf-health btn-icon bg-usfApple" role="button">
+                            USF Apple
+                            <span class="icon-chevron-right"></span>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>[[Sky Blue|http://yourTargetURL|bg-usfSky|False]]</b></td>
+                    <td>
+                        <a href="javascript:return false;" class="btn btn-usf-health btn-icon bg-usfSky" role="button">Sky Blue
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>[[Storm|http://yourTargetURL::New|bg-usfStorm]]</b></td>
+                    <td>
+                        <a href="javascript:return false;" target="_blank" class="btn btn-usf-health btn-icon bg-usfStorm" role="button">Storm
+                            <span class="icon-chevron-right"></span>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>[[Teal Green|http://yourTargetURL|bg-usfTealGreen|True]]</b></td>
+                    <td>
+                        <a href="javascript:return false;" class="btn btn-usf-health btn-icon bg-usfTealGreen" role="button">Teal Green
+                            <span class="icon-chevron-right"></span>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>[[Slate|http://yourTargetURL|bg-usfSlate|False]]</b></td>
+                    <td>
+                        <a href="javascript:return false;" class="btn btn-usf-health btn-icon bg-usfSlate" role="button">Slate
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>[[Seaglass|http://yourTargetURL|bg-usfSeaGlass|True]]</b></td>
+                    <td>
+                        <a href="javascript:return false;" class="btn btn-usf-health btn-icon bg-usfSeaGlass" role="button">Seaglass
+                            <span class="icon-chevron-right"></span>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
+
+
+

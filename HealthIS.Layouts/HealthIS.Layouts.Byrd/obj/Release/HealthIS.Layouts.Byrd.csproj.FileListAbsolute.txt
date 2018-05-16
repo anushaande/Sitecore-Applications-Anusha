@@ -1,0 +1,4 @@
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Byrd\bin\HealthIS.Layouts.Byrd.dll
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Byrd\bin\HealthIS.Layouts.Byrd.pdb
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Byrd\obj\Release\HealthIS.Layouts.Byrd.dll
+C:\SVN\Sources\HealthIS.Layouts\HealthIS.Layouts.Byrd\obj\Release\HealthIS.Layouts.Byrd.pdb

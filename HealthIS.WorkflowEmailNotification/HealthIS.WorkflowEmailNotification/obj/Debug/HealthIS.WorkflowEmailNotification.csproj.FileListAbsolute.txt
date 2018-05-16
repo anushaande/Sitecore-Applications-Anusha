@@ -1,0 +1,7 @@
+C:\SVN\Sources\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\bin\Debug\HealthIS.WorkflowEmailNotification.dll
+C:\SVN\Sources\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\bin\Debug\HealthIS.WorkflowEmailNotification.pdb
+C:\SVN\Sources\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\bin\Debug\HealthIS.Apps.Util.dll
+C:\SVN\Sources\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\bin\Debug\Sitecore.Kernel.dll
+C:\SVN\Sources\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\obj\Debug\HealthIS.WorkflowEmailNotification.dll
+C:\SVN\Sources\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\obj\Debug\HealthIS.WorkflowEmailNotification.pdb
+C:\SVN\Sources\HealthIS.WorkflowEmailNotification\HealthIS.WorkflowEmailNotification\obj\Debug\HealthIS.WorkflowEmailNotification.csprojResolveAssemblyReference.cache

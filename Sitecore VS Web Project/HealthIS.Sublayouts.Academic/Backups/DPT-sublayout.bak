@@ -1,0 +1,110 @@
+﻿<%@ Control Language="c#" AutoEventWireup="true" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
+<nav class="navbar theme-dark full-width fixed-content">
+	<ul>
+		<li id="home"><a href="/medicine/dpt/index.htm"><i class="icon-home"></i></a></li>
+		<li id="about"><a href="#">About</a>
+			<div class="menu">
+				<h2>Who We Are</h2>
+				<ul>
+					<li><a href="/medicine/dpt/faculty/index.htm">Faculty &amp; Staff</a></li>
+					<li><a href="/medicine/dpt/education/students.htm">Students</a></li>
+					<li><a href="/medicine/dpt/accreditation.htm">Accreditation</a></li>
+				</ul>
+			</div>
+		</li>
+		<li id="admissions"><a href="#">Admissions</a>
+			<div class="menu"><h2>Admissions</h2>
+				<ul>
+				<li><a href="/medicine/dpt/education/prospective-students.htm">For Prospective Students</a></li>
+				<li><a href="/medicine/dpt/education/entry-level-dpt.htm">Entry-Level DPT</a>
+				<li><a href="http://usf.rehabessentials.com/usf/index.cfm" target="_blank">tDPT Admissions</a>
+				<li><a href="/medicine/dpt/education/estimated-cost.htm">Estimated Costs &amp; Financial Aid</a>
+				</ul>
+			</div>
+		</li>
+		<li id="education"><a href="#">Academics</a>
+			<div class="menu wide">
+				<div class="section">
+					<h2>Curriculum</h2>
+					<ul>
+						<li><a href="/medicine/dpt/education/dpt-mph-curriculum.htm">Entry Level DPT</a></li>
+						<li><a href="http://usf.rehabessentials.com/usf/index.cfm" target="_blank">Transitional DPT</a></li>
+					</ul>
+					<br>
+					<h2>Handbooks</h2>
+					<ul>
+						<li><a href="http://health.usf.edu/cms_author/docs/Templates/CoPTRS/docs/2013_14_DPT_Student_Handbook.pdf" target="_blank">DPT Student Handbook (PDF)</a></li>
+						<li><a href="http://health.usf.edu/NR/rdonlyres/AA8B866C-37B0-4A86-B08D-AEABB1827639/0/web_ClinicalEducationHandbook.pdf" target="_blank">Clinical Education Handbook (PDF)</a></li>
+					</ul>
+				</div>
+				<div class="section">
+					<h2>More Resources</h2>
+					<ul>
+						<li><a href="/medicine/dpt/education/service-learning.htm">Service Learning</a></li>
+						<li><a href="http://health.usf.edu/bridge" target="_blank">BRIDGE Clinic</a></li>
+						<li><a href="http://health.usf.edu/ahec/index.htm" target="_blank">AHEC</a></li>
+					</ul>
+				</div>
+			</div>
+		</li>
+		<li id="research"><a href="#">Research</a>
+			<div class="menu">
+				<h2>Research</h2>
+				<ul>
+					<li><a href="http://veterans.research.usf.edu/" target="_blank">Veterans Reintegration &amp; Resilience</a></li>
+					<li><a href="http://oandp.health.usf.edu/" target="_blank">Prosthetics &amp; Orthotics</a></li>
+					<li><a href="/medicine/dpt/world-spine-care.htm">World Spine Care</a></li>
+					<li><a href="/medicine/dpt/neuromusculoskeletal.htm">Center for Neuromusculoskeletal Research</a></li>
+					<li><a href="http://hscweb3.hsc.usf.edu/health/now/?p=12023" target="_blank">Human Functional Performance Lab</a></li>
+					<li><a href="http://health.usf.edu/medicine/research/core_motionlab.html" target="_blank">Motion Analysis Lab</a></li>
+				</ul>
+			</div>
+		</li>
+		<li id="alumni"><a href="#">Alumni</a>
+			<div class="menu">
+				<h2>Alumni</h2>
+				<ul>
+					<li><a href="/medicine/dpt/alumni/index.htm">Our Alumni</a></li>
+					<li><a href="/medicine/dpt/alumni/events.htm">Alumni Events</a></li>
+					<li><a href="/medicine/dpt/alumni/giving.htm">Alumni Giving</a></li>
+				</ul>
+			</div>
+		</li>
+		<li id="giving"><a href="/medicine/dpt/giving.htm">Giving</a>
+			<div class="menu">
+				<h2>Giving</h2>
+				<ul>
+					<li><a href="/medicine/dpt/giving/index.htm">About Giving</a></li>
+					<li><a href="/medicine/dpt/giving/impact.htm">Why Give?</a></li>
+					<li><a href="/medicine/dpt/giving/contact.htm">Contact Us</a></li>
+				</ul>
+			</div>
+		</li>
+		<li id="contact"><a href="#">Useful Links</a>
+			<div class="menu wide">
+				<div class="section">
+					<h2>Student Resources</h2>
+					<ul>
+						<li><a href="/medicine/dpt/apts.htm">APTS</a></li>
+						<li><a href="http://hsc.usf.edu/medicine/studentaffairs/financial_aid/index.htm" target="_blank">Financial Aid</a></li>
+						<li><a href="/medicine/registrar/index.htm" target="_blank">Registrar</a></li>
+						<li><a href="/medicine/studentaffairs/" target="_blank">Student Affairs</a></li>
+						<li><a href="http://www.shs.usf.edu/" target="_blank">Student Health Services</a></li>
+						<li><a href="https://mysites.usf.edu/" target="_blank">BlackBoard/Canvas</a></li>
+					</ul>
+				</div>
+				<div class="section">
+					<h2>Technology Resources</h2>
+					<ul>
+						<li><a href="/is/" target="_blank">Health Information Systems</a></li>
+						<li><a href="http://www.it.usf.edu/" target="_blank">Information Technology</a></li>
+						<li><a href="http://usfhsc.bkstore.com/" target="_blank">USF Health Bookstore</a></li>
+						<li><a href="http://www.computerstore.usf.edu/" target="_blank">Computer Store</a></li>
+						<li><a href="http://health.usf.edu/library/home.html" target="_blank">Library</a></li>
+					</ul>
+				</div>
+			</div>
+		</li>
+		<li><a href="/medicine/dpt/contact.htm">Contact Us</a></li>
+	</ul>
+</nav>

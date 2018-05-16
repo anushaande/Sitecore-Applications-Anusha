@@ -1,0 +1,65 @@
+﻿@model HealthIS.Apps.MVC.Models.Redirect
+@using Sitecore.Mvc
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor && Model.isDatasourceNull)
+{
+    <center>
+        <h2>Page Redirect</h2><p>If you want to create a redirect, click 'Create New Redirect'.</p>
+        <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrcCB()" value="Create New Redirect" />
+    </center>
+    <script>
+        jQuery(document).ready(function () {
+            autoSave();
+        });
+        // Create new datasource regarding to this component
+        function callSetDataSrcCB() {
+            setDataSrc(
+                '@Html.Raw(Model.PageItem.ID.ToString())',                      // itemID
+                'User Defined2/Component Template/Redirect',                    // templatePath
+                '_RD',                                                          // suffix
+                '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',   // renderingID
+                '@Html.Raw(Model.PageItem.Database.Name)',                      // dbName
+                '@Html.Raw(Sitecore.Context.Device.ID.ToString())',             // deviceID
+                '@Html.Raw(Model.Rendering.UniqueId.ToString())',               // renderingUID
+                ''                                                              // btnID
+            );
+        }
+    </script>
+    return;
+}
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    <div>
+        <h2>Redirect Config</h2>
+        <b>Status: </b>
+        <select id="statusComboBox">
+            <option value="Permanent" @(Model.status == "Permanent" ? "selected" : "")>Permanent</option>
+            <option value="Temporary" @(Model.status == "Temporary" ? "selected" : "")>Temporary</option>
+        </select><br />
+        <b>Target Location: </b>@Html.Raw(Model.DataItems(Model.item, "Target Location")) <br />
+        <small>* If you want to redirect to an external web page, please add "http://" or "https://" in target location field.</small>
+    </div>
+    <script>
+        jQuery("#statusComboBox").change(function () {
+            var renderingId = '@Html.Raw(Model.item.ID.ToString())';
+            var changedValue = this.value;
+            Sitecore.PageModes.PageEditor.setModified(true);
+
+            Sitecore.PageModes.PageEditor.postRequest("item:updateitemfield(id=" + renderingId + ", fieldName=Status, fieldValue=" + this.value + ")");
+        });
+    </script>
+}
+else
+{
+    if (@Model.DataItems(Model.item, "Target Location").ToString().Trim() != "")
+    {
+        string targetLocation = Model.DataItems(Model.item, "Target Location").ToString();
+        int statusCode = Model.DataItems(Model.item, "Status") == "Temporary" ? 302 : 301;
+        System.Web.HttpContext.Current.Response.Redirect(targetLocation, true);
+        System.Web.HttpContext.Current.Response.StatusCode = statusCode;
+    }
+    else
+    {
+        <h3>Please set a target location where you want to redirect to</h3>
+    }
+}

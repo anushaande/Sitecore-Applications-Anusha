@@ -1,0 +1,331 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{743ABAB8-14A9-4F9C-BAAC-8E33BD645D3A}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HealthIS.Layouts</RootNamespace>
+    <AssemblyName>HealthIS.Layouts.COPH</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="HealthIS.Apps.MVC.Helpers, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\HealthIS.Apps.MVC\HealthIS.Apps.MVC.Helpers\bin\Release\HealthIS.Apps.MVC.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Kernel, Version=8.0.5352.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Sitecore.Kernel.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Mvc, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Sitecore.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.1.0.20105.408\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Providers">
+      <HintPath>..\packages\Microsoft.AspNet.Providers.Core.1.1\lib\net40\System.Web.Providers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.1.0.20105.408\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.1.0.20105.408\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.1.0.20105.408\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.1.0.20105.408\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Layouts\COPH.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Web.config" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\COPH-Master.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\HPM\HPM-Homepage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\Center-Department-Homepage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\Custom-Department-Homepage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\COPH-Individual-User-Profile.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\COPH-User-Profile-Directory.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\COPH-Content-Page.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\COPH-FAQ.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\HPM\HPM-Left-Column-Sublayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\HPM\HPM-Full-Column-Sublayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\COPH-Picture-Grid.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\COPH-Location-Contact.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\Sublayout\COPH-General-Sublayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\Dietetic Internship\Dietetic-Internship-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Dietetic Internship\Dietetic-Internship-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\Diversity and Inclusion\Diversity-Inclusion-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Diversity and Inclusion\Diversity-Inclusion-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\Dr Marhefka\Dr-Marhefka-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Dr Marhefka\Dr-Marhefka-Left-Column-Sublayout.cshtml" />
+    <Content Include="Views\Layouts\COPH\Giving\Giving-FCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\Giving\Giving-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Online Programs\Online-Programs-FCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\Online Programs\Online-Programs-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Online Programs\Online-Programs-Sub-Page.cshtml" />
+    <Content Include="Views\Layouts\COPH\Peace Corps\Peace-Corps-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Peace Corps\Peace-Corps-Left-Column-Sublayout.cshtml" />
+    <Content Include="Views\Layouts\COPH\Project-TECH\Project-TECH-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Project-TECH\Project-TECH-LCS.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\Apply\Apply-FCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\Apply\Apply-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Apply\Graduate Admissions\Graduate-Admissions-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Apply\Graduate Admissions\Graduate-Admissions-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\Chiles Center\Miechv\Miechv-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Chiles Center\Miechv\Miechv-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\Chiles Center\Samch\Samch-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Chiles Center\Samch\Samch-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH International\COPH-International-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH International\COPH-International-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\Create\Create-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Create\Create-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\Family AIDS Network\Family-AIDS-Network-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Family AIDS Network\Family-AIDS-Network-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\Fragile Infant Feeding Institute\Fragile-Infant-Feeding-Institute-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Fragile Infant Feeding Institute\Fragile-Infant-Feeding-Institute-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\Health Survey Evaluation\Health-Survey-Evaluation-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Health Survey Evaluation\Health-Survey-Evaluation-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\Strategic Plan\Strategic-Plan-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Strategic Plan\Strategic-Plan-LCS.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\COPH\Apply\Apply-FCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Apply\Apply-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Apply\Graduate Admissions\Graduate-Admissions-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Apply\Graduate Admissions\Graduate-Admissions-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Center-Department-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\CFH\BHSO\BHSO-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\CFH\BHSO\BHSO-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\CFH\CFH-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\CFH\CFH-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Chiles Center\Chiles-Center-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Chiles Center\Chiles-Center-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Chiles Center\Miechv\Miechv-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Chiles Center\Miechv\Miechv-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Chiles Center\Samch\Samch-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Chiles Center\Samch\Samch-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\COPH International\COPH-International-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\COPH International\COPH-International-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\COPH-Content-Page.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\COPH-FAQ.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\COPH-Individual-User-Profile.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\COPH-Location-Contact.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\COPH-Master.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\COPH-Picture-Grid.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\COPH-User-Profile-Directory.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Create\Create-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Create\Create-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Custom-Department-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Dietetic Internship\Dietetic-Internship-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Dietetic Internship\Dietetic-Internship-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Diversity and Inclusion\Diversity-Inclusion-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Diversity and Inclusion\Diversity-Inclusion-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Dr Marhefka\Dr-Marhefka-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Dr Marhefka\Dr-Marhefka-Left-Column-Sublayout.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\EOH\EOH-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\EOH\EOH-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\EOH\OCMED\OCMED-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\EOH\OCMED\OCMED-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\EOH\OTI Center\OTI-Center-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\EOH\OTI Center\OTI-Center-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Family AIDS Network\Family-AIDS-Network-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Family AIDS Network\Family-AIDS-Network-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Fragile Infant Feeding Institute\Fragile-Infant-Feeding-Institute-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Fragile Infant Feeding Institute\Fragile-Infant-Feeding-Institute-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Giving\Giving-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Health Survey Evaluation\Health-Survey-Evaluation-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Health Survey Evaluation\Health-Survey-Evaluation-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\HPM\HPM-Full-Column-Sublayout.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\HPM\HPM-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\HPM\HPM-Left-Column-Sublayout.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Online Programs\Online-Programs-FCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Online Programs\Online-Programs-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Online Programs\Online-Programs-Sub-Page.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Peace Corps\Peace-Corps-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Peace Corps\Peace-Corps-Left-Column-Sublayout.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Project-TECH\Project-TECH-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Project-TECH\Project-TECH-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Strategic Plan\Strategic-Plan-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Strategic Plan\Strategic-Plan-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Sublayout\COPH-General-Sublayout.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Undergrad\Student Association\Student-Association-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Undergrad\Student Association\Student-Association-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Undergrad\Undergrad-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\COPH\Undergrad\Undergrad-LCS.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\COPH\Giving\Giving-FCS.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Layouts\COPH\CFH\BHSO\BHSO-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\CFH\BHSO\BHSO-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\CFH\CFH-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\CFH\CFH-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\Chiles Center\Chiles-Center-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Chiles Center\Chiles-Center-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\EOH\EOH-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\EOH\EOH-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\EOH\OCMED\OCMED-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\EOH\OCMED\OCMED-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\EOH\OTI Center\OTI-Center-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\EOH\OTI Center\OTI-Center-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\Undergrad\Student Association\Student-Association-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Undergrad\Student Association\Student-Association-LCS.cshtml" />
+    <Content Include="Views\Layouts\COPH\Undergrad\Undergrad-Homepage.cshtml" />
+    <Content Include="Views\Layouts\COPH\Undergrad\Undergrad-LCS.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>64669</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:58320/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(SolutionDir)$(ProjectName)\bin\$(ProjectName).dll" "\\sitecoretest\Sitecore\Website\bin"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

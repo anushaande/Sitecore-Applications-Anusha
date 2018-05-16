@@ -1,0 +1,83 @@
+﻿@model HealthIS.Apps.MVC.Models.Location
+
+@{
+    bool isSitecorePath = false;
+    bool onlyPhoneNumber = false;
+    string locationId = "";
+    
+    if (String.IsNullOrEmpty(Model.Name))
+    {
+        <br />
+        <center>
+            <h3>Please select a location from Component Property.<br />You have broken link on this component.</h3>
+        </center>
+        <br />
+        return;
+    }
+
+    string url = Model.URL;
+    string phone = Model.Phone;
+    locationId = Model.Locations;
+    locationId = locationId.TrimStart('{');
+    locationId = locationId.TrimEnd('}');
+
+    if (!String.IsNullOrEmpty(phone) && phone.Length <= 15) { onlyPhoneNumber = true; }
+    if (!String.IsNullOrEmpty(url) && url.IndexOf(".pdf", StringComparison.OrdinalIgnoreCase) <= 0) { isSitecorePath = true; }
+}
+
+<div class="row">
+    <div class="col-xs-4">
+        <a class="direction" href="#">@Html.Raw(Model.DefaultImage)</a>
+    </div>
+    <div class="col-xs-8">
+        <div class="location-details">
+            <h4>@Html.Raw(Model.Name)</h4>
+            <p class="address details">
+                <span itemprop="streetAddress">
+                    @Html.Raw(Model.Address)
+                    @if (!String.IsNullOrEmpty(Model.AddressLine2)) { <br />@Html.Raw(Model.AddressLine2) }
+                </span>
+                <br />
+                <span itemprop="addressRegion">@Html.Raw(Model.City)</span>, @Html.Raw(Model.State)&nbsp;@Html.Raw(Model.Zip)
+                <br /><br />
+                @if (!String.IsNullOrEmpty(Model.Phone)) 
+                { 
+                    if (onlyPhoneNumber)
+                    {
+                        <span itemprop="telephone"><span class="icon-phone-sign"></span> <a href="tel:@Model.Phone">@Html.Raw(Model.Phone)</a></span><br />
+                    }
+                    else
+                    {
+                        <span itemprop="telephone" onclick="javascript:call('@locationId');"><span class="icon-phone-sign"></span> Open Phone Directory</span> 
+                        <div id="phoneList-@locationId" style="display: none;">
+                            @Html.Raw(Model.Phone)
+                        </div>
+                    }
+                }
+                @if (!String.IsNullOrEmpty(Model.URL))
+                {
+                    <span class="location-sub">
+                        <a href="@Html.Raw(Model.URL)">
+                            @if(!isSitecorePath) {
+                                <span class="icon-file-alt"></span> 
+                                @:PDF MAP
+                            } else {
+                                <span class="icon-info-sign"></span> 
+                                @:Link to Location Sub-Page
+                            }
+                        </a>
+                    </span>
+                    <br />
+                }
+                @if (!String.IsNullOrEmpty(Model.MapURL)) 
+                { 
+                    <a class="direction" target="_blank" href="@Model.MapURL">
+                        <span class="icon-map-marker"></span> Get Directions
+                    </a>
+                }
+            </p>
+
+        </div>
+    </div>
+</div>
+<hr>

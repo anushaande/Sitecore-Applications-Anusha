@@ -1,0 +1,32 @@
+﻿@model HealthIS.Layouts.Models.COPH
+@using Sitecore.Mvc
+
+@Html.Sitecore().Placeholder("Top Header")     
+<!--**** START - COPH Master Header ****-->
+<header class="container block-center" id="dept-header" role="banner">
+    <a id="health-logo" class="text-hide" href="http://health.usf.edu">USF Health</a>
+    @Html.Sitecore().Placeholder("BreadCrumbs")
+    <h4>@Model.currentItem["Page Title"]</h4>
+</header>
+<!--**** END - COPH Master Header ****-->
+        
+<!--**** START - COPH Main Horizontal Navigation ****-->
+@Html.Sitecore().Placeholder("Horizontal Navigation")
+<!--**** END - COPH Main Navigation ****-->
+
+<main class="container block-center site-content clearfix" role="main">
+    @if (Sitecore.Context.PageMode.IsExperienceEditor)
+    {
+        <input type="button" id="addNewChildItemTop" class="pe-button pe-green" onclick="addChildPage();" style="float: right; margin-bottom: 20px; margin-right: 15px;" value="Add a Child Page" />
+        <script>
+            $(document).ready(function () {
+                autoSave();
+                var currentUrl = '@Request.Url.AbsoluteUri';
+                msgEmptyPlaceholder(currentUrl);
+            });
+        </script>
+    }
+    @Html.Sitecore().Placeholder("COPH Page Type")
+</main>
+        
+@Html.Sitecore().Placeholder("Bottom Footer")

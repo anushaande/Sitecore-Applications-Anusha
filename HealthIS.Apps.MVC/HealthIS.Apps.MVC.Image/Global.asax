@@ -1,0 +1,1 @@
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="HealthIS.Apps.MVC.Image.MvcApplication" Language="C#" %>

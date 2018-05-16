@@ -1,0 +1,162 @@
+﻿@using Sitecore.Mvc
+@{
+    //unique id to use
+    string UID = "_" + Model.Rendering.UniqueId.ToString().Replace('-', '_');
+    string mainCss = "";
+    try
+    {
+        mainCss = (String.IsNullOrEmpty(Model.DataSourceFolder.Fields["Class"].Value) ? "" : @Model.DataSourceFolder.Fields["Class"].Value);
+    }
+    catch
+    {
+    }
+}
+<div class="row @mainCss" id="row@(UID)">
+    @if (Sitecore.Context.PageMode.IsPageEditor)
+    {
+        if (Model.dsSet)
+        {
+            <script>
+            function addSubItem@(UID)(){
+                addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/Expandable List Root/Expandable List Item', '_EL', 'master', '@(Model.DataSourceFolder.ID.Guid.ToString())', true)
+            }
+
+            function ddlChange@(UID)(ct){
+                var hiddenField = 'hid_' + ct + '@(UID)';
+                var selVal = jQuery('#selIcon_' + ct + '@(UID)').val();
+                jQuery('#em_' + ct + '@(UID)').attr("class" , selVal);
+                updateHiddenField(hiddenField , selVal);
+            }
+            </script>
+            <h2>Expandable List Config</h2>
+            <ul class="list-group">
+                @{int iCt = 0;}
+                @if (Model.DataSourceFolder.HasChildren)
+                {
+                    foreach (Sitecore.Data.Items.Item i in Model.DataSourceFolder.Children)
+                    {
+                        string iconToUse = HealthIS.Apps.MVC.Helpers.getStrField(i, "Icon");
+                        <li class="list-group-item">
+                            <div style="float:left;width:90%;">
+                                <div style="width:100%;">
+                                    <div style="float:left;">
+                                        <select class="form-control" id="selIcon_@(iCt)@(UID)" style="font-family: 'FontAwesome', 'helvetica neue', helvetica, arial, sans-serif;" onchange="ddlChange@(UID)('@(iCt)')">
+                                            <option value="">Please select an icon</option>
+                                            @if (HealthIS.Apps.MVC.Helpers.GetIcons() != null)
+                                            {
+                                                foreach (string icon in HealthIS.Apps.MVC.Helpers.GetIcons())
+                                                {
+                                                    var getValue = icon.Split('=');
+                                                    <option value="@getValue[1]" title="Tooltip">@Html.Raw(getValue[0])</option>
+                                                }
+                                            }
+                                        </select>&nbsp;&nbsp;
+                                        <script>
+                                        whenAvailable("jQuery", function () { jQuery('#selIcon_@(iCt)@(UID)').val('@iconToUse'); });
+                                        </script>
+                                    </div>
+                                    <div style="float:left;">
+                                        &nbsp;&nbsp;<em id="em_@(iCt)@(UID)" style="font-size:2.3em;" class="@iconToUse"></em>
+                                    </div><div style="clear:both;"></div>
+                                </div>
+                                <div id="hid_@(iCt)@(UID)" style="display:none;">
+                                    @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(i, "Icon"))
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2"><b>Title:</b></div>
+                                    <div class="col-md-10">@Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(i, "Title"))</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2"><b>Sub Title:</b></div>
+                                    <div class="col-md-10">@Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(i, "Sub Title"))</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2"><b>Content:</b></div>
+                                    <div class="col-md-10">@Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(i, "Content"))</div>
+                                </div>
+                            </div>
+                            <div style="float:right;width:5%;text-align:center;">
+                                @if (iCt != 0)
+                                {
+                                    <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:moveup(id=@(i.ID))",function(){location.reload(true);},false)' value="&#x25B2;" /><br />
+                                }
+                                @if (iCt != Model.DataSourceFolder.Children.Count - 1)
+                                {
+                                    <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:movedown(id=@(i.ID))",function(){location.reload(true);},false)' value="&#x25BC;" /><br />
+                                }
+                                <input class="pe-button pe-red" type="button" value="&#120;" onclick="deleteItem('@(i.ID)')" />
+                            </div>
+                            <div style="clear:both;"></div>
+                        </li>
+                                iCt++;
+                    }
+                }
+                <li class="list-group-item" style="text-align:right;">
+                    <input class='pe-button pe-yellow' type="button" onclick="Sitecore.PageModes.PageEditor.postRequest('webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Class, id=@Model.DataSourceFolder.ID)')" value="Add CSS Class" />
+                    <input class="pe-button pe-green" type="button" value="&#43; Add List Item" onclick="addSubItem@(UID)()" />
+                </li>
+            </ul>
+        }
+        else
+        {
+            <h2 style="text-align:center;">Expandable List Config</h2>
+            <script>
+            function callSetDataSrc@(UID)() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                                              // itemID
+                    'User Defined2/Component Template/Expandable List Root',                                // templatePath
+                    '_EL',                                                                                 // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                           // renderingID
+                    'master',                                                                               // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                                     // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',                                       // referenceID
+                    '',                                                                                     // btnID
+                    true                                                                                    // reload true
+                );
+            }
+            </script>
+            <div style="text-align:center">
+                <p>If you want to create a new Expandable List, click 'Create New Expandable List'.</p>
+                <input id="btnDSSet@(UID)" class="pe-button pe-green" type="button" value="Create New Expandable List" onclick="callSetDataSrc@(UID)()" />
+                <script>if(typeof(autoSave) != "undefined"){ autoSave(); }</script>
+            </div>
+        }
+    }
+    else
+    {
+        if (Model.dsSet)
+        {
+            <ul class="dra-wrapper">
+                @foreach (Sitecore.Data.Items.Item listItem in Model.DataSourceFolder.Children)
+                {
+                    string contentField = HealthIS.Apps.MVC.Helpers.getStrField(listItem, "Content");
+                    contentField = HealthIS.Apps.MVC.Helpers.GenerateContents(contentField);
+                    
+                    <li class="dra-item dra-hidden">
+                        <div class="dra-header">
+                            @{
+                    string iconName = HealthIS.Apps.MVC.Helpers.getStrField(listItem, "Icon");
+                    if (iconName.Length <= 0) { iconName = "icon-file-alt"; }
+                            }
+                            <em class="@(iconName)"></em>
+                            <div class="dra-header-content">
+                                <h2 class="dra-main">@HealthIS.Apps.MVC.Helpers.getStrField(listItem, "Title")</h2>
+                                <h3 class="dra-sub">@HealthIS.Apps.MVC.Helpers.getStrField(listItem, "Sub Title")</h3>
+                            </div>
+                        </div>
+                        <div class="dra-content">@Html.Raw(contentField)</div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No data source found for this Expandable List.</p>
+        }
+    }
+</div>
+<script>
+    whenAvailable("jQuery",function(){
+        jQuery('#row@(UID)').parent().attr("class","content-area-expandable-list");
+    });
+</script>

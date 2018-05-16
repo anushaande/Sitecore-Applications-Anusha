@@ -1,0 +1,157 @@
+﻿@model HealthIS.Apps.MVC.Models.SocialNetwork
+@using Sitecore.Mvc
+@if (Sitecore.Context.PageMode.IsPageEditor)
+{
+    if (!Model.dsIsSet)
+    {
+        <center>
+            <div><h2>Social Network</h2><p>To add a new Social Network, click 'Add New Social Network'</p></div>
+            <div>
+                <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrc()" value="Add New Social Network">
+            </div>
+        </center>
+            
+        <script type="text/javascript">
+            autoSave();
+            // Create new datasource regarding to this component
+            function callSetDataSrc() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                          // itemID
+                    'User Defined2/Component Template/Social Network',                  // templatePath
+                    '_SN',                                                              // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',       // renderingID
+                    '@Html.Raw(Model.PageItem.Database.Name)',                          // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                 // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',                   // renderingUID
+                    ''                                                                  // btnID
+                );
+            }
+        </script>
+        return;
+    }
+    string designView = "/Current_User/Page Editor/Capability/design";
+    if (Sitecore.Web.UI.HtmlControls.Registry.GetString(designView, "off") == "off")
+    {
+        Sitecore.Web.UI.HtmlControls.Registry.SetString(designView, "on");
+    }
+    <script>
+        function updateCheckValue(e) {
+            var val = '';
+            if (!e.checked) { val = '1'; }
+            var itemURI = new Sitecore.ItemUri('@Model.Item.ID.Guid.ToString().ToUpper()', 'en', '@Model.Item.Version.ToString()', '@Model.Item.Statistics.Revision');
+            Sitecore.WebEdit.setFieldValue(itemURI, '@Model.chSmallIconTemplateId', val);
+            if ($(e).prop("checked")) {
+                $(e).removeAttr("checked");
+            } else {
+                $(e).prop("checked", "true");
+            }
+        };
+    </script>
+    <style>
+        .settings-label {
+            font-weight: bold;
+        }
+        .odd {
+            background-color: rgb(247, 247, 247);
+        }
+
+        .editTable tr td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        .editTable tr:last-child td:first-child {
+            -moz-border-radius-bottomleft:10px;
+            -webkit-border-bottom-left-radius:10px;
+            border-bottom-left-radius:10px
+        }
+
+        .editTable tr:last-child td:last-child {
+            -moz-border-radius-bottomright:10px;
+            -webkit-border-bottom-right-radius:10px;
+            border-bottom-right-radius:10px
+        }
+    </style>
+    <div class="@Model.smallIconClass">
+        <h2>Please input each social network URL</h2>
+        <h4>If you want to link to an external website, please add "http://"</h4>
+        <table class="editTable">
+            <tr>
+                <td class="settings-label">Use Small Icons</td>
+                <td><input type="checkbox" class="chSmallIcon" onmousedown="updateCheckValue(this)" @if (Model.chSmallIcon.Checked){ @Html.Raw("checked='checked'"); } else { @Html.Raw("") } /></td>
+            </tr>
+            <tr>
+                <td class="settings-label"><em class="icon-facebook"></em> Facebook:</td>
+                <td>@Html.Raw(Model.facebook)</td>
+            </tr>
+            <tr>
+                <td class="settings-label"><em class="icon-twitter"></em> Twitter:</td>
+                <td>@Html.Raw(Model.twitter)</td>
+            </tr>
+            <tr>
+                <td class="settings-label"><em class="icon-youtube-play"></em> YouTube:</td>
+                <td>@Html.Raw(Model.youTube)</td>
+            </tr>
+            <tr>
+                <td class="settings-label"><em class="icon-linkedin"></em> LinkedIn:</td>
+                <td>@Html.Raw(Model.linkedIn)</td>
+            </tr>
+            <tr>
+                <td class="settings-label"><em class="icon-google-plus"></em> Google+:</td>
+                <td>@Html.Raw(Model.googlePlus)</td>
+            </tr>
+            <tr>
+                <td class="settings-label"><em class="icon-pinterest"></em> Pinterest:</td>
+                <td>@Html.Raw(Model.pInterest)</td>
+            </tr>
+            <tr>
+                <td class="settings-label"><em class="icon-instagram"></em> Instagram:</td>
+                <td>@Html.Raw(Model.instagram)</td>
+            </tr>
+            <tr>
+                <td class="settings-label"><em class="icon-flickr"></em> Flickr:</td>
+                <td>@Html.Raw(Model.flickr)</td>
+            </tr>
+            <tr>
+                <td class="settings-label"><em class="icon-rss"></em> RSS:</td>
+                <td>@Html.Raw(Model.rss)</td>
+            </tr>
+            <tr>
+                <td class="settings-label"><em class="icon-headphones"></em> Podcast:</td>
+                <td>@Html.Raw(Model.podcast)</td>
+            </tr>
+            <tr>
+                <td class="settings-label"><em class="icon-sharepoint"></em> SharePoint:</td>
+                <td>@Html.Raw(Model.sharePoint)</td>
+            </tr>
+        </table>
+    </div>
+}
+else
+{
+    <div class="@Model.cssClassName">
+        @if (!String.IsNullOrEmpty(Model.facebook))
+        { <a href="@Html.Raw(Model.facebook)" target="_blank"><em class="icon-facebook"></em></a> }
+        @if (!String.IsNullOrEmpty(Model.twitter))
+        { <a href="@Html.Raw(Model.twitter)" target="_blank"><em class="icon-twitter"></em></a> }
+        @if (!String.IsNullOrEmpty(Model.youTube))
+        { <a href="@Html.Raw(Model.youTube)" target="_blank"><em class="icon-youtube-play"></em></a> }
+        @if (!String.IsNullOrEmpty(Model.linkedIn))
+        { <a href="@Html.Raw(Model.linkedIn)" target="_blank"><em class="icon-linkedin"></em></a> }
+        @if (!String.IsNullOrEmpty(Model.googlePlus))
+        { <a href="@Html.Raw(Model.googlePlus)" target="_blank"><em class="icon-google-plus"></em></a> }
+        @if (!String.IsNullOrEmpty(Model.pInterest))
+        { <a href="@Html.Raw(Model.pInterest)" target="_blank"><em class="icon-pinterest"></em></a> }
+        @if (!String.IsNullOrEmpty(Model.instagram))
+        { <a href="@Html.Raw(Model.instagram)" target="_blank"><em class="icon-instagram"></em></a> }
+        @if (!String.IsNullOrEmpty(Model.flickr))
+        { <a href="@Html.Raw(Model.flickr)" target="_blank"><em class="icon-flickr"></em></a> }
+        @if (!String.IsNullOrEmpty(Model.rss))
+        { <a href="@Html.Raw(Model.rss)" target="_blank"><em class="icon-rss"></em></a> }
+        @if (!String.IsNullOrEmpty(Model.podcast))
+        { <a href="@Html.Raw(Model.podcast)" target="_blank"><em class="icon-headphones"></em></a> }
+        @if (!String.IsNullOrEmpty(Model.sharePoint))
+        { <a href="@Html.Raw(Model.sharePoint)" target="_blank"><em class="icon-sharepoint"></em></a> }
+    </div>
+}
+

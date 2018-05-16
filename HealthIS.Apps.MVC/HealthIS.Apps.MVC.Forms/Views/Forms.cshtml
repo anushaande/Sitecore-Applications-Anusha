@@ -1,0 +1,160 @@
+﻿@using Helpers = HealthIS.Apps.MVC.Helpers
+
+@{  
+    //unique id to use 
+    string UID = "_" + Model.Rendering.UniqueId.ToString().Replace('-', '_');   
+}
+
+@if (Sitecore.Context.PageMode.IsPageEditor)
+{
+    if (!Model.dsSet || Model.ds == null)
+    {
+        <script>
+            function callSetDataSrc@(UID)(){
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                      // itemID
+                    'User Defined2/Component Template/Form Root',                   // templatePath
+                    '_FM',                                                          // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',   // renderingID
+                    'master',                                                       // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',             // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',               // referenceID
+                    'btnDSSet@(UID)',                                               // btnID
+                    true
+                );
+            }
+        </script>
+        <div style="text-align:center">    
+            <h2>Form Config</h2>
+            <p>If you want to create a new Form, click 'Create New Form'.</p>
+            <input id="btnDSSet@(UID)" class="pe-button pe-green" type="button" value="Create New Form" onclick="callSetDataSrc@(UID)()" />
+            <script>if(typeof(autoSave) != "undefined"){ autoSave(); }</script>
+        </div>
+    }
+    else{
+        <h2>Form Config</h2>
+    <script>
+        function btnClassChange@(UID)(){
+            selOnChange('hidBtnClass@(UID)','selBtnClass@(UID)');
+            jQuery('#btnExample@(UID)').attr('class', 'btn btn-usf-health btn-icon ' + jQuery('#selBtnClass@(UID)').val());
+        }
+    </script>
+        <table class="editTable">
+            <tr>
+                <td class="settings-label">
+                    <b>Form:</b>
+                </td>
+                <td>
+                    <select id="selForms@(UID)" onchange="selOnChange('hidForms@(UID)','selForms@(UID)')">
+                        <option></option>
+                        @foreach (Sitecore.Data.Items.Item i in Model.forms)
+                        {
+                            string selectedVal = (Model.dsSet && i.ID == Model.ds.ID) ? "selected" : "";
+                            <option value='@i.ID.Guid.ToString()' @selectedVal>@i.Name</option>
+                        }
+                    </select>
+                    <div id="hidForms@(UID)" style="display:none;">
+                        @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.ds, "Form ID"))
+                    </div>
+                    <script>
+                        @{
+                            string formID = Helpers.getStrField(Model.ds, "Form ID");
+                            if (!string.IsNullOrEmpty(formID))
+                            {
+                                @:jQuery('#selForms@(UID)').val('@formID');
+                                                                            }
+                        }
+                    </script>
+                </td>
+            </tr>
+            <tr class="odd">
+                <td class="settings-label">
+                    <b>Open in modal window:</b>
+                </td>
+                <td>
+                    <input type="checkbox" @Model.getCheckedAttr(Model.isModal) id="cbIsModal@(UID)" onmousedown="cbOnChange('hidIsModal@(UID)','cbIsModal@(UID)')" onclick="jQuery('.modalOpt@(UID)    ').toggle()"/>
+                    <div id="hidIsModal@(UID)" style="display:none;">
+                        @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.ds, "Is Modal"))
+                    </div>
+                </td>
+            </tr>
+            @{
+                string styleDisplay = Model.isModal ? "" : "style='display:none;'";
+            }
+            <tr class="modalOpt@(UID)" @Html.Raw(styleDisplay)>
+                <td class="settings-label">
+                    <b>Button Text:</b>
+                </td>
+                <td>@Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.ds, "Button Text"))</td>
+            </tr>
+            <tr class="odd modalOpt@(UID)" @Html.Raw(styleDisplay)>
+                <td class="settings-label">
+                    <b>Button Style:</b>
+                </td>
+                <td>
+                    <select id="selBtnClass@(UID)" onchange="btnClassChange@(UID)()">
+                        <option value=""></option>
+                        <option value="bg-usfGreen">Green</option>
+                        <option value="bg-usfSky">Sky</option>
+                        <option value="bg-usfStorm">Storm</option>
+                        <option value="bg-usfTealGreen">Teal Green</option>
+                        <option value="bg-usfSlate">Slate</option>
+                        <option value="bg-usfSeaGlass">Sea Glass</option>
+                    </select>
+                    <div id="hidBtnClass@(UID)" style="display:none;">
+                        @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.ds, "Button Class"))
+                    </div>
+                    <script>
+                        @{
+                            string btnClass = Helpers.getStrField(Model.ds, "Button Class");
+                            if (!string.IsNullOrEmpty(btnClass))
+                            {
+                                @:jQuery('#selBtnClass@(UID)').val('@btnClass');
+                                                    }
+                        }
+                    </script>
+                </td>
+            </tr>
+            <tr class="modalOpt@(UID)" @Html.Raw(styleDisplay)>
+                <td class="settings-label">
+                    <b>Button example:</b>
+                </td>
+                <td>
+                    @{
+                        string btnTxt = Helpers.getStrField(Model.ds, "Button Text");
+                        btnTxt = string.IsNullOrEmpty(btnTxt) ? "Example" : btnTxt;
+                    }
+                    <a id="btnExample@(UID)" class='btn btn-usf-health btn-icon @Html.Raw(Helpers.getStrField(Model.ds, "Button Class"))' role="button" href="#">@Html.Raw(btnTxt)</a>
+                </td>
+            </tr>
+        </table>
+    }
+}
+else
+{
+    <script type="text/javascript" src="/resources/scripts/HealthIS.Apps.Util.js"></script>
+    if (Model.dsSet && !string.IsNullOrEmpty(Model.location))
+    {
+        if(Model.isModal){
+            <a class='btn btn-usf-health btn-icon @Html.Raw(Helpers.getStrField(Model.ds, "Button Class"))' href="#modal@(UID)" role="button" data-toggle="modal">@Html.Raw(Helpers.getStrField(Model.ds, "Button Text"))</a>
+            <div id="modal@(UID)" class="modal fade" style="padding:30px;display:none;">
+                <div class="modal-window">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="iFrame@(UID)" src='@Html.Raw(Model.location)' style="width:100%;" onload="resizeIframe(this)" frameborder="0" marginwidth="0" marginheight="0"></iframe>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <iframe id="iFrame@(UID)" src='@Html.Raw(Model.location)' style="width:100%;" onload="resizeIframe(this)" frameborder="0" marginwidth="0" marginheight="0" ></iframe>
+        }
+    }
+    else
+    {
+        <p>No form set.</p>
+    }
+}

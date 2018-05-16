@@ -1,0 +1,24 @@
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Sitecore VS Project.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Sitecore VS Project.pdb
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Sitecore.Kernel.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Lucene.Net.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\ITHit.WebDAV.Server.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\HtmlAgilityPack.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Mvp.Xml.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\ComponentArt.Web.UI.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Sitecore.Zip.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Sitecore.Logging.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Sitecore.NVelocity.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Newtonsoft.Json.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\RadEditor.Net2.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Telerik.Web.UI.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Sitecore.Kernel.xml
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Lucene.Net.xml
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\HtmlAgilityPack.xml
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Newtonsoft.Json.xml
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Telerik.Web.UI.xml
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\obj\Debug\Sitecore VS Project.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\obj\Debug\Sitecore VS Project.pdb
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\obj\Debug\Sitecore VS Project.csprojResolveAssemblyReference.cache
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\HealthIS.Apps.Util.dll
+C:\inetpub\wwwroot\USFHealth\Sitecore VS Project\Sitecore VS Project\bin\Oracle.DataAccess.dll

@@ -1,0 +1,284 @@
+﻿@using Sitecore.Mvc
+@model HealthIS.Apps.MVC.FAQ.Models.FAQ
+
+@{
+    //unique id to use
+    string UID = "_" + Model.Rendering.UniqueId.ToString().Replace('-', '_');
+    List<Sitecore.Data.Items.Item> deprecatedItems = new List<Sitecore.Data.Items.Item>();
+}
+@if (Sitecore.Context.PageMode.IsPageEditor)
+{
+    if (Model.dsSet)
+    {
+        <script>
+            function addSection@(UID)(){
+                @if (Model.DataSourceFolder != null)
+                {
+                    <text>
+                    addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/FAQ Root/FAQ Section', '_FAQS', 'master', '@(Model.DataSourceFolder.ID.Guid.ToString())', true, null);
+                    </text>
+                }
+                else
+                {
+                    <text>
+                    console.log('ERROR: Datasource not found.');
+                    </text>
+                }
+            }
+
+            function addItemToSection@(UID)(folderID){
+                addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/FAQ Root/FAQ Item', '_FAQI', 'master', folderID, true, null);
+            }
+            function updateValue(thisComboBox, itemID, field) {
+                var val = thisComboBox.value;
+                Sitecore.PageModes.PageEditor.postRequest("item:updateitemfield(id=" + itemID + ", fieldName=" + field + ", fieldValue=" + val + ")");
+            }
+        </script>
+        <h2>FAQ Accordion Config</h2>
+        <ul class="list-group">
+            @if (Model.Sections != null && Model.Sections.Count > 0)
+            {
+                int sectionCt = 0;
+                List<HealthIS.Apps.MVC.FAQ.Models.FAQSection> sections = Model.Sections;
+                int actualSectCt = sections.Where(s => s.SCItem.Template.DisplayName.ToLower() == "faq section").ToList().Count;
+                foreach (HealthIS.Apps.MVC.FAQ.Models.FAQSection section in Model.Sections)
+                {
+                    section.populateComboBox();
+                    if (section.SCItem.Template.DisplayName.ToLower() == "faq item")
+                    {
+                        deprecatedItems.Add(section.SCItem);
+                    }
+                    else
+                    {
+                        sectionCt++;
+                        int listingCt = 0;
+                        string defaultOpen = section.templateFieldName;
+                        if (String.IsNullOrEmpty(section.SCItem.Fields[defaultOpen].Value))
+                        {
+                            // set default value of "Open First FAQ Item By Default" field to "No"
+                            section.SCItem.Editing.BeginEdit();
+                            section.SCItem.Fields[defaultOpen].Value = "No";
+                            section.SCItem.Editing.EndEdit();
+                        }
+                        string selectedValue = section.SCItem.Fields[defaultOpen].Value;  // holds current selected value
+                        <li class="list-group-item">
+                            <div style="float:left;padding-bottom:10px;">
+                                <h3>Heading: @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(section.SCItem, "Heading"))</h3>
+                                @if (section.SCItem.HasChildren)
+                                {
+                                    @Html.Raw("Open first FAQ item by default: ")@Html.DropDownList("myList", section.options, selectedValue, new { @onchange = "updateValue(this,'" + section.SCItem.ID.ToString() + "','" + section.templateFieldName + "')" })
+                                }
+                            </div>
+                            <div style="float:right;text-align:right;">
+                                @if (actualSectCt > 1)
+                                {
+                                    if (sectionCt > 1)
+                                    {
+                                        <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:moveup(id=@(section.SCItem.ID))",function(){location.reload(true);},false)' value="&#x25B2;" />
+                                    }
+                                    if (sectionCt < actualSectCt)
+                                    {
+                                        <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:movedown(id=@(section.SCItem.ID))",function(){location.reload(true);},false)' value="&#x25BC;" />
+                                    }
+                                }
+                                <input class="pe-button pe-red" type="button" value="&#120;" onclick="deleteItem('@(section.SCItem.ID)')" />
+                            </div>
+                            <div style="clear:both;"></div>
+                            <ul class="list-group">
+                                @foreach (HealthIS.Apps.MVC.FAQ.Models.FAQItem listing in section.Listings)
+                                {
+                                    <li class="list-group-item">
+                                        <div style="float:left;width:90%;">
+                                            <span style="font-weight:bold;">Question:</span><br />
+                                            @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(listing.SCItem, "Question"))<br />
+                                            <span style="font-weight:bold;">Answer:</span><br />
+                                            @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(listing.SCItem, "Answer"))
+                                        </div>
+                                        <div style="float:right;width:5%;text-align:center;">
+                                            @if (listingCt != 0)
+                                            {
+                                                <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:moveup(id=@(listing.SCItem.ID))",function(){location.reload(true);},false)' value="&#x25B2;" /><br />
+                                            }
+                                            @if (listingCt != section.Listings.Count - 1)
+                                            {
+                                                <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:movedown(id=@(listing.SCItem.ID))",function(){location.reload(true);},false)' value="&#x25BC;" /><br />
+                                            }
+                                            <input class="pe-button pe-red" type="button" value="&#120;" onclick="deleteItem('@(listing.SCItem.ID)    ')" />
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                            listingCt++;
+                                }
+                                <li class="list-group-item" style="text-align:right;">
+                                    <input type="button" class="pe-button pe-yellow" onclick="javascript:Sitecore.PageModes.PageEditor.postRequest('webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=CSS Class, id=@(section.SCItem.ID))')" value="Add CSS Class">&nbsp;
+                                    <input type="button" class="pe-button pe-green" value="&#43; Add FAQ Item" onclick="addItemToSection@(UID)('@(section.SCItem.ID)')" />
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                }
+                if (deprecatedItems.Count > 0)
+                {
+                    int listingCt = 0;
+                    foreach (Sitecore.Data.Items.Item scItem in deprecatedItems)
+                    {
+                        <li class="list-group-item">
+                            <div style="float:left;width:90%;">
+                                <span style="font-weight:bold;">Question:</span><br />
+                                @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(scItem, "Question"))<br />
+                                <span style="font-weight:bold;">Answer:</span><br />
+                                @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(scItem, "Answer"))
+                            </div>
+                            <div style="float:right;width:5%;text-align:center;">
+                                @if (listingCt != 0)
+                                {
+                                    <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:moveup(id=@(scItem.ID))",function(){location.reload(true);},false)' value="&#x25B2;" /><br />
+                                }
+                                @if (listingCt != deprecatedItems.Count - 1)
+                                {
+                                    <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:movedown(id=@(scItem.ID))",function(){location.reload(true);},false)' value="&#x25BC;" /><br />
+                                }
+                                <input class="pe-button pe-red" type="button" value="&#120;" onclick="deleteItem('@(scItem.ID)')" />
+                            </div>
+                            <div style="clear:both;"></div>
+                        </li>
+                                listingCt++;
+                    }
+                    <li class="list-group-item" style="text-align:right;">
+                        <input class="pe-button pe-green" type="button" value="&#43; Add FAQ Item" onclick="addItemToSection@(UID)('@(Model.DataSourceFolder.ID)')" />
+                    </li>
+
+                }
+            }
+            <li class="list-group-item" style="text-align:right;">
+                <input class="pe-button pe-green" type="button" value="&#43; Add FAQ Section" onclick="addSection@(UID)()" />
+            </li>
+        </ul>
+    }
+    else
+    {
+        <h2 style="text-align:center;">FAQ Accordion Config</h2>
+        <script>
+            function callSetDataSrc@(UID)() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                                              // itemID
+                    'User Defined2/Component Template/FAQ Root',                                            // templatePath
+                    '_FAQ',                                                                                 // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                           // renderingID
+                    'master',                                                                               // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                                     // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',                                       // referenceID
+                    '',                                                                                     // btnID
+                    true                                                                                    // reload true
+                );
+            }
+        </script>
+        <div style="text-align:center">
+            <p>If you want to create a new FAQ Accordion, click 'Create New FAQ Accordion'.</p>
+            <input id="btnDSSet@(UID)" class="pe-button pe-green" type="button" value="Create New FAQ Accordion" onclick="callSetDataSrc@(UID)    ()" />
+            <script>if (typeof (autoSave) != "undefined") { autoSave(); }</script>
+        </div>
+    }
+}
+else
+{
+    if (Model.dsSet)
+    {
+        <div id="faqAccordion@(UID)">
+            @if (Model.Sections != null && Model.Sections.Count > 0)
+            {
+                int ct = 0;
+                foreach (HealthIS.Apps.MVC.FAQ.Models.FAQSection section in Model.Sections)
+                {
+                    string defaultOpen = Sitecore.Web.UI.WebControls.FieldRenderer.Render(section.SCItem, section.templateFieldName);
+                    ct = defaultOpen.ToLower().Equals("no") ? 1 : 0;
+
+                    if (section.SCItem.Template.DisplayName.ToLower() == "faq item")
+                    {
+                        deprecatedItems.Add(section.SCItem);
+                    }
+                    else
+                    {
+                        string cssClass = !String.IsNullOrEmpty(section.SCItem.Fields["CSS Class"].Value) ? " " + section.SCItem.Fields["CSS Class"].Value : "";
+                        <div class="usf-accordion panel-group@(cssClass)">
+                            @if (!String.IsNullOrEmpty(section.Heading))
+                            { <h2>@Html.Raw(section.Heading)</h2> }
+                            @foreach (HealthIS.Apps.MVC.FAQ.Models.FAQItem faqItem in section.Listings)
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" onclick="AccordionEvent(this)">
+                                        <h4 class="panel-title">
+                                            <a style="cursor:pointer;">
+                                                <span class="icon @if (ct > 0)
+                                                                  {@Html.Raw("icon-caret-right");
+                                                                  }
+                                                                  else
+                                                                  {@Html.Raw("icon-caret-down");
+                                                                  }"></span>
+                                                @Html.Raw(faqItem.Question)
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse@(ct)@(UID)" class="panel-collapse @if (ct > 0)
+                                                                                        {@Html.Raw("collapse");
+                                                                                        }">
+                                        <div class="panel-body">@Html.Raw(faqItem.Answer)</div>
+                                    </div>
+                                </div>
+                                                                                        ct++;
+                            }
+                        </div>
+                    }
+                }
+                if (deprecatedItems.Count > 0)
+                {
+                    <div class="usf-accordion panel-group">
+                        @foreach (Sitecore.Data.Items.Item faqItem in deprecatedItems)
+                        {
+                            <div class="panel panel-default">
+                                <div class="panel-heading" onclick="AccordionEvent(this)">
+                                    <h4 class="panel-title">
+                                        <a style="cursor:pointer;">
+                                            <span class="icon @if (ct > 0)
+                                                                {@Html.Raw("icon-caret-right");
+                                                                }
+                                                                else
+                                                                {@Html.Raw("icon-caret-down");
+                                                                }"></span>
+                                            @Html.Raw(HealthIS.Apps.MVC.Helpers.getStrField(faqItem, "Question"))
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse@(ct)@(UID)" class="panel-collapse @if (ct > 0)
+                                                                                    {@Html.Raw("collapse");
+                                                                                    }">
+                                    <div class="panel-body">@Html.Raw(HealthIS.Apps.MVC.Helpers.getStrField(faqItem, "Answer"))</div>
+                                </div>
+                            </div>
+                                                                                    ct++;
+                        }
+                    </div>
+                }
+            }
+        </div>
+        <script>
+            //jQuery('#faqAccordion@(UID) .panel .panel-heading').click(function(){
+            function AccordionEvent(e) {
+                var showThis = jQuery(e).parent().find(".panel-collapse");
+                showThis.slideToggle();
+                jQuery(e).find('.icon').toggleClass('icon-caret-right icon-caret-down')
+                jQuery('#faqAccordion@(UID) .panel .panel-heading').each(function () {
+                    if (jQuery(this).parent().find(".panel-collapse").attr("id") != showThis.prop("id")) {
+                        jQuery(this).parent().find(".panel-collapse").slideUp();
+                        jQuery(this).find('.icon').removeClass('icon-caret-down').addClass('icon-caret-right')
+                    }
+                });
+            }
+            //});
+        </script>
+    }
+    else
+    {
+        <p>No data source found for this FAQ Accordion.</p>
+    }
+}

@@ -1,0 +1,47 @@
+﻿@using Sitecore.Mvc
+
+<!--START Footer -->
+<footer role="contentinfo" id="patient-care-footer-upper">
+    <div class="patient-care-container">
+        <div class="row">
+            <div class="col-md-4">
+                <h1>Contact Us</h1>
+                @Html.Raw(Model.vCardAddress)
+                <!-- <span id="modified">This page was last modified on: @Html.Sitecore().Field("__Updated", new { format = "MM/dd/yyyy" })</span>
+                <div id="credits">
+                    <a href="http://health.usf.edu/is"><img width="62" height="62" alt="USF Health Information Systems" src="http://health.usf.edu/layouts/images/health_is.png"></a>
+                    <a id="powered" href="http://health.usf.edu/is">Powered By <br>USF Health Information Systems</a>
+                </div> -->
+            </div>
+            <div class="col-md-8">
+                <h1 class="fl-header">Helpful Links</h1>
+                @Html.Raw(Model.FooterLinks)
+            </div>
+        </div>
+    </div>
+</footer>
+<footer role="contentinfo" id="patient-care-footer-lower">
+    <div class="patient-care-container">
+        <div class="row">
+            <div class="col-md-4">
+                <a class="health-logo-footer" href="http://health.usf.edu">
+                    <img alt="USF Health Logo" src="/layouts/images/health_logo_2017.png">
+                </a>
+            </div>
+            <div class="col-md-8 copyright">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sodales nunc fermentum, aliquet ligula sit amet, dapibus nisl. Nam luctus enim id ex tempor, et cursus dolor accumsan. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <div class="pc-footer-social">
+                    <div class="social-icons-small">
+                        <a href="https://www.facebook.com/usfhealth" target="_blank"><em class="icon-facebook"></em></a>
+                        <a href="https://twitter.com/USFHealth" target="_blank"><em class="icon-twitter"></em></a>
+                        <a href="https://www.youtube.com/user/usfhealth" target="_blank"><em class="icon-youtube-play"></em></a>
+                        <a href="https://www.pinterest.com/usfhealthonline/" target="_blank"><em class="icon-pinterest"></em></a>
+                        <a href="https://www.instagram.com/usfhealth/" target="_blank"><em class="icon-instagram"></em></a>
+                        <a href="https://hscweb3.hsc.usf.edu/" target="_blank"><em class="icon-rss"></em></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- END Footer -->

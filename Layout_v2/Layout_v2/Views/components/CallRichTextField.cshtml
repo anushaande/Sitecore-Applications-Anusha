@@ -1,0 +1,12 @@
+﻿@{
+    string DynamicData = "<br /><center><h3>Please select the associated content</h3></center><br />";
+    if (!String.IsNullOrEmpty(Model.Rendering.DataSource)) 
+    {
+        DynamicData = Model.Rendering.Item["RichTextContent"];
+    }
+}
+<div>
+    <br />
+    @Html.Raw(DynamicData)
+</div>
+

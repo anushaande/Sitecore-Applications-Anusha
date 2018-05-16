@@ -1,0 +1,100 @@
+﻿@using Sitecore.Mvc
+@using Sitecore.Mvc.Analytics.Extensions
+
+@{
+    string title = Model.currentItem.Name;
+    string deptName = "";
+    Dictionary<string, string> sw = null;
+
+    deptName = HealthIS.Apps.Util.getItemNameAtLevel(2);
+
+    // setup sitewit IDs
+    sw = new Dictionary<string, string>();
+    sw.Add("medicine", "1306");
+    sw.Add("nursing", "1307");
+    sw.Add("publichealth", "1308");
+    sw.Add("pharmacy", "1309");
+    sw.Add("paperfree", "1310");
+
+    Response.AddHeader("X-UA-Compatible", "IE=Edge");
+    
+    if (!String.IsNullOrEmpty(Model.MetaTitle)) 
+    {
+        title = @Model.MetaTitle;
+    } else {
+        title = @Model.currentItem.Name;
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en-us" class="no-js">
+
+<!-- Start Global Head Resource -->
+<head>
+    <title>@title | USF Health</title>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="CODE_LANGUAGE" content="C#" />
+    <meta name="vs_defaultClientScript" content="JavaScript" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    @if (!String.IsNullOrEmpty(Model.MetaKeywords)) { <meta name="keywords" content="@Model.MetaKeywords" />; }
+    @if (!String.IsNullOrEmpty(Model.MetaDescription)) { <meta name="description" content="@Model.MetaDescription" /> }
+
+    <link media="print" rel="stylesheet" href="http://health.usf.edu/layouts/styles/print.css">
+    @if (!String.IsNullOrEmpty(Model.PageStylesPath)) { <link rel="stylesheet" href="@Model.PageStylesPath" /> }
+    @if (!String.IsNullOrEmpty(Model.CustomStylesPath)) { <link rel="stylesheet" href="@Model.CustomStylesPath" /> }
+    @Html.Sitecore().VisitorIdentification()
+
+    @if (HealthIS.Apps.Util.isOnProduction() && sw.ContainsKey(deptName))
+    {
+        <script type="text/javascript">
+            var loc = (("https:" == document.location.protocol) ? "https://analytics." : "http://analytics.");
+            document.write(unescape("%3Cscript src='" + loc + "sitewit.com/sw.js'   type='text/javascript'%3E%3C/script%3E"));
+
+            var sw = new _sw_analytics();
+            sw.id = '@sw[deptName]';
+            sw.register_page_view();
+
+            alert(sw.id);
+        </script>
+    }
+    @if (HealthIS.Apps.Util.isOnProduction()) {
+        <script type="text/javascript">
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-4198073-1', 'auto');
+            ga('require', 'displayfeatures');
+            ga('send', 'pageview');
+        </script>
+    }
+
+</head>
+<!-- End Global Head Resource -->
+
+<body>
+    @Html.Sitecore().Placeholder("MainTemplate")
+    <!-- Start Javascript External Links -->
+    <script src="http://health.usf.edu/layouts/scripts/modernizr.js"></script>
+    <!-- BEGIN_REPLACE|jquery -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+        window.jQuery || document.write('<script src="http://health.usf.edu/layouts/scripts/jquery.min.js"><\/script>')
+    </script>
+    <!-- END_REPLACE|jquery -->
+
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="http://health.usf.edu/layouts/scripts/template.min.js?v=1"></script>
+
+    <!-- BEGIN_REPLACE|customJS  -->
+    <script src="http://health.usf.edu/layouts/scripts/plugins.min.js?v=5"></script>
+
+    @if (!String.IsNullOrEmpty(Model.PageScriptsPath)) { <script src="@Model.PageScriptsPath"></script> }
+    @if (!String.IsNullOrEmpty(Model.CustomScriptsPath)) { <script src="@Model.CustomScriptsPath"></script> }
+</body>
+</html>

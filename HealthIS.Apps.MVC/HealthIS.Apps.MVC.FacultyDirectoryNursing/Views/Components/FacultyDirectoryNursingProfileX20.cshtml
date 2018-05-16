@@ -1,0 +1,256 @@
+﻿@if (Sitecore.Context.PageMode.IsExperienceEditorEditing)
+{
+    <h4>Faculty Directory Nursing Profile X20</h4>
+    <p>Faculty Directory Profile rendering has been added.</p>
+    <script>if (typeof (autoSave) != "undefined") { autoSave(); }</script>
+}
+else
+{
+    Model.GetNursingPersonData();
+    <div class="back-button-x20">
+		<a class="back" href="/nursing/faculty-staff/directory-x20"><em class="icon-arrow-left">&nbsp;</em>Back to<br><span>Directory</span></a>
+	</div>
+    <div class="faculty-profile">
+        @if (!Model.validId)
+        {
+            <h1>Invalid Person ID.</h1>
+        }
+        else if (Model.person == null || String.IsNullOrEmpty(Model.personID.ToString()) || !String.IsNullOrEmpty(Model.person.error))
+        {
+            <h1>Person could not be found.</h1>
+        }
+        else
+        {
+            <div class="row">
+                <div class="profile-box" id="profile-basic">
+                    @{
+                        string title = "";
+                        string credentials = "";
+                        string fullName = Model.person.firstName + " " + Model.person.lastName;
+                        if (!String.IsNullOrEmpty(Model.person.title))
+                        {
+                            title = ", <span class=\"faculty-credentials\">" + Model.person.title + "</span>";
+                            credentials = ", " + Model.person.title;
+                        }
+                    }
+                    <h1>@Html.Raw(fullName + title)</h1>
+                    <img class="img-polaroid" src="/resources/root-elements/FacultyDirectoryGetFile.cshtml?method=picture&person_id=@Html.Raw(Model.personID)" alt="@Html.Raw(fullName + credentials)" />
+
+                    <!-- Appointments -->
+                    @if (Model.person.appointments.Length > 0 || Model.person.presentPositions.Length > 0)
+                    {
+                        <ul>
+                        @foreach (string appointment in Model.person.appointments)
+                        {
+                            string appt = HealthIS.Apps.MVC.Helpers.FormatString("Appt", appointment);
+                            <li class="faculty-position">@(appt)</li>
+                        }
+                        </ul>
+                    }
+
+                    <!-- Contact Information -->
+                    <ul class="clearfix">
+                    @if (!String.IsNullOrEmpty(Model.person.email))
+                    {
+                        <li class="contact-bullet"><i class="icon-envelope-alt"></i> <a href="mailto:@Html.Raw(Model.person.email)">@Html.Raw(Model.person.email)</a></li>
+                    }
+                    @if (!String.IsNullOrEmpty(Model.person.phone))
+                    {
+                        <li class="contact-bullet"><i class="icon-phone"></i> @Html.Raw(Model.person.phone)</li>
+                    }
+                    @if (!String.IsNullOrEmpty(Model.person.building))
+                    {
+                        string bldg = Model.person.building.ToUpper();                        
+                        string rm = Model.person.room.ToUpper();
+                        <li class="contact-bullet"><i class="icon-map-marker"></i>@(bldg) Building, Room <span class="room">@(rm)</span></li>
+                    }
+                    @if (!String.IsNullOrEmpty(Model.person.cvSrc))
+                    {
+                        <li class="contact-bullet"><i class="icon-file"></i> <a href="/resources/root-elements/FacultyDirectoryGetFile.cshtml?method=resume&person_id=@Html.Raw(Model.personID)" target="_blank">View My C.V.</a></li>
+                    }
+                    </ul>
+                </div>
+            </div>
+
+            if (Model.getNumberOfNavItems() >= 3)
+            {
+                <div>
+                    <ul class="profile-nav">
+                    @if (Model.person.degrees != "")
+                    {
+                        <li><a class="con-gold" href="#profile-education" title="Education"><i class="icon-mortarboard"></i></a></li>
+                    }
+                    @if (Model.person.clinicalInterests.Length > 0)
+                    {
+                        <li><a class="con-blue" href="#profile-clinical" title="Clinical Interests"><i class="icon-stethoscope"></i></a></li>
+                    }
+                    @if (Model.person.researchInterests.Length > 0)
+                    {
+                        <li><a class="con-red" href="#profile-research" title="Research Interests"><i class="icon-beaker"></i></a></li>
+                    }
+                    @if (Model.person.awards.Length > 0)
+                    {
+                        <li><a class="con-purple" href="#profile-awards" title="Awards"><i class="icon-star"></i></a></li>
+                    }
+                    @if (Model.person.memberships.Length > 0)
+                    {
+                        <li><a class="con-green" href="#profile-memberships" title="Memberships"><i class="icon-group"></i></a></li>
+                    }
+                    @if (Model.person.publications.Length > 0)
+                    {
+                        <li><a class="con-blue" href="#profile-publications" title="Publications"><i class="icon-book"></i></a></li>
+                    }
+                    @if (Model.person.grants.Length > 0)
+                    {
+                        <li><a class="usf-green" href="#profile-grants" title="Grants"><i class="icon-pencil"></i></a></li>
+                    }
+                    </ul>
+                </div>
+            }
+
+            <!-- Academic Philosophy -->
+            if (!String.IsNullOrEmpty(Model.person.academic_philosophy))
+            {
+                <div id="profile-philosophy">
+                    <div class="quote">
+                        <blockquote>"@Html.Raw(Model.person.academic_philosophy)"</blockquote>
+                    </div>
+                </div>
+            }
+
+            <div class="row">
+                <!-- Education -->
+                @if (Model.person.degrees != "")
+                {
+                    string degree = HealthIS.Apps.MVC.Helpers.FormatString("Deg", Model.person.degrees);
+                    <div class="profile-box" id="profile-education">
+                        <h3>Education</h3>
+                        @Html.Raw(degree)
+                    </div>
+                }
+
+                <!-- Interdisciplinary and Emerging Signature Programs  -->
+                @if (Model.person.signatureProgram.Length > 0)
+                {
+                    <div class="profile-box" id="profile-interdisciplinary">
+                        <h3>Interdisciplinary and Emerging Signature Programs</h3>
+                        <ul>
+                        @foreach (string prg in Model.person.signatureProgram)
+                        {
+                            <li>@Html.Raw(prg)</li>
+                        }
+                        </ul>
+                    </div>
+                }
+            </div>
+
+            <!-- Clinical Interests -->
+            if (Model.person.clinicalInterests.Length > 0)
+            {
+                <div class="row">
+                    <div class="profile-box" id="profile-clinical">
+                        <h3>Clinical Interests</h3>
+                        <ul class="bullets">
+                        @foreach (string interest in Model.person.clinicalInterests)
+                        {
+                            <li>@Html.Raw(interest)</li>
+                        }
+                        </ul>
+                    </div>
+                </div>
+            }
+
+            <!-- Research Interests -->
+            if (Model.person.researchInterests.Length > 0)
+            {
+                <div class="row">
+                    <div class="profile-box" id="profile-research">
+                        <h3>Research Interests</h3>
+                        <ul class="bullets">
+                        @foreach (string interest in Model.person.researchInterests)
+                        {
+                            <li>@Html.Raw(interest)</li>
+                        }
+                        </ul>
+                    </div>
+                </div>
+            }
+
+            <!-- Outside Interests -->
+            if (!String.IsNullOrEmpty(Model.person.outsideInterest))
+            {
+                <div class="row">
+                    <div class="profile-box">
+                        <h3>Outside Interests</h3>
+                        <p>@Html.Raw(Model.person.outsideInterest)</p>
+                    </div>
+                </div>
+            }
+
+            if (Model.person.awards.Length > 0 || Model.person.memberships.Length > 0)
+            {
+                <div class="row">
+                    <!-- Awards/Honors -->
+                    @if (Model.person.awards.Length > 0)
+                    {
+                        <div class="profile-box" id="profile-awards">
+                            <h3>Awards/Honors</h3>
+                            <ul class="bullets paginated" data-pagination="5">
+                            @foreach (string award in Model.person.awards)
+                            {
+                                <li>@Html.Raw(award)</li>
+                            }
+                            </ul>
+                        </div>
+                    }
+                    <!-- Memberships -->
+                    @if (Model.person.memberships.Length > 0)
+                    {
+                        <div class="profile-box" id="profile-memberships">
+                            <h3>Memberships</h3>
+                            <ul class="bullets paginated" data-pagination="5">
+                            @foreach (string mem in Model.person.memberships)
+                            {
+                                <li>@Html.Raw(mem)</li>
+                            }
+                            </ul>
+                        </div>
+                    }
+                </div>
+            }
+
+            <!-- Publications -->
+            if (Model.person.publications.Length > 0)
+            {
+                <div class="row">
+                    <div class="profile-box" id="profile-publications">
+                        <h3>Selected Publications</h3>
+                        <ul class="bullets paginated" data-pagination="5">
+                            @foreach (string pub in Model.person.publications)
+                            {
+                                <li>@Html.Raw(pub)</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            }
+
+            <!-- Grants -->
+            if (Model.person.grants.Length > 0)
+            {
+                <div class="row">
+                    <div class="profile-box" id="profile-grants">
+                        <h3>Grants</h3>
+                        <ul class="bullets paginated" data-pagination="5">
+                            @foreach (string grant in Model.person.grants)
+                            {
+                                <li>@Html.Raw(grant)</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}
+<script type="text/javascript" src="/resources/root-elements/scripts/facdir-nursing-profilelib.js"></script>

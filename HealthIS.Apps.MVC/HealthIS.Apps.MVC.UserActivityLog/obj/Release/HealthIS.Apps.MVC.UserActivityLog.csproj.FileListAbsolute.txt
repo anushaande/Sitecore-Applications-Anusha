@@ -1,0 +1,5 @@
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.UserActivityLog\bin\Release\HealthIS.Apps.MVC.UserActivityLog.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.UserActivityLog\bin\Release\HealthIS.Apps.MVC.UserActivityLog.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.UserActivityLog\obj\Release\HealthIS.Apps.MVC.UserActivityLog.csprojResolveAssemblyReference.cache
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.UserActivityLog\obj\Release\HealthIS.Apps.MVC.UserActivityLog.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.UserActivityLog\obj\Release\HealthIS.Apps.MVC.UserActivityLog.pdb

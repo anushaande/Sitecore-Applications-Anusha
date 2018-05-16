@@ -1,0 +1,5 @@
+C:\SVN\Sources\HealthIS.MediaResolverPatch\HealthIS.MediaResolverPatch\bin\Debug\HealthIS.MediaResolverPatch.dll
+C:\SVN\Sources\HealthIS.MediaResolverPatch\HealthIS.MediaResolverPatch\bin\Debug\HealthIS.MediaResolverPatch.pdb
+C:\SVN\Sources\HealthIS.MediaResolverPatch\HealthIS.MediaResolverPatch\obj\Debug\HealthIS.MediaResolverPatch.csprojResolveAssemblyReference.cache
+C:\SVN\Sources\HealthIS.MediaResolverPatch\HealthIS.MediaResolverPatch\obj\Debug\HealthIS.MediaResolverPatch.dll
+C:\SVN\Sources\HealthIS.MediaResolverPatch\HealthIS.MediaResolverPatch\obj\Debug\HealthIS.MediaResolverPatch.pdb

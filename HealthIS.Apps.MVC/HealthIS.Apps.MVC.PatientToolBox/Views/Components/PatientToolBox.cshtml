@@ -1,0 +1,51 @@
+﻿@model HealthIS.Apps.MVC.Models.PatientToolBox
+
+@{
+    string title1 = "<strong>Find</strong>a doctor";
+    string title2 = "<strong>Request</strong>an appointment online";
+    string title3 = "<strong>Refer</strong>a patient";
+    string url1 = "http://hsccf.hsc.usf.edu/clinicaldirectory/directorysearch/search.cfm";
+    string url2 = "https://hsccf.hsc.usf.edu/patientappointment/requestform.cfm";
+    string url3 = "http://health.usf.edu/doctors/medical-professionals.html";
+
+    // Change the values if fields are filled out
+    if (!String.IsNullOrEmpty(Model.Title1)) { title1 = @Model.Title1; }
+    if (!String.IsNullOrEmpty(Model.Title2)) { title2 = @Model.Title2; }
+    if (!String.IsNullOrEmpty(Model.Title3)) { title3 = @Model.Title3; }
+    if (!String.IsNullOrEmpty(Model.URL1)) { url1 = @Model.URL1; }
+    if (!String.IsNullOrEmpty(Model.URL2)) { url2 = @Model.URL2; }
+    if (!String.IsNullOrEmpty(Model.URL3)) { url3 = @Model.URL3; }
+}
+
+<header>
+    How can we help <img src="http://health.usf.edu/layouts/images/ptbr_question.png">
+</header>
+
+<div class="pt-box-panel">
+    <nav class="pt-box-links">
+        <ul>
+            <li class="pt-box-phone doctors-cta">
+                <span class="pt-box-link">
+                    <strong>
+                        <a href="@Model.PatientToolBoxPhoneNumber" onclick="_gaq.push(['_trackEvent','Phone Call Tracking','Click/Touch','Footer']);">@Model.PatientToolBoxPhoneNumber</a>
+                    </strong> for all appointments
+                </span>
+            </li>
+            <li>
+                <a class="doctors-cta bg-usf-gray4" href="@Html.Raw(url1)" id="linkSearch">
+                    <span class="pt-box-link ">@Html.Raw(title1)</span>
+                </a>
+            </li>
+            <li>
+                <a class="doctors-cta bg-sky-lighter" href="@Html.Raw(url2)" id="linkAppt">
+                    <span class="pt-box-link">@Html.Raw(title2)</span>
+                </a>
+            </li>
+            <li>
+                <a class="doctors-cta bg-sky-lighter" href="@Html.Raw(url3)" id="linkReferral">
+                    <span class="pt-box-link">@Html.Raw(title3)</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

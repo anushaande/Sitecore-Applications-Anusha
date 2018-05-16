@@ -1,0 +1,40 @@
+body p:first-child {
+  margin-top: 0;
+}
+
+body p:last-child {
+  margin-bottom: 0;
+}
+
+/*================== BEGIN =================== */
+/* This is for Image style in Rich Text Editor */
+.float-image-left {
+  float: left;
+  margin-bottom: 8px;
+  margin-right: 20px;
+  @media (max-width: 767px)
+  { 
+    float: none; margin-bottom: 20px; margin-right: 0px; 
+  }
+}
+
+.float-image-center {
+    display: block;
+    margin: 0 auto;
+    @media (max-width: 767px) {
+        float: none;
+        margin-bottom: 20px;
+        margin-left: 0px;
+    }
+}
+
+.float-image-right {
+  float: right;
+  margin-bottom: 8px;
+  margin-left: 20px;
+  @media (max-width: 767px)
+  { 
+    float: none; margin-bottom: 20px; margin-left: 0px; 
+  }
+}
+/*===============+=== END ===+================ */

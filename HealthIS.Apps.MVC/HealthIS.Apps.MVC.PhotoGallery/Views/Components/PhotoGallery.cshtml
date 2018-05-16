@@ -1,0 +1,150 @@
+﻿@using Sitecore.Mvc
+@model HealthIS.Apps.MVC.Models.PhotoGallery
+
+@{
+    //unique id to use
+    string UID = "_" + Model.Rendering.UniqueId.ToString().Replace('-', '_');
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor && !Model.dsSet)
+{
+    <script type="text/javascript">
+        // Create new datasource regarding to this component
+        function callSetDataSrc() {
+            setDataSrc(
+                '@Html.Raw(Model.PageItem.ID.ToString())',                      // itemID
+                'User Defined2/Component Template/Photo Gallery',               // templatePath
+                '_PG',                                                          // suffix
+                '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',   // renderingID
+                '@Html.Raw(Model.PageItem.Database.Name)',                      // dbName
+                '@Html.Raw(Sitecore.Context.Device.ID.ToString())',             // deviceID
+                '@Html.Raw(Model.Rendering.UniqueId.ToString())',               // renderingUID
+                ''                                                              // btnID
+            );
+        }
+    </script>
+    <center>
+        <h2>Photo Gallery Config</h2>
+        <p>If you want to create a new Photo Gallery, click 'Create New Photo Gallery'.</p>
+        <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrc()" value="Create New Photo Gallery">
+        <script>if (typeof (autoSave) != "undefined") { autoSave(); }</script>
+    </center>
+    return;
+}
+
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    // edit mode UI
+    <script type="text/javascript">
+        function addSection@(UID)(){
+            @if (Model.DataSourceFolder != null)
+            {
+                <text>
+                addItemToDataSrc(
+                    '@(Model.PageItem.ID.ToString())',                                              // itemID
+                    '/sitecore/templates/Branches/Components/Photo Gallery/Photo Gallery Section',  // templatePath
+                    '_PGS',                                                                         // suffix
+                    '@(Model.PageItem.Database.Name)',                                              // dbName
+                    '@(Model.DataSourceFolder.ID.Guid.ToString())',                                 // dsFolderName
+                    true,
+                    null
+                );
+                </text>
+            }
+        }
+
+        function updateValue(thisComboBox, itemID, field) {
+            var val = thisComboBox.value;
+            Sitecore.PageModes.PageEditor.postRequest("item:updateitemfield(id=" + itemID + ", fieldName=" + field + ", fieldValue=" + val + ")");
+        }
+
+        function openNewTab(url) {
+            var win = window.open(url, '_blank');
+        }
+    </script>
+
+    <h2>Photo Gallery Config</h2>
+    <ul class="list-group">
+        @if (Model.Sections != null && Model.Sections.Count > 0)
+        {
+            int sectionCt = 0;
+            List<HealthIS.Apps.MVC.Models.PhotoGallery.PhotoGallerySection> sections = Model.Sections;
+            int actualSectCt = sections.Where(s => s.SCItem.Template.DisplayName.ToLower() == "photo gallery section").ToList().Count;
+            foreach (HealthIS.Apps.MVC.Models.PhotoGallery.PhotoGallerySection section in Model.Sections)
+            {
+                section.PopulateComboBox();
+                string heading = Sitecore.Web.UI.WebControls.FieldRenderer.Render(section.SCItem, "Heading");
+                string flickrAlbum = Sitecore.Web.UI.WebControls.FieldRenderer.Render(section.SCItem, "Flickr Album URL");
+                string flickrApiKey = Sitecore.Web.UI.WebControls.FieldRenderer.Render(section.SCItem, "Flickr API Key");
+
+                sectionCt++;
+                string selectedValue = section.SCItem.Fields[section.templateFieldName].Value;  // holds current selected value
+                <li class="list-group-item">
+                    <div style="float:right;text-align:right;">
+                        @if (actualSectCt > 1)
+                        {
+                            if (sectionCt > 1)
+                            {
+                                <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:moveup(id=@(section.SCItem.ID))",function(){location.reload(true);},false)' value="&#x25B2;" />
+                            }
+                            if (sectionCt < actualSectCt)
+                            {
+                                <input class='pe-button pe-gray1' type="button" onclick='Sitecore.PageModes.PageEditor.postRequest("item:movedown(id=@(section.SCItem.ID))",function(){location.reload(true);},false)' value="&#x25BC;" />
+                            }
+                        }
+                        <input class="pe-button pe-red" type="button" value="&#120;" onclick="deleteItem('@(section.SCItem.ID)')" />
+                    </div>
+                    <h3>Heading: @Html.Raw(heading)</h3>
+                </li>
+                    <li class="list-group-item">
+                        Flickr Album URL: @Html.Raw(flickrAlbum)
+                    </li>
+                    <li class="list-group-item">
+                        Flickr API Key: @Html.Raw(flickrApiKey)&nbsp;<img onclick='openNewTab("https://www.flickr.com/services/api/misc.api_keys.html");' src="/temp/IconCache/Core2/16x16/whats_this.png" />
+                    </li>
+                    <li class="list-group-item">
+                        Number of Preview Photos to Display:&nbsp;@Html.DropDownList("myList", section.options, selectedValue, new { @onchange = "updateValue(this,'" + section.SCItem.ID.ToString() + "','" + section.templateFieldName + "')" })
+                    </li>
+            }
+        }
+        <li class="list-group-item" style="text-align:right;">
+            <input class="pe-button pe-green" type="button" value="&#43; Add Album" onclick="addSection@(UID)()" />
+        </li>
+    </ul>
+}
+else // preview mode UI
+{
+    <script src="/resources/root-elements/scripts/photo-gallery.js"></script>
+
+    int numberPreviewPhotos = 1;
+    if (Model.Sections != null && Model.Sections.Count > 0)
+    {
+        int ct = 0;
+        foreach (HealthIS.Apps.MVC.Models.PhotoGallery.PhotoGallerySection section in Model.Sections)
+        {
+            string heading = Sitecore.Web.UI.WebControls.FieldRenderer.Render(section.SCItem, "Heading");
+            string flickrAlbum = Sitecore.Web.UI.WebControls.FieldRenderer.Render(section.SCItem, "Flickr Album URL");
+            string flickrApiKey = Sitecore.Web.UI.WebControls.FieldRenderer.Render(section.SCItem, "Flickr API Key");
+            string num = Sitecore.Web.UI.WebControls.FieldRenderer.Render(section.SCItem, section.templateFieldName);
+            int.TryParse(num, out numberPreviewPhotos);
+
+            if (!String.IsNullOrEmpty(flickrAlbum) && !String.IsNullOrEmpty(flickrApiKey))
+            {
+                string photoset = section.GetPhotosetId(flickrAlbum);
+                ct++;
+
+                // use FlickrAPI to get pictures
+                <script>
+                    $(document).ready(function () {
+                        getImages("@(ct)", "@(flickrApiKey)", "@(flickrAlbum)", "@(photoset)", @numberPreviewPhotos);
+                    });
+                </script>
+            }
+
+            if (!String.IsNullOrEmpty(heading))
+            { <h3>@heading</h3> }
+            <div id="sect@(ct)" class="photo-grid"></div>
+        }
+    }
+}

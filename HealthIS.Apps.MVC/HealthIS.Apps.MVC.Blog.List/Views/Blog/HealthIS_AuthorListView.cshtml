@@ -1,0 +1,182 @@
+﻿@model HealthIS.Apps.MVC.Blog.List.Models.ListView
+@using Sitecore.Mvc
+
+@{
+    string reqUrl = Request.Url.ToString();
+    if (reqUrl.Contains("/author?") && reqUrl.Contains("name="))
+    {
+        Model.SetAllBlogArticles();
+        Model.GetArticlesByAuthor(Request["name"]);
+    }    
+}
+
+
+<div class="col-md-12">
+    <h1 class="tech-header">
+        <i class="fa fa-power-off"></i> Health IS <strong>Technology</strong> Blog
+    </h1>
+</div>
+
+@if (Model.filteredArticles.Count < 1)
+{
+<div id="middle" class="search-page">
+    <h3 class="page-title">Oops!</h3>
+    <p>No items found written by that user. Please try a search.</p>
+</div>
+}
+else
+{
+    Model.Pag = new HealthIS.Apps.MVC.Blog.List.Models.Pagination(Model.filteredArticles.Count, Request["page"].ToInt(), 8); 
+                
+    string key = Request["name"];
+    string fullName = Model.GetAuthorFullName(key);
+    if (!String.IsNullOrEmpty(key))
+    {
+        <div id="tag-title" class="col-md-12">
+            <h3 class="title"> <i class="fa fa-th-large"></i> Author Archive: @fullName</h3>
+        </div>
+    }    
+                    
+    <div class="pst post col-md-12">
+        @for (int i = Model.Pag.ArticleStart; i <= Model.Pag.ArticleEnd; i++)
+        {
+            if (i <= Model.Pag.TotalNumberOfArticles)
+            {
+                Sitecore.Data.Items.Item art = Model.filteredArticles.ElementAt(i - 1);
+                if (art != null)
+                {
+                    string postURL = Sitecore.Links.LinkManager.GetItemUrl(art);
+                    Sitecore.Data.Fields.ImageField thumbnail = HealthIS.Apps.MVC.Helpers.getImgField(art, "ThumbnailImage");
+                    string imgSrc = thumbnail.MediaItem != null ? Sitecore.Resources.Media.MediaManager.GetMediaUrl(thumbnail.MediaItem) : "/~/media/Images/Root Element/rss-default.ashx";
+                    string imgAltText = thumbnail.MediaItem != null ? thumbnail.Alt : "";
+                    string title = art.Fields["Title"].Value;
+                    string desc = art.Fields["Description"].Value;
+                    Sitecore.Data.Fields.DateField publishedDateField = (Sitecore.Data.Fields.DateField)art.Fields["pubDate"];
+                    DateTime publishedDate = publishedDateField.DateTime;
+
+                    <div class="col-md-12 article-row-border">
+                        <div class="tag-item">
+                            <div class="col-md-3 tag-item-img">
+                                <a href="@postURL"><img src="@imgSrc" alt="@imgAltText" style="width:150px;height:auto" /></a>
+                            </div>
+                            <div class="col-md-9 tag-item-content">
+                                @if (!String.IsNullOrEmpty(title))
+                                {
+                                    <h3 class="post-title">
+                                        <a href="@postURL">@title</a>
+                                    </h3>
+                                }
+                                @if (publishedDate != null)
+                                {
+                                    <div class="post-time">
+                                        <i class="fa fa-clock-o"> </i> <strong> Posted on </strong> @Sitecore.DateUtil.FormatIsoDate(Sitecore.DateUtil.ToIsoDate(publishedDate), "MMMM dd, yyyy")
+                                    </div>
+                                }
+                                @if (!String.IsNullOrEmpty(desc))
+                                {
+                                    desc = desc.Replace("<p>", "").Replace("</p>", "") + " [...]";
+                                    <div class="post-excerpt">
+                                        @Html.Raw(desc)
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+    </div>
+
+    int numOfPagesShowing = 10;
+    <div id="page-buttons">
+        @if (Model.Pag.TotalPages > 1)
+        {
+            <ul class="pagination">
+                @if (Model.Pag.RenderedPageNumber > 1)
+                {
+                    int pg = Model.Pag.RenderedPageNumber - 1;
+                    string pageParam = pg > 1 ? "&page=" + pg : "";
+                    <li>
+                        <a href="@Model.url?name=@key@pageParam" class="prev">«</a>
+                    </li>
+                }
+
+                @if (Model.Pag.TotalPages <= numOfPagesShowing)
+                {
+                    <li class="@(Model.Pag.RenderedPageNumber == 1 ? "active" : "")">
+                        <a href="@Model.url?name=@key">1</a>
+                    </li>
+                    for (var page = 2; page <= Model.Pag.TotalPages; page++)
+                    {
+                        <li class="@(page == Model.Pag.RenderedPageNumber ? "active" : "")">
+                            <a href="@Model.url?name=@key&page=@page">@page</a>
+                        </li>
+                    }
+                }
+                else
+                {
+                    int numBreaks = Model.Pag.TotalPages / numOfPagesShowing;
+                    int start = 1, stop = numOfPagesShowing;
+                    for (int i = 0; i < numBreaks; i++)
+                    {
+                        if ((Model.Pag.RenderedPageNumber >= start) && (Model.Pag.RenderedPageNumber <= stop))
+                        {
+                            for (var page = start; page <= stop; page++)
+                            {
+                                if(page==1)
+                                {
+                                    <li class="@(page == Model.Pag.RenderedPageNumber ? "active" : "")">
+                                        <a href="@Model.url?name=@key">1</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="@(page == Model.Pag.RenderedPageNumber ? "active" : "")">
+                                        <a href="@Model.url?name=@key&page=@page">@page</a>
+                                    </li>
+                                }
+                            }
+                            if (stop != Model.Pag.TotalPages)
+                            {
+                                @Html.Raw("...")
+                                <li>
+                                    <a href="@Model.url?name=@key&page=@Model.Pag.TotalPages">@Model.Pag.TotalPages</a>
+                                </li>  
+                            }
+                            break;
+                        }
+                        else
+                        {
+                            start += numOfPagesShowing;
+                            stop = start + numOfPagesShowing - 1;
+                        }
+                    }
+
+                    if (Model.Pag.RenderedPageNumber == Model.Pag.TotalPages)
+                    {
+                        <li>
+                            <a href="@Model.url?name=@key">1</a>
+                        </li>
+                        @Html.Raw("...")
+                        for (var page = @Model.Pag.RenderedPageNumber - 4; page < @Model.Pag.RenderedPageNumber + 1; page++)
+                        {
+                            <li class="@(page == Model.Pag.RenderedPageNumber ? "active" : "")">
+                                <a href="@Model.url?name=@key&page=@page">@page</a>
+                            </li>
+                        }
+                    }
+                }
+
+                @if (Model.Pag.TotalPages > 1)
+                {
+                    if (Model.Pag.RenderedPageNumber != Model.Pag.TotalPages)
+                    {
+                        <li>
+                            <a href="@Model.url?name=@key&page=@(Model.Pag.RenderedPageNumber + 1)" class="next">»</a>
+                        </li>
+                    }
+                }
+            </ul>
+        }
+    </div>
+}

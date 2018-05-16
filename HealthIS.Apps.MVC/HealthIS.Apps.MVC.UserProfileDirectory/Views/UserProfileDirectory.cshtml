@@ -1,0 +1,386 @@
+﻿@model HealthIS.Apps.MVC.UserProfileDirectory.Models.UserProfileDirectory
+@using Sitecore.Mvc
+
+@{
+    //unique id to use
+    string UID = "_" + Model.Rendering.UniqueId.ToString().Replace('-', '_');
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    if (Model.dsSet)
+    {
+        <script>
+            function addListingSection@(UID)(){
+                @if (Model.ListingRootFolder != null)
+                {
+                    @: addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/UPD Root/UPD Listings/UPD Listing Section', '_UPDLFS', 'master', '@(Model.ListingRootFolder.ID.Guid.ToString())', false,
+                    @:  function(data){showEditDialog(data,"Heading");}
+                    @: )
+                }
+                else
+                {
+                    //create listings folder root then add section
+                    @: addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'System/Templates/Template Folder', '_UPDLFI', 'master', '@(Model.DataSourceFolder.ID.Guid.ToString())', false,
+                    @:  function(data){
+                            @:      addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/UPD Root/UPD Listings/UPD Listing Section', '_UPDLFS', 'master', data, false, function(d){
+                            @:          showEditDialog(d,"Heading");
+                                    @:      })
+                                    @:  }
+                    @: )
+                }
+            }
+
+
+            function addListingSubItem@(UID)(folderID){
+                addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/UPD Root/UPD Listings/UPD Listing', '_UPDL', 'master', folderID, false,
+                      function(data){
+                          showEditDialog(data,"First Name|Last Name|Title|Job Title|Email or Full Profile Link");
+                      }
+                );
+            }
+
+
+            function addViewSection@(UID)(){
+                @if (Model.ViewRootFolder != null)
+                {
+                    @: addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/UPD Root/UPD Views/UPD View Section', '_UPDVFS', 'master', '@(Model.ViewRootFolder.ID.Guid.ToString())', false,
+                    @:  function(data){showEditDialog(data,"Heading");}
+                    @: )
+                }
+                else
+                {
+                    //create listings folder root then add section
+                    @: addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'System/Templates/Template Folder', '_UPDVFI', 'master', '@(Model.DataSourceFolder.ID.Guid.ToString())', false,
+                    @:  function(data){
+                                @:      addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/UPD Root/UPD Views/UPD View Section', '_UPDVFS', 'master', data, false, function(d){
+                                @:          showEditDialog(d,"Heading");
+                                            @:      })
+                                            @:  }
+                    @: )
+                }
+            }
+
+            function addViewSubItem@(UID)(folderID){
+                addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/UPD Root/UPD Views/UPD View', '_UPDV', 'master', folderID, false,
+                      function(data){
+                          showEditDialog(data,"Image|First Name|Last Name|Title|Job Title|Email|Phone|Profile Link");
+                      }
+                );
+            }
+
+            function updateAccordionCheckValue@(Model.Item.ID.ToShortID())(e) {
+                var val = '';
+                if (!e.checked) { val = '1'; }
+                var itemURI = new Sitecore.ItemUri('@Model.Item.ID.Guid.ToString().ToUpper()', 'en', '@Model.Item.Version.ToString()', '@Model.Item.Statistics.Revision');
+                Sitecore.WebEdit.setFieldValue(itemURI, '@Model.chEnableAccordionTemplateId', val);
+                if ($(e).prop("checked")) {
+                    $(e).removeAttr("checked");
+                } else {
+                    $(e).prop("checked", "true");
+                }
+            };
+        </script>
+        <h2>User Profile Directory Config</h2>
+        if (Model.ListingRootFolder != null && Model.ListingRootFolder.HasChildren)
+        {
+            <h4>Enable Accordion: <input type="checkbox" class="chEnableAccordion_@Model.Item.ID.ToShortID()" onmousedown="updateAccordionCheckValue@(Model.Item.ID.ToShortID())(this)" @if (Model.chEnableAccordion.Checked) { @Html.Raw("checked='checked'")    ; } else { @Html.Raw("")     } /></h4>
+        }
+        if (Model.ViewRootFolder != null && Model.ViewsFolders != null)
+        {
+            foreach (Sitecore.Data.Items.Item viewFolder in Model.ViewsFolders)
+            {
+                <div class="user-directory-view" style="border:1px solid #ddd;margin-bottom:8px;">
+                    <h2>Section Header: @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(viewFolder, "Heading"))
+                        <input type="button" id="btnRemoveSection" class="pe-button pe-red" style="float:right" onclick="javascript:Sitecore.PageModes.PageEditor.postRequest('webedit:delete(id=@(viewFolder.ID.ToString()))')" value="X Remove Section" />                        
+                        @if (viewFolder.Children.Count > 1)
+                        {
+                        <input type="button" id="btnSortSection" class="pe-button pe-gray1" style="float:right;margin-right:3px" onclick="javascript:Sitecore.PageModes.PageEditor.postRequest('webedit:facdirsort(id=@(viewFolder.ID.ToString()))')" value="<> Sort Profiles" />
+                        }  
+                    </h2>
+                    <ul>
+                        @if (viewFolder != null)
+                        {
+                            foreach (Sitecore.Data.Items.Item view in viewFolder.Children)
+                            {
+                                Sitecore.Data.Fields.ImageField img = HealthIS.Apps.MVC.Helpers.getImgField(view, "Image");
+                                string fname = HealthIS.Apps.MVC.Helpers.getStrField(view, "First Name");
+                                string lname = HealthIS.Apps.MVC.Helpers.getStrField(view, "Last Name");
+                                string jobTitle = HealthIS.Apps.MVC.Helpers.getStrField(view, "Job Title");
+                                string title = HealthIS.Apps.MVC.Helpers.getStrField(view, "Title");
+                                title = string.IsNullOrEmpty(title) ? "" : ", " + title;
+                                string email = HealthIS.Apps.MVC.Helpers.getStrField(view, "Email");
+                                string phone = HealthIS.Apps.MVC.Helpers.getStrField(view, "Phone");
+                                <li>
+                                    <a href="#">
+                                        @if (img != null && img.MediaItem != null)
+                                        {
+                                            <img alt="@(img.Alt)" src="@(Sitecore.Resources.Media.MediaManager.GetMediaUrl(img.MediaItem))" />
+                                        }
+                                        else
+                                        {
+                                            <img alt="Image Placeholder" src="http://placehold.it/100x125" />
+                                        }
+                                    </a>
+                                    <span>@Html.Raw(fname + " " + lname + title)</span>
+                                    <br />
+                                    <p>@(jobTitle)</p>
+                                    <p>
+                                        <a href="mailto:@(email)">@(email)</a><br />
+                                        @(phone)
+                                    </p>
+                                    <div style="clear:both;height:10px;width:100%;"></div>
+                                    @{ string fieldList = "Image|First Name|Last Name|Title|Job Title|Email|Phone|Profile Link"; }
+                                    <input type="button" class="pe-button pe-yellow" value="Edit" onclick='showEditDialog("@(view.ID.Guid)","@(fieldList)")' />
+                                    <input type="button" class="pe-button pe-red" value="X" onclick="deleteItem('@(view.ID.Guid)')" />
+                                </li>
+                            }
+                            if (viewFolder.Children.Count % 2 != 0)
+                            {
+                                <li></li>
+                            }
+                        }
+                    </ul>
+                    <div style="text-align:right">
+                        <input type="button" class="pe-button pe-green" onclick="addViewSubItem@(UID)('@(viewFolder.ID.Guid.ToString())')" value="+ Add Profile" />
+                    @if (Model.ViewsFolders.Count > 1)
+                    {
+                        <input type="button" class='pe-button pe-gray1' onclick='Sitecore.PageModes.PageEditor.postRequest("item:moveup(id=@(viewFolder.ID))",function(){location.reload(true);},false)' value="&#x25B2;" />
+                        <input type="button" class='pe-button pe-gray1' onclick='Sitecore.PageModes.PageEditor.postRequest("item:movedown(id=@(viewFolder.ID))",function(){location.reload(true);},false)' value="&#x25BC;" />
+                    }
+                    </div>
+                </div>  
+            }
+        }
+        <div style="width:100%;">
+            <span style="float:right;margin-top:5px;margin-bottom:4px;margin-right:7px;">
+                <input type="button" class="pe-button pe-green" onclick="addViewSection@(UID)()" value="+ Add Profile View Section" />
+            </span>
+            <div style="clear:both;"></div>
+        </div>
+
+        if (Model.ListingRootFolder != null && Model.ListingsFolders != null)
+        {
+            foreach (Sitecore.Data.Items.Item listingFolder in Model.ListingsFolders)
+            {
+                <div class="user-directory-list" style="border:1px solid #ddd;margin-bottom:8px">
+                    <h2>Section Header: @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(listingFolder, "Heading"))                    
+                        <input type="button" id="btnRemoveSection" class="pe-button pe-red" style="float:right" onclick="javascript:Sitecore.PageModes.PageEditor.postRequest('webedit:delete(id=@(listingFolder.ID.ToString()))')" value="X Remove Section" />
+                        @if (listingFolder.Children.Count > 1)
+                        {
+                            <input type="button" id="btnSortSection" class="pe-button pe-gray1" style="float:right;margin-right:3px" onclick="javascript:Sitecore.PageModes.PageEditor.postRequest('webedit:facdirsort(id=@(listingFolder.ID.ToString()))')" value="<> Sort Profiles" />
+                        }
+                    </h2>
+                <ul>
+                    @foreach (Sitecore.Data.Items.Item listing in listingFolder.Children)
+                    {
+                        string fname = HealthIS.Apps.MVC.Helpers.getStrField(listing, "First Name");
+                        string lname = HealthIS.Apps.MVC.Helpers.getStrField(listing, "Last Name");
+                        string jtitle = HealthIS.Apps.MVC.Helpers.getStrField(listing, "Job Title");
+                        string title = HealthIS.Apps.MVC.Helpers.getStrField(listing, "Title");
+                        title = string.IsNullOrEmpty(title) ? "" : ", " + title;
+                        string href = HealthIS.Apps.MVC.Helpers.getStrField(listing, "Email or Full Profile Link");
+                        <li style="line-height:27px;margin-bottom:10px;">
+                            @if (href.Contains("@"))
+                            {
+                                <a href="mailto:@(href)">@Html.Raw(fname + " " + lname + title)</a>
+                            }
+                            else
+                            {
+                                <a href='@Html.Raw(href)'>@Html.Raw(fname + " " + lname + title)</a>
+                            }
+                            <div style="margin: 0;padding: 12px 5px 8px 5px;border-bottom: 1px solid #dddddd;">
+                                @(jtitle)
+                                <div style="float:right;">
+                                    <input class="pe-button pe-yellow" type="button" value="Edit" onclick='showEditDialog("@listing.ID","First Name|Last Name|Title|Job Title|Email or Full Profile Link")' />
+                                    <input class="pe-button pe-red" type="button" value="X" onclick="deleteItem('@(listing.ID)')" />
+                                </div>
+                            </div>
+                            <div style="clear:both"></div>
+                        </li>
+                    }
+                </ul>
+                <div style="width:100%;">
+                    <span style="float:right;margin-top:5px;margin-bottom:4px;margin-right:7px;">
+                        <input type="button" class="pe-button pe-green" onclick="addListingSubItem@(UID)('@(listingFolder.ID.Guid.ToString())')" value="+ Add Profile" />
+                        @if (Model.ListingsFolders.Count > 1)
+                        {
+                        <input type="button" class='pe-button pe-gray1' onclick='Sitecore.PageModes.PageEditor.postRequest("item:moveup(id=@(listingFolder.ID))",function(){location.reload(true);},false)' value="&#x25B2;" />
+                        <input type="button" class='pe-button pe-gray1' onclick='Sitecore.PageModes.PageEditor.postRequest("item:movedown(id=@(listingFolder.ID))",function(){location.reload(true);},false)' value="&#x25BC;" />
+                        }
+                    </span>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            }
+        }
+        <div style="width:100%;">
+            <span style="float:right;margin-top:5px;margin-bottom:4px;margin-right:7px;">
+                <input type="button" class="pe-button pe-green" onclick="addListingSection@(UID)()" value="+ Add Profile Listing Section" />
+            </span>
+            <div style="clear:both;"></div>
+        </div>
+    }
+    else
+    {
+        <h2 style="text-align:center;">User Profile Directory Config</h2>
+        <script>
+            function callSetDataSrc@(UID)() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                                              // itemID
+                    'User Defined2/Component Template/UPD Root',                                            // templatePath
+                    '_UPD',                                                                                 // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                           // renderingID
+                    '@Html.Raw(Model.Item.Database.Name)',                                                  // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                                     // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',                                       // referenceID
+                    '',                                                                                     // btnID
+                    true                                                                                    // reload true
+                );
+            }
+        </script>
+        <div style="text-align:center">
+            <p>If you want to create a new User Profile Directory, click 'Create New User Profile Directory'.</p>
+            <input id="btnDSSet@(UID)" class="pe-button pe-green" type="button" value="Create New User Profile Directory" onclick="callSetDataSrc@(UID)    ()" />
+            <script>if(typeof(autoSave) != "undefined"){ autoSave(); }</script>
+        </div>
+    }
+}
+else
+{
+    if (Model.dsSet)
+    {
+        if (Model.ViewRootFolder != null && Model.ViewsFolders != null)
+        {
+            foreach (Sitecore.Data.Items.Item viewFolder in Model.ViewsFolders)
+            {
+                <div class="user-directory-view">
+                    @if (!String.IsNullOrEmpty(@HealthIS.Apps.MVC.Helpers.getStrField(viewFolder, "Heading")))
+                    { <h2>@HealthIS.Apps.MVC.Helpers.getStrField(viewFolder, "Heading")</h2> }
+                    <ul>
+                        @foreach (Sitecore.Data.Items.Item view in viewFolder.Children)
+                        {
+                            Sitecore.Data.Fields.ImageField img = HealthIS.Apps.MVC.Helpers.getImgField(view, "Image");
+                            string fname = HealthIS.Apps.MVC.Helpers.getStrField(view, "First Name");
+                            string lname = HealthIS.Apps.MVC.Helpers.getStrField(view, "Last Name");
+                            string jtitle = HealthIS.Apps.MVC.Helpers.getStrField(view, "Job Title");
+                            string title = HealthIS.Apps.MVC.Helpers.getStrField(view, "Title");
+                            string email = HealthIS.Apps.MVC.Helpers.getStrField(view, "Email");
+                            string phone = HealthIS.Apps.MVC.Helpers.getStrField(view, "Phone");
+                            string profile = HealthIS.Apps.MVC.Helpers.getStrField(view, "Profile Link");
+                            string mainTitle = string.IsNullOrEmpty(title) ? fname + " " + lname : fname + " " + lname + ", " + title;
+                            <li>
+                                @if (profile.Trim().Length > 0)
+                                {
+                                    @Html.Raw("<a href='" + profile + "'>");
+                                }
+                                @if (img != null && img.MediaItem != null)
+                                {
+                                    <img alt="@(img.Alt)" src="@(Sitecore.Resources.Media.MediaManager.GetMediaUrl(img.MediaItem))" />
+                                }
+                                else
+                                {
+                                    <img alt="Image Placeholder" src="http://placehold.it/100x125" />
+                                }
+                                <span>@Html.Raw(mainTitle)</span>
+                                @if (profile.Trim().Length > 0)
+                                {
+                                    @Html.Raw("</a>")
+                                }
+                                <br />
+                                <p>@(jtitle)</p>
+                                <p>
+                                    <a href="mailto:@(email)">@(email)</a><br />
+                                    @(phone)
+                                </p>
+                            </li>
+                        }
+                        <!-- @if (viewFolder.Children.Count % 2 != 0)
+                        {
+                            <li></li>
+                        } -->
+                    </ul>
+                </div>
+            }
+        }
+        <div class="user-directory-list-container">
+            @if (Model.ListingRootFolder != null && Model.ListingsFolders != null)
+            {
+                int accordionCount = 1;
+                string listDivId = "";
+                string listCSSId = "";
+                string listCSSClass = "user-directory-list";
+                
+                foreach (Sitecore.Data.Items.Item listingFolder in Model.ListingsFolders)
+                {
+                    if (Model.chEnableAccordion.Checked)
+                    {
+                        listDivId = "accordion" + accordionCount.ToString();
+                        listCSSId = "accordionLink" + accordionCount.ToString();
+                        listCSSClass += " collapse";
+                    }
+                    <div id="@(listDivId)">
+                        @if (!String.IsNullOrEmpty(@HealthIS.Apps.MVC.Helpers.getStrField(listingFolder, "Heading")))
+                        {
+                            if (Model.chEnableAccordion.Checked)
+                            {
+                                <h2 data-toggle="collapse" data-parent="#accordion@(accordionCount)" href="#@(listCSSId)">
+                                    @HealthIS.Apps.MVC.Helpers.getStrField(listingFolder, "Heading")
+                                    <span>&nbsp;&nbsp;(Click to expand)</span>
+                                </h2>
+                            }
+                            else
+                            {
+                                <h2>@HealthIS.Apps.MVC.Helpers.getStrField(listingFolder, "Heading")</h2>
+                            }
+                        }
+                        <ul id="@(listCSSId)" class="@(listCSSClass)">
+                            @foreach (Sitecore.Data.Items.Item listing in listingFolder.Children)
+                            {
+                                string fname = HealthIS.Apps.MVC.Helpers.getStrField(listing, "First Name");
+                                string lname = HealthIS.Apps.MVC.Helpers.getStrField(listing, "Last Name");
+                                string jtitle = HealthIS.Apps.MVC.Helpers.getStrField(listing, "Job Title");
+                                string title = HealthIS.Apps.MVC.Helpers.getStrField(listing, "Title");
+                                string href = HealthIS.Apps.MVC.Helpers.getStrField(listing, "Email or Full Profile Link");
+                                bool showLink = href.Trim().Length > 0;
+                                string cssClass = showLink ? "" : "no-link";
+                                <li class="@(cssClass)">
+                                    @if (href.Contains("@"))
+                                    {
+                                        <a href="mailto:@(href)">@Html.Raw(fname + " " + lname + ", " + title)</a>
+                                    }
+                                    else
+                                    {
+                                        if (showLink)
+                                        {
+                                            @:<a href="@(href)">
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("<p>")
+                                        }
+                                        @Html.Raw(fname + " " + lname);
+                                                                      if (!string.IsNullOrEmpty(title))
+                                                                      {
+                                                                        @Html.Raw(", " + title);
+                                                                      }
+                                                                      if (showLink)
+                                                                      {
+                                                                        @:</a>
+                                                                      }
+                                                                      else
+                                                                      {
+                                                                        @Html.Raw("</p>");
+                                                                      }
+                                    }
+                                    <span>@(jtitle)</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                            accordionCount++;
+                }
+            }
+        </div>
+    }
+}

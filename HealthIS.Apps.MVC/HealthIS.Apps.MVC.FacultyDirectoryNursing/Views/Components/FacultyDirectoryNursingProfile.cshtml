@@ -1,0 +1,188 @@
+﻿@if (Sitecore.Context.PageMode.IsExperienceEditorEditing)
+{
+    <h4>Faculty Directory Nursing Profile X20</h4>
+    <p>Faculty Directory Profile rendering has been added.</p>
+    <script>if (typeof (autoSave) != "undefined") { autoSave(); }</script>
+}
+else
+{
+    Model.GetNursingPersonData();
+    <div class="back-button-x20">
+        <a class="back" href="/nursing/faculty-staff/directory-x20"><em class="icon-arrow-left">&nbsp;</em>Back to<br><span>Directory</span></a>
+    </div>
+    <div class="faculty-profile">
+        @if (!Model.validId)
+        {
+            <h1>Invalid Person ID.</h1>
+        }
+        else if (Model.person == null || String.IsNullOrEmpty(Model.personID.ToString()) || !String.IsNullOrEmpty(Model.person.error))
+        {
+            <h1>Person could not be found.</h1>
+        }
+        else
+        {
+
+
+            <div class="profile-photo-container-x20">
+                <img class="profile-photo-x20" src="/resources/root-elements/FacultyDirectoryGetFile.cshtml?method=picture&person_id=@Html.Raw(Model.personID)" alt="@Html.Raw(Model.person.firstName + " " + Model.person.lastName + " " + Model.person.researchid)" />
+                @if (!String.IsNullOrEmpty(Model.person.researchid))
+                {
+                    <span id="badgeCont656831" style="width:126px">
+                        <script src="http://labs.researcherid.com/mashlets?el=badgeCont656831&amp;mashlet=badge&amp;showTitle=false&amp;className=a&amp;rid=@Html.Raw(Model.person.researchid)"></script>
+                    </span>
+                }
+                <div class="profile-details">
+                    @{
+                string title = "";
+                string credentials = "";
+                string fullName = Model.person.firstName + " " + Model.person.lastName;
+                if (!String.IsNullOrEmpty(Model.person.title))
+                {
+                    title = ", <span class=\"faculty-credentials\">" + Model.person.title + "</span>";
+                    credentials = ", " + Model.person.title;
+                }
+                    }
+                    <h1>@Html.Raw(fullName + title)</h1>
+
+                    <!-- Appointments -->
+                    @foreach (string appointment in Model.person.appointments)
+                    {
+                        string appt = HealthIS.Apps.MVC.Helpers.FormatString("Appt", appointment);
+                        <h2 class="faculty-position">@(appt)</h2>
+                    }
+
+                    <!-- Contact Information -->
+                    <ul class="nursing-faculty-contact">
+                        @if (!String.IsNullOrEmpty(Model.person.email))
+                        {
+                            <li><i class="icon-envelope-alt"></i><a href="mailto:@Html.Raw(Model.person.email)">@Html.Raw(Model.person.email)</a></li>
+                        }
+                        @if (!String.IsNullOrEmpty(Model.person.phone))
+                        {
+                            <li><i class="icon-phone"></i>@Html.Raw(Model.person.phone)</li>
+                        }
+                        @if (!String.IsNullOrEmpty(Model.person.building))
+                        {
+                            string bldg = Model.person.building.ToUpper();
+                            string rm = Model.person.room.ToUpper();
+                            <li><i class="icon-map-marker"></i>@(bldg) Building, Room <span class="room">@(rm)</span></li>
+                        }
+                        @if (!String.IsNullOrEmpty(Model.person.cvSrc))
+                        {
+                            <li><i class="icon-file"></i><a href="/resources/root-elements/FacultyDirectoryGetFile.cshtml?method=resume&person_id=@Html.Raw(Model.personID)" target="_blank">View My C.V.</a></li>
+                        }
+                    </ul>
+
+                    <!-- Academic Philosophy -->
+                    @if (!String.IsNullOrEmpty(Model.person.academic_philosophy))
+                    {
+                        <blockquote>"@Html.Raw(Model.person.academic_philosophy)"</blockquote>
+                    }
+                </div>
+            </div>
+            <div class="profile-main">
+                <!-- Education -->
+                @if (Model.person.degrees != "")
+                {
+                    string degree = HealthIS.Apps.MVC.Helpers.FormatString("Deg", Model.person.degrees);
+                    <h3>Education</h3>
+                    <div class="faculty-degrees">@Html.Raw(degree)</div>
+                }
+
+                <!-- Interdisciplinary and Emerging Signature Programs  -->
+                @if (Model.person.signatureProgram.Length > 0)
+                {
+                    <h3>Interdisciplinary and Emerging Signature Programs</h3>
+                    <ul>
+                        @foreach (string prg in Model.person.signatureProgram)
+                        {
+                            <li>@Html.Raw(prg)</li>
+                        }
+                    </ul>
+                }
+
+                <!-- Clinical Interests -->
+                @if (Model.person.clinicalInterests.Length > 0)
+                {
+                    <h3>Clinical Interests</h3>
+                    <ul>
+                        @foreach (string interest in Model.person.clinicalInterests)
+                        {
+                            <li>@Html.Raw(interest)</li>
+                        }
+                    </ul>
+                }
+
+                <!-- Research Interests -->
+                @if (Model.person.researchInterests.Length > 0)
+                {
+                    <h3>Research Interests</h3>
+                    <ul>
+                        @foreach (string interest in Model.person.researchInterests)
+                        {
+                            <li>@Html.Raw(interest)</li>
+                        }
+                    </ul>
+                }
+
+                <!-- Outside Interests -->
+                @if (!String.IsNullOrEmpty(Model.person.outsideInterest))
+                {
+                    <h3>Outside Interests</h3>
+                    <p>@Html.Raw(Model.person.outsideInterest)</p>
+                }
+
+                <!-- Awards/Honors -->
+                @if (Model.person.awards.Length > 0)
+                {
+                    <h3>Awards/Honors</h3>
+                    <ul data-pagination="5">
+                        @foreach (string award in Model.person.awards)
+                        {
+                            <li>@Html.Raw(award)</li>
+                        }
+                    </ul>
+                }
+
+                <!-- Memberships -->
+                @if (Model.person.memberships.Length > 0)
+                {
+                    <h3>Memberships</h3>
+                    <ul data-pagination="5">
+                        @foreach (string membership in Model.person.memberships)
+                        {
+                            <li>@Html.Raw(membership)</li>
+                        }
+                    </ul>
+                }
+
+                <!-- Publications -->
+                @if (Model.person.publications.Length > 0)
+                {
+                    <h3>Recent Publications</h3>
+                    <ul data-pagination="5" class="pub-list">
+                        @foreach (string publication in Model.person.publications)
+                        {
+                            <li>@Html.Raw(publication)</li>
+                        }
+                    </ul>
+                }
+
+                <!-- Grants -->
+                @if (Model.person.grants.Length > 0)
+                {
+
+                    <h3>Grants</h3>
+                    <ul data-pagination="5">
+                        @foreach (string grant in Model.person.grants)
+                        {
+                            <li>@Html.Raw(grant)</li>
+                        }
+                    </ul>
+                }
+            </div>
+        }
+    </div>
+}
+<!-- Enable this JS only if you want to enable features of the old nursing profiles -->
+<!-- <script type="text/javascript" src="/resources/root-elements/scripts/facdir-nursing-profilelib.js"></script> -->

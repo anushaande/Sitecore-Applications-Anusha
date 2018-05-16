@@ -1,0 +1,22 @@
+﻿@model HealthIS.Layouts.Models.COPH
+@using Sitecore.Mvc
+@using HealthIS.Apps.MVC
+@Model.executeAutosave()
+
+<div class="slick-shadow">
+    @if (!String.IsNullOrEmpty(Helpers.getRenderingId("Headline for Standard")))
+    {
+        @Html.Raw(Model.headlineOpen("standard-header coph-standard"));
+        @Html.Sitecore().Placeholder("Headline for Standard")
+        @Html.Raw(Model.headlineClose);
+    } else {
+        @Html.Sitecore().Placeholder("Headline for Standard") 
+    }
+    @Helpers.placeholderRequired("Headline for Standard")
+    <div class="content-area first">
+        @Html.Sitecore().Placeholder("RichText Editor1") @Helpers.placeholderRequired("RichText Editor1")
+    </div>
+    <div class="content-area break">
+        @Html.Sitecore().Placeholder("Google Map") @Helpers.placeholderRequired("Google Map")
+    </div>
+</div>

@@ -1,0 +1,16 @@
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\bin\HealthIS.Apps.MVC.ColumnBuilder.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\bin\HealthIS.Apps.MVC.ColumnBuilder.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\bin\Microsoft.Web.Infrastructure.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\bin\System.Web.Helpers.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\bin\System.Web.Razor.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\bin\System.Web.Webpages.Deployment.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\bin\System.Web.Webpages.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\bin\System.Web.Webpages.Razor.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\bin\System.Web.Razor.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\bin\System.Web.Webpages.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\bin\System.Web.Webpages.Deployment.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\bin\System.Web.Webpages.Razor.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\bin\System.Web.Helpers.xml
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\obj\Release\HealthIS.Apps.MVC.ColumnBuilder.csprojResolveAssemblyReference.cache
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\obj\Release\HealthIS.Apps.MVC.ColumnBuilder.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ColumnBuilder\obj\Release\HealthIS.Apps.MVC.ColumnBuilder.pdb

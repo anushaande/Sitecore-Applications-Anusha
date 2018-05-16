@@ -1,0 +1,35 @@
+﻿@model HealthIS.Apps.MVC.Models.HeadingTag
+@using Sitecore.Mvc
+
+@if (Sitecore.Context.PageMode.IsPageEditor && String.IsNullOrEmpty(Model.isSetDs))
+{
+    <center>
+        <div><h2>Headline</h2><p>If you want to create a new headline, click 'Create New Headline'.</p></div>
+        <div>
+            <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrc()" value="Create New Headline">
+        </div>
+    </center>
+    <script>
+        jQuery(document).ready(function () {
+            autoSave();
+        });
+        // Create new datasource with Branch
+        function callSetDataSrc() {
+            setDataSrc(
+                '@Html.Raw(Model.PageItem.ID.ToString())',                          // itemID
+                'User Defined2/Component Template/Headlines/Heading for Homepage',  // templatePath
+                '_HL',                                                              // suffix
+                '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',       // renderingID
+                '@Html.Raw(Model.PageItem.Database.Name)',                          // dbName
+                '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                 // deviceID
+                '@Html.Raw(Model.Rendering.UniqueId.ToString())',                   // referenceID
+                ''                                                                  // btnID
+            );
+        }
+    </script>
+    return;
+}
+@*H1 tag/styles handled from COPH page types*@
+@Html.Raw(Model.smallHeadline)<br>
+<span>@Html.Raw(Model.largeHeadline)</span>
+

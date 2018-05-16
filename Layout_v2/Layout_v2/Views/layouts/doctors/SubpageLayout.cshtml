@@ -1,0 +1,69 @@
+﻿@using Sitecore.Mvc
+
+<!-- Beginning of USF Health Header -->
+<header id="health-header" role="banner">
+    <div class="container block-center" id="health-header-inner">
+        <nav class="health-links clearfix">
+            <ul>
+                <li><a href="http://health.usf.edu/news.html">USF Health News</a></li>
+            </ul>
+        </nav>
+        <nav class="usf-links">
+            <ul class="clearfix">
+                <li><a href="http://health.usf.edu" class="icon-home">USF Health</a></li>
+                <li><a href="http://www.usf.edu">USF</a></li>
+                <li><a href="http://search.usf.edu/search?btnG=USF+Health+Search&amp;access=p&amp;btng=Search&amp;client=health&amp;proxystylesheet=health&amp;output=xml_no_dtd&amp;sort=date%3AD%3AL%3Ad1&amp;oe=UTF-8&amp;ie=UTF-8&amp;ud=1&amp;exclude_apps=1&amp;site=health">Search</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<!-- End of USF Health Header -->
+
+<!-- Department Header -->
+<header id="dept-header" role="banner">
+    <div class="container dept-doctors block-center">
+        <div class="logo_ribbon">
+            <div class="health-logo">
+                <a href="http://health.usf.edu"><img width="101" height="68" alt="" src="http://health.usf.edu/layouts/images/health_logo_gold.png"></a>
+            </div>
+        </div>
+        <span class="doctors-wordmark"><a href="/doctors/"><strong>Doctors</strong> of USF Health</a></span>
+        <h2>
+            @Model.PageItemName
+        </h2>
+    </div>
+</header>
+<!-- End Department Header -->
+
+<!-- Department Nav -->
+@Html.Sitecore().Placeholder("H_Navigations")
+
+<!-- Breadcrumbs -->
+<div class="container">
+    @Html.Sitecore().Placeholder("BreadCrumbs")
+</div>
+<!-- End of Breadcrumbs -->
+
+<!-- Beginning of Page Type 1 -->
+<main class="container block-center site-content" id="generic_wrapper" role="main">
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-md-8 col-xs-12">
+            <div class="doctors-main-content">
+                @Html.Sitecore().Placeholder("Content Type")
+            </div>
+        </div>
+
+        <div class="col-md-4 col-xs-12">
+            <div class="patient-tool-box">
+                @Html.Sitecore().Placeholder("PatientToolBox")
+            </div>
+            <br /><br />
+            <div class="ad-box">
+                @Html.Raw(Model.AdBox)
+            </div>
+        </div>
+    </div>
+</main>
+<!-- End of Page Type 1 -->
+

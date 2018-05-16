@@ -1,0 +1,493 @@
+﻿@model HealthIS.Apps.MVC.Blog.Models.DetailPage
+@using Sitecore.Mvc
+@{
+    string getPostRoot = Model.ArticleRootPath.Paths.GetFriendlyUrl();
+
+    //Author Profile Information
+    string authorFullName = string.Empty;
+    Sitecore.Data.Fields.ImageField authorProfileImage = null;
+    string authorProfileImageUrl = "/~/media/Images/Root Element/no-photo";
+    string authorBio = string.Empty;
+    string authorUserName = string.Empty;
+    bool foundAuthorProfile = false;
+    if (Model.GetAuthorProfile != null)
+    {
+        foundAuthorProfile = true;
+        authorFullName = Model.GetAuthorProfile.Fields["Full Name"].Value;
+        authorProfileImage = Model.GetAuthorProfile.Fields["Profile Image"];
+        authorProfileImageUrl = authorProfileImage != null && !String.IsNullOrEmpty(authorProfileImage.Value) ? Sitecore.Resources.Media.MediaManager.GetMediaUrl(authorProfileImage.MediaItem) : "/~/media/Images/Root Element/no-photo";
+        authorBio = Model.GetAuthorProfile.Fields["Bio"].Value;
+        authorUserName = Model.CurrentPage.Fields["__Created by"].Value.Replace("\\", "");
+    }
+}
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    <link rel="stylesheet" href="/resources/scripts/tagsinput/tag-basic-style.css" />
+    <style>
+        .bootstrap-tagsinput {
+            width: 100%;
+        }
+    </style>
+    <table class="table table-striped">
+        <thead class="thead-default">
+            <tr>
+                <th style="font-size: 20px;">
+                    Title
+                    <a href="@(Model.ArticleRootPath.Paths.ContentPath)/Create New Blog Post" class="pe-button pe-green" style="float: right;">Move to Main Page</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><h2>@Html.Raw(Model.Title)</h2></td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-striped">
+        <thead class="thead-default">
+            <tr>
+                <th style="font-size: 20px;">Thumbnail Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Html.Raw(Model.ThumbnailImage)</td>
+            </tr>
+        </tbody>
+    </table>
+    @*<table class="table table-striped">
+        <thead class="thead-default">
+            <tr>
+                <th style="font-size: 20px;">
+                    Description
+                    <span>
+                        <input type="button" style="float: right;" class="btn btn-warning" id="description-length-limit-btn" onclick="javascript: syncDescription()" value="Sync Description" />
+                        <input type="text" style="float: right; width: 200px; margin-right: 5px;" class="form-control col-2" id="description-length-limit" placeholder="Default: 500 Characters" />
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="height: 100px;">@Html.Raw(Model.Description)</td>
+            </tr>
+        </tbody>
+    </table>*@
+    <table class="table table-striped">
+        <thead class="thead-default">
+            <tr>
+                <th style="font-size: 20px;">Content</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="height: 300px;">@Html.Raw(Model.Content)</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table">
+        <thead class="thead-default">
+            <tr>
+                <th style="font-size: 17px;">Category <span><input type="button" style="float: right;" class="btn btn-warning" onclick="javascript: Sitecore.PageModes.PageEditor.postRequest('webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Categories, id=@Model.CurrentPage.ID)', null, null, true)" value="Update Category" /></span></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <br />
+                    @if (Model.CurrentArticleCategories.Count > 0)
+                    {
+                        foreach (string eachCategory in Model.CurrentArticleCategories)
+                        {
+                            <span class='label label-success' style='font-size: 16px; padding: 10px;'>@Html.Raw(eachCategory)</span>
+                        }
+                    }
+                    else
+                    {
+                        <span>Please update categories.</span>
+                    }
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table">
+        <thead class="thead-default">
+            <tr>
+                <th style="font-size: 17px;">Tag</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div data-tags-input-name="tagList" id="tags">
+                        @Model.CurrentArticleTags.Aggregate((i, j) => i + ", " + j)
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-striped">
+        <thead class="thead-default">
+            <tr>
+                <th style="font-size: 17px;">Meta Title</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Html.Raw(Model.MetaTitle)</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-striped">
+        <thead class="thead-default">
+            <tr>
+                <th style="font-size: 17px;">Meta Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Html.Raw(Model.MetaDescription)</td>
+            </tr>
+        </tbody>
+    </table>
+    <!--=================================
+    =            Author Info            =
+    ==================================-->
+    <div class="blog-detail-page">
+        <div class="blog-post-article">
+            <div class="global-content-section">
+                <div class="author-area">
+                    <img alt="@(authorFullName)" src="@authorProfileImageUrl" style="width: 100px;" srcset="@authorProfileImageUrl" class="avatar avatar-100 photo" />
+                    <div class="author-site">
+                        <strong>Visit this author's <br>department:</strong><p><a href="/">USF Health</a></p>
+                    </div>
+                    <div class="author-info">
+                        @if (foundAuthorProfile)
+                        {
+                            <h3>
+                                About <a href="@(getPostRoot)/author?username=@(authorUserName)&fullname=@(authorFullName)" title="Posts by @(authorFullName)" rel="author">@(authorFullName)</a>
+                                @if (Model.CurrentUserProfile.UserName.Replace("\\", "") == Model.GetAuthorProfile.Name)
+                                {
+                                    <input type="button" onclick="editProfile('@(Model.GetAuthorProfile.ID)');" style="float: right;" class="pe-button pe-yellow" value="Update Profile" />
+                                }
+                            </h3>
+                            <p>@(authorBio)</p>
+                        }
+                        else if (!foundAuthorProfile && Model.CurrentUserWroteThisPost) // if no author information found
+                        {
+                            <p>We can't find your author profile.<br />Please create your profile.</p>
+                            <br />
+                            <input type="button" onclick="createProfile('@(Model.AuthorProfileLibrary.ID)','@(Model.AuthorProfileTemplate.ID)', '@(Model.CurrentUserProfile.UserName.Replace("\\", ""))')" class="pe-button pe-yellow" value="Create Profile" />
+                        }
+                        else
+                        {
+                            <p>
+                                We can't find your author information "@(Model.CurrentPage.Statistics.CreatedBy)"<br /><br />
+                                Please contact an administrator.<br />support@health.usf.edu
+                            </p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function editProfile(id) {
+            Sitecore.PageModes.PageEditor.postRequest("webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Full Name|Profile Image|Bio, id=" + id + ")", null, null, true);
+        }
+        function createProfile(profileLibrary, profileTemplateId, itemName) {
+            Sitecore.PageModes.PageEditor.postRequest("item:create(database=master, id=" + profileLibrary + ", template=" + profileTemplateId + ", prompt=<span style=\"color: red;\">Your profile item name MUST be <b>" + itemName + "</b></span>)", null, null, true);
+        }
+    </script>
+    <!--====  End of Author Info  ====-->
+
+    <input type="hidden" id="hiddencategoryList" value="" />
+    <input type="hidden" id="hiddentagList" value="" />
+    <script>
+        //function syncDescription() {
+        //    var lengthLimit = $('#description-length-limit').val();
+        //    lengthLimit = lengthLimit.replace(/\s/g, '');
+        //    if (isNaN(lengthLimit)) {
+        //        alert("The length limit field contains non-numeric value. Please type the correct number");
+        //        return true;
+        //    }
+
+        //    // Save the page first
+        //    Sitecore.PageModes.PageEditor.postRequest('webedit:save()', function () { }, false);
+
+        //    if (!lengthLimit || !lengthLimit.length) {
+        //        lengthLimit = 500;
+        //    }
+
+        //    if (confirm("Would you like to overwrite the first " + lengthLimit + " characters of content value in description field?")) {
+        //        $("#description-length-limit-btn").attr({
+        //            "value": "I am syncing.........",
+        //            "disabled": "true"
+        //        })
+        //        var postReq = jQuery.ajax({
+        //            url: window.location.href,
+        //            type: "POST",
+        //            data: {
+        //                "sync": "true",
+        //                "lengthLimit": lengthLimit
+        //            },
+        //            context: this,
+        //            success: function (data) {
+        //            },
+        //            error: function (data) {
+        //                alert('error: While synchronizing description value ' + data);
+        //            }
+        //        }).done(function () {
+        //            location.reload();
+        //        });
+        //    }
+        //}
+
+        function updateCategoryTag(type, newInput) {
+            var listOfCategories = $("#hiddencategoryList").val();
+            var listOfTags = $("#hiddentagList").val();
+
+            if (type == "categoryList") {
+                listOfCategories = listOfCategories + newInput;
+            }
+            if (type == "tagList") {
+                listOfTags = listOfTags + newInput;
+            }
+
+            var postReq = jQuery.ajax({
+                url: window.location.href,
+                type: "POST",
+                data: {
+                    "categories": listOfCategories,
+                    "tags": listOfTags
+                },
+                context: this,
+                success: function (data) {
+                    //console.log(data);
+                },
+                error: function (data) {
+                    alert('You may not have a permission to add tags. Please contact an administrator.');
+                    //console.log("error", data);
+                }
+            }).done(function () {
+            });
+        }
+    </script>
+    <script src="/resources/scripts/tagsinput/tagging.js"></script>
+}
+else
+{
+    <div class="blog-detail-page">
+        <div class="blog-post-top">
+            <!--===============================
+            =            Blog Name            =
+            ================================-->
+            <h1 class="blog-header-small">
+                <i class="icon-switch"></i> Health IS <strong>Technology</strong> Blog
+            </h1>
+            <!--====  End of Blog Name  ====-->
+            <!--================================
+            =            Breadcrumb            =
+            =================================-->
+            <p id="breadcrumbs">
+                <span xmlns:v="http://rdf.data-vocabulary.org/#">
+                    <span typeof="v:Breadcrumb">
+                        <a href="/is/blog" rel="v:url" property="v:title">Home</a> »
+                        <span class="breadcrumb_last">@Html.Raw(Model.CurrentPage.DisplayName)</span>
+                    </span>
+                </span>
+            </p>
+        </div>
+        <!--====  End of Breadcrumb  ====-->
+        <!--===================================
+        =            Article Title            =
+        ====================================-->
+        <div class="blog-post-article">
+            <h1 class="article-title article-row-1 article-row-border">
+                @Html.Raw(Model.Title)
+            </h1>
+            <!--====  End of Article Title  ====-->
+            <!--============================================
+            =            Social Sharing Buttons            =
+            =============================================-->
+            <div class="social-media-content">
+                <div class="social-media-buttons">
+                    <a class="facebook-button" onclick="fb()" href="#" target="_blank" rel="nofollow">
+                        <em class="icon-facebook"></em>
+                        <span>Share</span>
+                    </a>
+                    <a class="twitter-button" onclick="tw()" href="#" target="_blank" rel="nofollow">
+                        <em class="icon-twitter"></em>
+                        <span>Tweet</span>
+                    </a>
+                </div>
+            </div>
+            @*<div class="social-media-content">
+                    <div class="article-row-2" id="shareBtns">
+                        <a id="shareBtnFacebook" href="#"><span class="fw">&#xf09a;</span>  <span>Share</span></a>
+                        <a id="shareBtnTwitter" onclick="openPopup()" href="#"><span class="fw">&#xf099;</span>  <span>Twitter</span></a>
+                    </div>
+                </div>*@
+            <br />
+            <!--====  End of Social Sharing Buttons  ====-->
+            <!--======================================================
+            =            Post Content with Featured Image            =
+            =======================================================-->
+            <div class="blog-post-content">
+                @Html.Raw(Model.Content)
+                <!--====  End of Post Content  ====-->
+                <!--==================================
+                =            Related Post            =
+                ===================================-->
+                @if (Model.GetRelatedPostByCategory != null && Model.GetRelatedPostByCategory.Count() > 0)
+                {
+                    <div class="related-posts-section">
+                        <h2>Related Posts:</h2>
+                        <ul>
+                            @foreach (var i in Model.GetRelatedPostByCategory)
+                            {
+                                Sitecore.Data.Fields.ImageField imageField = i.Fields["ThumbnailImage"];
+                                string title = i.Fields["Title"].Value;
+                                <li class="related-article">
+                                    <a href="@(i.Paths.GetFriendlyUrl())">
+                                        @if (!String.IsNullOrEmpty(imageField.Value))
+                                        {
+                                            string imageUrl = Sitecore.Resources.Media.MediaManager.GetMediaUrl(imageField.MediaItem);
+                                            <img src="@imageUrl" alt="@imageField.Alt" style="width: 200px;" title="@title" class="crp_thumb crp_featured img-responsive" />
+                                        }
+                                        <div>@Html.Raw(title)</div>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+            <!--====  End of Related Post  ====-->
+            <!--============================================
+            =            Social Sharing Buttons            =
+            =============================================-->
+            <div class="social-media-content">
+                <div class="social-media-buttons">
+                    <a class="facebook-button" onclick="fb()" href="#" target="_blank" rel="nofollow">
+                        <em class="icon-facebook"></em>
+                        <span>Share</span>
+                    </a>
+                    <a class="twitter-button" onclick="tw()" href="#" target="_blank" rel="nofollow">
+                        <em class="icon-twitter"></em>
+                        <span>Tweet</span>
+                    </a>
+                </div>
+            </div>
+            <!--====  End of Social Sharing Buttons  ====-->
+            <!--===============================
+            =            Blog Info            =
+            ================================-->
+            <div class="global-content-section">
+                <p>USF Health Information Systems is a comprehensive technology group serving the needs of the Academic Research and Clinical missions. We partner with our customers to deliver agile responsive technology solutions that drive business value and make life better for our students and patients. Be informed at all times by visiting <a href="http://health.usf.edu/is/" target="_blank">health.usf.edu/is/</a>. You can connect directly via phone by calling (813) 974-6288 or by sending us an email via <a href="mailto:support@health.usf.edu" target="_blank">support@health.usf.edu</a>, after hours.</p>
+                <p class="hash-tag"><strong>#USFHealthIS</strong></p>
+                <!--====  End of Blog Info  ====-->
+                <!--============================================
+                =            Article Published Date            =
+                =============================================-->
+                <div class="post-meta-bottom">
+                    Posted on <i class="icon-time"></i> @(!String.IsNullOrEmpty(Model.CurrentPage.Fields["pubDate"].Value) ? Sitecore.DateUtil.FormatIsoDate(Model.CurrentPage.Fields["pubDate"].ToString(), "MMM dd, yyyy") : "") in
+                    <!--========================================
+                    =            Article Categories            =
+                    =========================================-->
+                    <strong>
+                        @if (Model.CurrentArticleCategories.Count > 0)
+                        {
+                            foreach (string eachCategory in Model.CurrentArticleCategories)
+                            {
+                                <a href="@(getPostRoot)/category?name=@(Model.ConvertName(eachCategory.Trim()).ToLower().Replace(" ", "-"))" class="pe-button pe-green" rel="category tag">@Html.Raw(eachCategory)</a>
+                            }
+                        }
+                    </strong>
+                    <!--====  End of Article Categories  ====-->
+                </div>
+                <!--====  End of Article Published Date  ====-->
+                <!--==================================
+                =            Article Tags            =
+                ===================================-->
+                <div class="master-tags">
+                    <i class="icon-tag"></i> Tags:
+                    @if (Model.CurrentArticleTags.Count > 0)
+                    {
+                        List<string> listOfTags = new List<string>();
+                        foreach (string eachTag in Model.CurrentArticleTags)
+                        {
+                            listOfTags.Add("<a href=\"" + getPostRoot + "/tag?name=" + eachTag.Trim() + "\" rel=\"tag\">" + eachTag + "</a>");
+                        }
+                        string formattedTagList = listOfTags.Aggregate((i, j) => i + ", " + j);
+                        @Html.Raw(formattedTagList);
+                    }
+                </div>
+                <!--====  End of Article Tags  ====-->
+                <!--=================================
+                =            Author Info            =
+                ==================================-->
+                @if (!String.IsNullOrEmpty(authorFullName))
+                {
+                    <div class="author-area">
+                        <img alt="@(authorFullName)" src="@authorProfileImageUrl" style="width: 100px;" srcset="@authorProfileImageUrl" class="avatar avatar-100 photo">
+                        <div class="author-site">
+                            <strong>
+                                Visit this author's <br>department:
+                            </strong>
+                            <p>
+                                <a href="/">USF Health</a>
+                            </p>
+                        </div>
+                        <div class="author-info">
+                            <h3>About <a href="@(getPostRoot)/author?username=@(authorUserName)&fullname=@(authorFullName)" title="Posts by @(authorFullName)" rel="author">@(authorFullName)</a></h3>
+                            <p>@(authorBio)</p>
+                        </div>
+                    </div>
+                }
+                <!--====  End of Author Info  ====-->
+            </div>
+        </div>
+    </div>
+    <script>
+        function tw() {
+            // Set values for window
+            intWidth = '500';
+            intHeight = '400';
+            strResize = 'yes';
+
+            var strParam = 'width=' + intWidth + ',height=' + intHeight + ',resizable=' + strResize;
+            var currentPostPage = window.location.href;
+            currentPostPage = currentPostPage.replace(/\s/g, "-");
+            currentPostPage = currentPostPage.replace(/%20/g, "-");
+            window.open("https://twitter.com/intent/tweet?url=" + currentPostPage + "&amp;text=@(Model.Title)", "title", strParam);
+        }
+
+        // Facebook
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '453179031511432',
+                autoLogAppEvents: true,
+                xfbml: true,
+                version: 'v2.9'
+            });
+            FB.AppEvents.logPageView();
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        function fb() {
+            FB.ui({
+                method: 'share',
+                display: 'popup',
+                href: window.location.href
+            }, function (response) { });
+        }
+    </script>
+}

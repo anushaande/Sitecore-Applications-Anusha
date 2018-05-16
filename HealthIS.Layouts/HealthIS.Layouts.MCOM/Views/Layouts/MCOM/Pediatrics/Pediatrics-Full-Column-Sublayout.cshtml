@@ -1,0 +1,16 @@
+﻿@using Sitecore.Mvc
+@using HealthIS.Apps.MVC
+@{
+    if (Sitecore.Context.PageMode.IsPageEditor)
+    {
+        <script>
+            jQuery(document).ready(function () {
+                autoSave();
+            });
+        </script>
+        <style>.slick-shadow { margin-top: 40px; }</style>
+    }
+}
+<div>
+    @Html.Sitecore().Placeholder("Pediatrics Full Column Page Type")
+</div>

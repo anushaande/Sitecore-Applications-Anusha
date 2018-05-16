@@ -1,0 +1,48 @@
+﻿@model HealthIS.Layouts.Models.COPH
+@using Sitecore.Mvc
+@using HealthIS.Apps.MVC
+@{
+    string customCss = string.Empty;
+    var rc = Sitecore.Mvc.Presentation.RenderingContext.CurrentOrNull;
+    string renderingUid = rc.Rendering.UniqueId.ToString().Replace("-", "").ToUpper();
+    string openH1 = "";
+    string closeH1 = "";
+    
+    if (rc != null)
+    {
+        var parms = rc.Rendering.Parameters;
+        customCss = parms["Custom Class Name"];
+    }
+    if (Sitecore.Context.PageMode.IsPageEditor)
+    {
+        <input type="button" id="customCSS" class="pe-button pe-blue" onclick="Sitecore.PageModes.PageEditor.postRequest('webedit:editrenderingproperties(uniqueid=@renderingUid)');" style="float: right; margin-right: 15px;" value="Custom CSS" />
+        <script>
+            $(document).ready(function () {
+                autoSave();
+            });
+        </script> 
+    }
+    else
+    {
+        openH1 = "<h1 class='homepage-header coph-homepage'>";
+        closeH1 = "</h1>";
+    }
+}
+
+<div class="slick-shadow">
+    <!-- main column root elements go here -->
+    @if (String.IsNullOrEmpty(Helpers.placeholderRequired("Headline for Homepage").ToHtmlString()))
+    {
+        @Html.Raw(openH1);
+        @Html.Sitecore().Placeholder("Headline for Homepage") @Helpers.placeholderRequired("Headline for Homepage")
+        @Html.Raw(closeH1);
+    }
+    else
+    {
+        @Html.Sitecore().Placeholder("Headline for Homepage") @Helpers.placeholderRequired("Headline for Homepage")
+    }
+    @Html.Sitecore().Placeholder("Media") @Helpers.placeholderRequired("Media")
+    <div class="content-area first">
+        @Html.Sitecore().Placeholder("RichText Editor1") @Helpers.placeholderRequired("RichText Editor1")
+    </div>
+</div>

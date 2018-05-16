@@ -1,0 +1,132 @@
+﻿@model HealthIS.Layouts.Models.COPH
+@using Sitecore.Mvc
+@using HealthIS.Apps.MVC
+@using Rss
+@Model.executeAutosave()
+@helper GetLocation(string desc)
+{
+    string output = desc;
+    int locStart = 0;
+    int locEnd = 0;
+    int locLength = 0;
+
+    if (!String.IsNullOrEmpty(output))
+    {
+        locStart = output.ToLower().IndexOf("~~location:");
+        if (locStart > -1)
+        {
+            locStart += 11; // to account for the 11 characters in the "~~loc..." string
+            locEnd = output.IndexOf("~~", locStart);
+            if (locEnd == -1)
+            {
+                locEnd = output.Length;
+            }
+            locLength = locEnd - locStart;
+            output = output.Substring(locStart, locLength);
+            output = System.Text.RegularExpressions.Regex.Replace(output, "<.*?>", String.Empty);
+            <text>@output.Trim()</text>
+        }
+    }
+}
+@{
+    string feedUrl = "http://hscweb3.hsc.usf.edu/calendar/remote/rss.php?calendar=4&view=upcoming&days=60";
+    RssFeed feed = RssFeed.Read(feedUrl);
+    RssChannel channel = feed.Channels[0];
+    RssItemCollection feedItems = channel.Items;
+    string month = String.Empty;
+    string output = String.Empty;
+    string timex = String.Empty;
+    string smonth = String.Empty;
+    string sday = String.Empty;
+    string sdayx = String.Empty;
+    
+    for (int i = 0; i < feedItems.Count; i++)
+    {
+        // if the month of this item is different from the previous month, show the month header
+        if (feedItems[i].PubDate.ToString("MMMM") != month)
+        {
+            month = feedItems[i].PubDate.ToString("MMMM");
+            output += "\n<h3 class=\"month\">" + month + "</h3>";
+            output += "\n<table cellpadding=\"0\" cellspacing=\"5\">";
+            output += "\n\t<thead>\n\t\t<tr>\n\t\t\t<td width=\"50\"><b>Date</b></td>" +
+                "\n\t\t\t<td width=\"450\"><b>Event</b></td>\n\t\t\t<td width=\"400\"><b>Location</b></td>" +
+                "\n\t\t</tr>\n\t</thead>\n\t<tbody>";
+        }
+
+        // Hack Fix for all day events showing yesterday's date
+        timex = feedItems[i].PubDate.ToString("HH:mm:sstt");
+        smonth = feedItems[i].PubDate.ToString("MM");
+        sday = feedItems[i].PubDate.ToString("dd");
+        sdayx = (int.Parse(sday) + 1).ToString();        
+        
+        if (timex == "23:00:00PM")
+        { sday = sdayx; }
+        // Hacking the Hack - When Days go over... Leap Year not accounted for
+        if (sday == "32" && smonth == "01")
+        { sday = "01"; smonth = "02"; }
+        if (sday == "29" && smonth == "02")
+        { sday = "01"; smonth = "03"; }
+        if (sday == "32" && smonth == "03")
+        { sday = "01"; smonth = "04"; }
+        if (sday == "31" && smonth == "04")
+        { sday = "01"; smonth = "05"; }
+        if (sday == "32" && smonth == "05")
+        { sday = "01"; smonth = "06"; }
+        if (sday == "31" && smonth == "06")
+        { sday = "01"; smonth = "07"; }
+        if (sday == "32" && smonth == "07")
+        { sday = "01"; smonth = "08"; }
+        if (sday == "32" && smonth == "08")
+        { sday = "01"; smonth = "09"; }
+        if (sday == "31" && smonth == "09")
+        { sday = "01"; smonth = "10"; }
+        if (sday == "32" && smonth == "10")
+        { sday = "01"; smonth = "11"; }
+        if (sday == "31" && smonth == "11")
+        { sday = "01"; smonth = "12"; }
+        if (sday == "32" && smonth == "12")
+        { sday = "01"; smonth = "01"; }
+
+        output += "\n\t\t<tr>";
+        output += "\n\t\t\t<td>" + smonth + "/" + sday + "</td>";  // code before hack: output += "\n\t\t\t<td>" + feedItems[i].PubDate.ToString("MM/dd") + "</td>";
+        output += "\n\t\t\t<td><a href=\"" + feedItems[i].Link + "\">" + feedItems[i].Title + "</a></td>";
+        output += "\n\t\t\t<td>" + GetLocation(feedItems[i].Description) + "</td>";
+        output += "\n\t\t</tr>";
+        // if we're at the last item in the feed or the next item is in a different month, close the table
+        if (i + 1 == feedItems.Count || feedItems[i + 1].PubDate.ToString("MMMM") != month)
+        {
+            output += "\n\t</tbody>\n</table><br />";
+        }
+
+    }
+}
+<div class="slick-shadow coph-events-calendar">
+    @if (!String.IsNullOrEmpty(Helpers.getRenderingId("Headline for Standard")))
+    {
+        @Html.Raw(Model.headlineOpen("standard-header coph-standard"));
+        @Html.Sitecore().Placeholder("Headline for Standard")
+        @Html.Raw(Model.headlineClose);
+    } else {
+        @Html.Sitecore().Placeholder("Headline for Standard") 
+    }
+    @Helpers.placeholderRequired("Headline for Standard")
+
+    <div class="content-area first">
+        @if (Sitecore.Context.PageMode.IsExperienceEditor)
+        {
+            <h4 style="text-align: center;">
+                This page uses a direct event RSS feed embeded into the page type.<br />
+                <a href="https://agile.health.usf.edu/servicedesk/customer/portal/7/create/192" target="_blank">For any updates or issues, please contact the Sitecore team</a>.<br /><br />
+                <span style="font-size: 13px;">
+                    <b>Current RSS Feed URL:</b><br />
+                    http://hscweb3.hsc.usf.edu/calendar/remote/rss.php?calendar=4&view=upcoming&days=60
+                </span>
+            </h4>
+        }
+        @Html.Raw(output)
+        <p style="border-top: 2px solid #cfc493;padding-top: 2px;">
+            <a href="http://hscweb3.hsc.usf.edu/calendar/index.php?calendar=4" target="_blank">Full Calendar</a>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;<a href="http://health.usf.edu/publichealth/map">Map</a>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;<a href="http://hscweb3.hsc.usf.edu/calendar/login.php" target="_blank">Admin Login</a>
+        </p>
+        <p>For more information about these events please call (813) 974-3623</p>
+    </div>
+</div>

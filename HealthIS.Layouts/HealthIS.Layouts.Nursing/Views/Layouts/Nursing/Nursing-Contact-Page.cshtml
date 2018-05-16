@@ -1,0 +1,21 @@
+@using Sitecore.Mvc
+
+@{
+    if (Sitecore.Context.PageMode.IsExperienceEditor)
+    {
+        <script>
+            jQuery(document).ready(function () {
+                autoSave();
+            });
+        </script>
+        <style>.slick-shadow { margin-top: 40px; }</style>
+    }
+}
+<div class="col-sm-6">
+    <h1>@Html.Sitecore().Placeholder("Headline for Standard")</h1>
+    @Html.Sitecore().Placeholder("RichText Editor1")
+    @Html.Sitecore().Placeholder("RichText Editor2")
+</div>
+<div class="col-sm-6">
+    @Html.Sitecore().Placeholder("Google Map")
+</div>

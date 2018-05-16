@@ -1,0 +1,273 @@
+﻿@model HealthIS.Apps.MVC.Models.SlideShow
+@using Sitecore.Mvc
+@{
+    string active = "";
+    string imgStyle = "";
+    int count = 0;
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor && Model.IsDatasourceNull)
+{
+    
+    <center>
+        <h2>Slide Show</h2><p>If you want to create a new slides, click 'Create New Slides'.</p>
+        <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrc()" value="Create New Slides" />
+    </center>
+    <script>
+        jQuery(document).ready(function () {
+            autoSave();
+        });
+        // Create new datasource regarding to this component
+        function callSetDataSrc() {
+            setDataSrc(
+                '@Html.Raw(Model.PageItem.ID.ToString())',                      // itemID
+                'User Defined2/Component Template/Slide Show',                  // templatePath
+                '_SS',                                                          // suffix
+                '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',   // renderingID
+                '@Html.Raw(Model.PageItem.Database.Name)',                      // dbName
+                '@Html.Raw(Sitecore.Context.Device.ID.ToString())',             // deviceID
+                '@Html.Raw(Model.Rendering.UniqueId.ToString())',               // renderingUID
+                ''                                                              // btnID
+            );
+        }
+    </script>
+    return;
+}
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    if (!Model.IsDatasourceNull)
+    {
+        <div class="newdata">
+            <h2>SlideShow Config</h2>
+            @if (Model.chHorizontal.Checked)
+            {
+                <b>Hide Arrow:</b> <input type="checkbox" disabled="disabled" class="chHideArrow" /><br />
+                <b>Image Height:</b> @Html.Raw("275 px")
+            }
+            else
+            {
+                <b>Hide Arrow:</b> <input type="checkbox" class="chHideArrow" onmousedown="updateCheckValue(this,'AR')" @if (Model.chSlideShowHideArrow.Checked) { @Html.Raw("checked='checked'"); } else { @Html.Raw("") } /><br />
+                <b>Image Height:</b> @Html.Raw(Model.DataItems(Model.Item, "Image Height", "")) @Html.Raw("&nbsp; px")
+            }
+            <hr />
+            <div>
+                @if (Model.Rendering.Item.HasChildren)
+                {
+                    foreach (Sitecore.Data.Items.Item item in @Model.Rendering.Item.Children)
+                    {
+                        if (!String.IsNullOrEmpty(Model.DataItems(item, "image", "")))
+                        {
+                            imgStyle = "style=width: 100px;";
+                        }
+                        <div style="float: left; margin-right: 20px;">
+                            @Html.Raw(Model.DataItems(item, "Image", imgStyle))
+                        </div>
+                        <div style="float: left;">
+                            <b>Title:</b> @Html.Raw(Model.DataItems(item, "Title", "")) <br />
+                            <b>Subtitle:</b> @Html.Raw(Model.DataItems(item, "Subtitle", "")) <br />
+                            <b>Link URL:</b> @Html.Raw(Model.DataItems(item, "Link URL", "")) <br />
+                            <b>Description:</b> @Html.Raw(Model.DataItems(item, "Description", "")) <br />
+                        </div>
+                        <div style="clear:both">
+                            <br />
+                            @Model.MoveItemButton("pe-button pe-gray1", "moveup", "&#x25B2; Move up", item) &nbsp;
+                            @Model.MoveItemButton("pe-button pe-gray1", "movedown", "&#x25BC; Move down", item) &nbsp;
+                            <input type="button" class="pe-button pe-yellow" value="Edit" onclick="javascript:Sitecore.PageModes.PageEditor.postRequest('webedit:fieldeditor(command={11111111-1111-1111-1111-111111111111}, fields=Image|Title|Link URL|Description, id=@item.ID)')" />&nbsp;
+                            @Model.ActionItemButton("pe-button pe-red", "delete", "X", item)
+                        </div>
+                        <hr />
+                    }
+                }
+                <input type="button" class="pe-button pe-green" style="float: right;" value="+ Add Slide" onclick="callAddItemToDataSrc()" />
+            </div>
+        </div>
+    
+        <script type="text/javascript">
+            // When component added, save the edit page
+            $(document).ready(function () {
+                autoSave();
+            });
+
+            // Create new sub-items regarding to this component
+            function callAddItemToDataSrc() {
+                addItemToDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                                  // itemID
+                    'User Defined2/Component Template/Slide Show/Slide Show Image',             // templatePath
+                    '_SS_Image',                                                                // suffix
+                    '@Html.Raw(Model.PageItem.Database.Name)',                                  // dbName
+                    '@Html.Raw(Model.Rendering.Item.ID)'                                        // dsFolderName
+                );
+            }
+
+            // checkbox update
+            function updateCheckValue(e, tempID) {
+                var val = '';
+                if (!e.checked) { val = '1'; }
+                var itemURI = new Sitecore.ItemUri('@Model.Rendering.Item.ID.Guid.ToString().ToUpper()', 'en', '@Model.Rendering.Item.Version.ToString()', '@Model.Rendering.Item.Statistics.Revision');
+                if (tempID == 'HZ') { Sitecore.WebEdit.setFieldValue(itemURI, '@Model.getHorizontalTemplateId', val); }
+                else { Sitecore.WebEdit.setFieldValue(itemURI, '@Model.getHideArrowTemplateId', val); }
+                
+                if ($(e).prop("checked")) {
+                    $(e).removeAttr("checked");
+                } else {
+                    $(e).prop("checked", "true");
+                }                
+            };
+        </script>
+    }
+}
+else
+{
+    if (!Model.Item.HasChildren)
+    {
+        Html.Raw("<center><br /><h3>Slide Show<br />Please set associated content or add items</h3><br /></center>");
+    }
+    else
+    {        
+        if (!String.IsNullOrEmpty(@Model.imageHeight))
+        {
+            @Html.Raw("<style>.slider-size { height: " + Model.imageHeight + "px !important; } @media (max-width: 550px) { .slider-size { height: " + (Int32.Parse(Model.imageHeight) * 0.625) + "px !important; } }</style>");
+        }
+
+        if (!@Model.HorizontalSlider.Equals("hz-slider"))
+        {
+            <div id="fixed2" class="carousel slide slideshow-fade @Model.SlideShowHideArrow" data-ride="carousel" data-interval="5000" data-pause="hover">
+                <div class="carousel-inner">
+                    @if (Model.Rendering.Item.HasChildren)
+                    {
+                        foreach (Sitecore.Data.Items.Item item in @Model.Rendering.Item.Children)
+                        {
+                            if (!String.IsNullOrEmpty(item.Fields["Image"].Value))
+                            {
+                                if (count == 0) { active = "active"; } else { active = ""; }
+                                string linkUrl = item.Fields["Link URL"].Value;
+                                string anchorStart = "<a href='#'>";
+                                string anchorEnd = "</a>";
+                                string url = (String.IsNullOrEmpty(linkUrl)) ? "return false" : "location.href = '" + @Html.Raw(linkUrl) + "'";
+
+                                <div class="item @active" onclick="javascript:@url">
+                                    @{
+                                Model.imagePath = item.Fields["Image"];
+                                Model.image = new Sitecore.Data.Items.MediaItem(Model.imagePath.MediaItem);
+                                string src = Sitecore.StringUtil.EnsurePrefix('/', Sitecore.Resources.Media.MediaManager.GetMediaUrl(Model.image));
+                                    }
+                                    @if (!String.IsNullOrEmpty(linkUrl))
+                                    {
+                                        @Html.Raw(anchorStart);
+                                    }
+                                    <div style="background:url('@src') center center; background-size:cover;" class="slider-size">
+                                        @if (!String.IsNullOrEmpty(item.Fields["Title"].Value) || !String.IsNullOrEmpty(item.Fields["Description"].Value))
+                                        {
+                                            <div class="carousel-caption">
+                                                @if (!String.IsNullOrEmpty(item.Fields["Title"].Value))
+                                                { <h4 class="carousel-caption-headline">@Html.Raw(item.Fields["Title"].Value)</h4> }
+                                                @if (!String.IsNullOrEmpty(item.Fields["Description"].Value))
+                                                { <p>@Html.Raw(item.Fields["Description"].Value)</p> }
+                                            </div>
+                                        }
+                                    </div>
+                                    @if (!String.IsNullOrEmpty(linkUrl))
+                                    {
+                                        @Html.Raw(anchorEnd);
+                                    }
+                                </div>
+                                    count++;
+                            }
+                        }
+                    }
+                </div>
+                <a class="left carousel-control" href="javascript:void(0)" data-slide="prev" data-target="#fixed2">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+                <a class="right carousel-control" href="javascript:void(0)" data-slide="next" data-target="#fixed2">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
+            </div>
+        }
+        else // horizontal
+        {
+            <div id="hz-slider" class="carousel slide slideshow-fade slideshow-no-arrows slick-shadow-02" data-ride="carousel" data-interval="7500" data-pause="hover">
+                @{ string indicators = ""; }
+                <div class="carousel-inner" id="slider2">
+                    @if (Model.Rendering.Item.HasChildren)
+                    {
+                        int i = 1;
+                        foreach (Sitecore.Data.Items.Item item in @Model.Rendering.Item.Children)
+                        {
+                            if (!String.IsNullOrEmpty(item.Fields["Image"].Value))
+                            {
+                                if (count == 0) { active = "active"; } else { active = ""; }
+                                string linkUrl = item.Fields["Link URL"].Value;
+
+                                Model.imagePath = item.Fields["Image"];
+                                Model.image = new Sitecore.Data.Items.MediaItem(Model.imagePath.MediaItem);
+                                string src = Sitecore.StringUtil.EnsurePrefix('/', Sitecore.Resources.Media.MediaManager.GetMediaUrl(Model.image));
+                                string panelNumber = "panel" + i;
+
+                                <div class="@(panelNumber) item @active">
+                                    <div class=" panel1-slide1">
+                                        <div>
+                                        @if (!String.IsNullOrEmpty(item.Fields["Title"].Value) || !String.IsNullOrEmpty(item.Fields["Description"].Value))
+                                        {
+                                            if (panelNumber.Equals("panel1"))
+                                            {
+                                                if (!String.IsNullOrEmpty(item.Fields["Title"].Value))
+                                                { <h1>@Html.Raw(item.Fields["Title"].Value)</h1> }
+                                                if (!String.IsNullOrEmpty(item.Fields["Subtitle"].Value))
+                                                { <h6>@Html.Raw(item.Fields["Subtitle"].Value)</h6> }
+                                                if (!String.IsNullOrEmpty(item.Fields["Description"].Value))
+                                                {
+                                                    <h4>
+                                                    @if (!String.IsNullOrEmpty(linkUrl))
+                                                    { <a href="@(linkUrl)" target="_blank">@Html.Raw(item.Fields["Description"].Value) &nbsp;<span class="icon-circle-arrow-right"></span></a> }
+                                                    else
+                                                    {@Html.Raw(item.Fields["Description"].Value)}
+                                                    </h4>                                                                                                                                                                      
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (!String.IsNullOrEmpty(item.Fields["Title"].Value))
+                                                { <h2>@Html.Raw(item.Fields["Title"].Value)</h2> }
+                                                if (!String.IsNullOrEmpty(item.Fields["Subtitle"].Value))
+                                                { <h3>@Html.Raw(item.Fields["Subtitle"].Value)</h3> }
+                                                if (!String.IsNullOrEmpty(item.Fields["Description"].Value))
+                                                {
+                                                    <p>
+                                                    @if (!String.IsNullOrEmpty(linkUrl))
+                                                    { @Html.Raw(item.Fields["Description"].Value + "&nbsp;")<a href="@(linkUrl)" target="_blank"><span class="icon-circle-arrow-right"></span></a> }
+                                                    else
+                                                    {@Html.Raw(item.Fields["Description"].Value)}
+                                                    </p>                                                                                                                                                                      
+                                                }
+                                            }
+                                        }
+                                        </div>
+                                    </div>
+                                    <div class="panel1-slide2 teal">
+                                        <div class ="slider-size">
+                                            <img src="@src" />
+                                        </div>
+                                    </div>
+                                </div>
+                                if (i == 1)
+                                {
+                                    indicators += "<li class=\"active\"><a class=\"panel1\" href=\"javascript:void(0)\" data-slide-to=\"0\" data-target=\"#hz-slider\"><span>Slide1</span></a></li>";
+                                }
+                                else
+                                {
+                                    indicators += "<li><a class=\"panel" + i + "\" href=\"javascript:void(0)\" data-slide-to=\"" + (i - 1) + "\" data-target=\"#hz-slider\"><span>Slide1</span></a></li>";
+                                }
+                                count++;
+                                i++;
+                            }
+                        }
+                    }
+                </div>
+                    <ul class="carousel-indicators">
+                        @Html.Raw(indicators)
+                    </ul>                
+            </div>                
+        }
+    }
+}

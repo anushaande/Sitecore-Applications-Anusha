@@ -1,0 +1,215 @@
+﻿@using Sitecore.Mvc
+@model HealthIS.Apps.MVC.Models.IconGrid
+
+@{
+    //unique id to use
+    string UID = "_" + Model.Rendering.UniqueId.ToString().Replace('-', '_');
+
+    // variables for header font size drop down
+    string selHeaderFontSize = "selHeaderFontSize" + UID;
+    string hidHeaderFontSize = "hidHeaderFontSize" + UID;
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor && !Model.dsSet)
+{
+    <script type="text/javascript">
+        // Create new datasource regarding to this component
+        function callSetDataSrc() {
+            setDataSrc(
+                '@Html.Raw(Model.PageItem.ID.ToString())',                      // itemID
+                '/sitecore/templates/Branches/Components/Icon Grid/Icon Grid',  // templatePath
+                '_IG',                                                          // suffix
+                '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',   // renderingID
+                '@Html.Raw(Model.PageItem.Database.Name)',                      // dbName
+                '@Html.Raw(Sitecore.Context.Device.ID.ToString())',             // deviceID
+                '@Html.Raw(Model.Rendering.UniqueId.ToString())',               // renderingUID
+                ''                                                              // btnID
+            );
+        }
+    </script>
+    <center>
+        <h2>Icon Grid Config</h2>
+        <p>If you want to create a new Icon Grid, click 'Create New Icon Grid'.</p>
+        <input type="button" id="btnAddDS" class="pe-button pe-green" onclick="callSetDataSrc()" value="Create New Icon Grid">
+        <script>if (typeof (autoSave) != "undefined") { autoSave(); }</script>
+    </center>
+    return;
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditor)
+{
+    // edit mode UI
+    string header = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.DataSourceFolder, "Header");
+    string headerFontSize = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.DataSourceFolder, "Header Font Size");
+    string iconSize = Model.DataSourceFolder.Fields[Model.iconField].Value;  // holds current selected value for "Icon Size" field
+    string columns = Model.DataSourceFolder.Fields[Model.columnField].Value;  // holds current selected value for "Columns" field
+    string colClass = Model.GetColumnClass(columns);
+    Model.PopulateComboBox();
+    Model.GetGridItems(columns);
+
+    <script type="text/javascript">
+        function updateValue(thisComboBox, itemID, field) {
+            var newVal = thisComboBox.value;
+            Sitecore.PageModes.PageEditor.postRequest("item:updateitemfield(id=" + itemID + ", fieldName=" + field + ", fieldValue=" + newVal + ")");
+        }
+    </script>
+
+    <style>
+        .settings-label {
+            font-weight: bold;
+            width: 20%;
+        }
+
+        .editTable tr td {
+            padding: 3px;
+        }
+
+        .block {
+            display: block;
+            background-color: #f6f6f6;
+            padding: 8px;
+            font-family: inherit;
+            float: left;
+            border-left: 4px solid white;
+            border-right: 4px solid white;
+        }
+
+        .col-sm-2a {
+            width: 20%;
+        }
+
+        .row {
+            border: 1px solid #ddd;
+            margin-top: 8px
+        }
+    </style>
+
+    int iCt = 0;
+    <div id="@hidHeaderFontSize" style="display:none; ">@Html.Raw(headerFontSize)</div>
+    <h2>Icon Grid Config</h2>
+    <table id="tblIconGridConfig@(UID)" class="editTable">
+        <tr>
+            <td class="settings-label">Header Font Size:</td>
+            <td>
+                <select class="form-control" id="@(selHeaderFontSize)" style="width:40%" onchange="selOnChange('@(hidHeaderFontSize)','@(selHeaderFontSize)')">
+                    @for (int i = 2; i <= 6; i++)
+                    {
+                        string selected = "";
+
+                        if (String.IsNullOrEmpty(Model.headerFontSize) && i == 3)
+                        {
+                            selected = " selected='selected'";
+                        }
+                        else if (Model.headerFontSize.ToLower() == "h" + i)
+                        {
+                            selected = " selected='selected'";
+                        }
+                        <option value="h@(i)" style="font-size: @((2 / Math.Sqrt(i)) * 18)px;" @(selected)>H@(i) - Header Font Size</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="settings-label">Section Header:</td>
+            <td>@Html.Raw(header)</td>
+        </tr>
+        <tr>
+            <td class="settings-label">Icon Size:</td>
+            <td>@Html.DropDownList("iconSizes", Model.iconSizeOptions, iconSize, new { @onchange = "updateValue(this,'" + Model.DataSourceFolder.ID.ToString() + "','" + Model.iconField + "')" })</td>
+        </tr>
+        <tr>
+            <td class="settings-label">Columns:</td>
+            <td>@Html.DropDownList("columns", Model.columnOptions, columns, new { @onchange = "updateValue(this,'" + Model.DataSourceFolder.ID.ToString() + "','" + Model.columnField + "')" })</td>
+        </tr>
+    </table>
+
+    if (Model.DataSourceFolder.Children.Count > 0)
+    {
+        <div class="row">
+            @foreach (Sitecore.Data.Items.Item icon in Model.DataSourceFolder.Children)
+            {
+                string _uid = "_" + icon.ID.ToString().Replace('-', '_').Replace("{", "").Replace("}", "");
+                string iconToUse = HealthIS.Apps.MVC.Helpers.getStrField(icon, "Icon");
+                string title = Sitecore.Web.UI.WebControls.FieldRenderer.Render(icon, "Title");
+                string linkURL = Sitecore.Web.UI.WebControls.FieldRenderer.Render(icon, "Link URL");
+
+                <script>
+                    function ddlChange@(_uid)(ct) {
+                        var hiddenField = 'hid_' + ct + '@(_uid)';
+                        var selVal = jQuery('#selIcon_' + ct + '@(_uid)').val();
+                        jQuery('#em_' + ct + '@(_uid)').attr("class" , selVal);
+                        updateHiddenField(hiddenField , selVal);
+                    }
+                </script>
+
+                <div class="@(colClass) block">
+                    <div style="float:left;">
+                        <select class="form-control" id="selIcon_@(iCt)@(_uid)" style="font-family: 'FontAwesome', 'helvetica neue', helvetica, arial, sans-serif;" onchange="ddlChange@(_uid)('@(iCt)')">
+                            <option value="">Select an icon</option>
+                            @if (HealthIS.Apps.MVC.Helpers.GetIcons() != null)
+                            {
+                                foreach (string ico in HealthIS.Apps.MVC.Helpers.GetIcons())
+                                {
+                                    var getValue = ico.Split('=');
+                                    <option value="@getValue[1]" title="@Html.Raw(getValue[0])">@Html.Raw(getValue[0])</option>
+                                }
+                            }
+                        </select>&nbsp;&nbsp;
+                        <script>
+                        whenAvailable("jQuery", function () { jQuery('#selIcon_@(iCt)@(_uid)').val('@iconToUse'); });
+                        </script>
+                    </div>
+                    <div style="float:left;">
+                        &nbsp;&nbsp;<em id="em_@(iCt)@(_uid)" style="font-size:2.3em;" class="@iconToUse"></em>
+                    </div>
+                    <div style="clear:both;"></div><br />
+                    Title: @Html.Raw(title)<br />
+                    Link URL: @Html.Raw(linkURL)
+                </div>
+                <div id="hid_@(iCt)@(_uid)" style="display:none;">
+                    @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(icon, "Icon"))
+                </div>
+            }
+        </div>       
+    }
+}
+else // preview mode UI
+{
+    string header = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.DataSourceFolder, "Header");
+    string headerFontSize = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.DataSourceFolder, "Header Font Size");
+    string iconSize = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.DataSourceFolder, "Icon Size");
+    string columns = Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.DataSourceFolder, "Columns");
+    string colClass = Model.GetColumnClass(columns);
+    string sizeClass = Model.GetIconSize(iconSize);
+    Model.GetGridItems(columns);
+
+    <div class="icon-grid">
+        <div class="row@(sizeClass)">
+            @if (!String.IsNullOrEmpty(header)) { @Html.Raw("<" + headerFontSize + ">" + header + "</" + headerFontSize + ">") }
+            @if (Model.DataSourceFolder.Children.Count > 0)
+            {
+                foreach (Sitecore.Data.Items.Item icon in Model.DataSourceFolder.Children)
+                {
+                    string iconToUse = Sitecore.Web.UI.WebControls.FieldRenderer.Render(icon, "Icon");
+                    string title = Sitecore.Web.UI.WebControls.FieldRenderer.Render(icon, "Title");
+                    string linkURL = Sitecore.Web.UI.WebControls.FieldRenderer.Render(icon, "Link URL");
+
+                    <div class=@(colClass)>
+                        @if (!String.IsNullOrEmpty(linkURL))
+                        {
+                            <a href="@(linkURL)">
+                                <em class="@(iconToUse)"></em>
+                                <p>@(title)</p>
+                            </a>
+                        }
+                        else
+                        {
+                            <em class="@(iconToUse)"></em>
+                            <p>@(title)</p>
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}

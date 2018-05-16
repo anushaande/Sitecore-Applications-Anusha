@@ -1,0 +1,84 @@
+﻿@using Sitecore.Mvc
+@model HealthIS.Layouts.Models.Doctors
+
+<header role="banner" id="health-header">
+    <div id="health-header-inner" class="container block-center">
+        <nav class="health-links clearfix">
+            <ul>
+                <li><a href="http://health.usf.edu/news">USF Health News</a></li>
+            </ul>
+        </nav>
+        <nav class="usf-links">
+            <ul class="clearfix">
+                <li><a href="http://health.usf.edu"><i class="icon-home">&nbsp;</i>USF Health</a></li>
+                <li><a href="http://www.usf.edu">USF</a></li>
+                <li><a href="http://search.usf.edu/search?btnG=USF+Health+Search&amp;access=p&amp;btng=Search&amp;client=health&amp;proxystylesheet=health&amp;output=xml_no_dtd&amp;sort=date%3AD%3AL%3Ad1&amp;oe=UTF-8&amp;ie=UTF-8&amp;ud=1&amp;exclude_apps=1&amp;site=health">Search</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<header role="banner" id="dept-header">
+    <!-- BEGIN_REPLACE|header -->
+    <div class="container block-center">
+        <div class="logo_ribbon">
+            <div id="logo">
+                <a href="http://health.usf.edu" id="health-logo"><img src="/layouts/images/health_logo_gold.png" alt="" width="101" height="68" /></a>
+            </div>
+        </div>
+        <h4 class="doctors-wordmark"><a href="/doctors/"><strong>Doctors</strong> of USF Health</a></h4>
+        <h2>@Html.Raw(Model.PageItemName)</h2>
+    </div>
+    <!-- END_REPLACE|header -->
+</header>
+
+<!-- BEGIN_REMOVE|horizontalNavigation -->
+@Html.Sitecore().Placeholder("Horizontal Navigation")
+<!-- END_REMOVE|horizontalNavigation -->
+
+<div class="container">
+    @Html.Sitecore().Placeholder("BreadCrumbs")
+</div>
+
+<main role="main" id="generic_wrapper" class="container block-center site-content">
+    @Html.Sitecore().Placeholder("Doctors Page Type")
+</main>
+
+<footer id="dept-footer" role="contentinfo">
+    <div class="container">
+        <div id="contact-panel">
+            <h4 class="doctors-wordmark"><strong>Doctors</strong> of USF Health</h4>
+            <h2 class="usf-subtitle">University of South Florida</h2>
+            <div class="spacemaker">
+                <!-- BEGIN_REPLACE|footer  -->
+                @Html.Raw(Model.vCardAddress)
+                @Html.Raw(Model.FooterGmap)
+                <!-- END_REPLACE|footer  -->
+            </div>
+            <span id="modified">This page was last modified on: @Html.Sitecore().Field("__Updated", new { format = "MM/dd/yyyy" })</span>
+        </div>
+        <!-- user control footer links -->
+        <div id="footer-links">
+            @Html.Raw(Model.FooterLinks)
+        </div>
+    </div>
+</footer>
+<footer id="health-footer">
+    <div class="container">
+        <div id="credits">
+            <a href="http://health.usf.edu/is" class="powered">
+                <img width="62" height="62" alt="USF Health Information Systems" src="http://health.usf.edu/layouts/images/health_is.png">
+                <span>Powered and Designed by <br>USF Health Information Systems</span>
+            </a>
+        </div>
+
+        <nav id="docs-footer-right">
+            <ul>
+                <li><a href="http://health.usf.edu">USF Health</a><span class="separator">·</span></li>
+                <li><a href="http://health.usf.edu/research/">Research</a><span class="separator">·</span></li>
+                <li><a href="http://health.usf.edu/education">Academics</a><span class="separator">·</span></li>
+                <li><a href="http://health.usf.edu/doctors/">Patient Care</a></li>
+            </ul>
+        </nav>
+    </div>
+</footer>

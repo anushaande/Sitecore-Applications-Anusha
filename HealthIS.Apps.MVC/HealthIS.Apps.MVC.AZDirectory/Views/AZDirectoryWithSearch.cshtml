@@ -1,0 +1,210 @@
+﻿@model HealthIS.Apps.MVC.Models.AZDirectory
+@{
+    //unique id to use
+    string UID = "_" + Model.Rendering.UniqueId.ToString().Replace('-', '_');
+}
+
+@if (Sitecore.Context.PageMode.IsExperienceEditorEditing)
+{
+    if (!Model.dsSet || Model.DataSourceFolder == null)
+    {
+        <script>
+            function callSetDataSrc@(UID)() {
+                setDataSrc(
+                    '@Html.Raw(Model.PageItem.ID.ToString())',                                              // itemID
+                    'User Defined2/Component Template/AZDirectory Root',                                            // templatePath
+                    '_AZ',                                                                                 // suffix
+                    '@Html.Raw(Model.Rendering.Properties["RenderingItemPath"])',                           // renderingID
+                    'master',                                                  // dbName
+                    '@Html.Raw(Sitecore.Context.Device.ID.ToString())',                                     // deviceID
+                    '@Html.Raw(Model.Rendering.UniqueId.ToString())',                                       // referenceID
+                    'btnDSSet@(UID)',                                                                                     // btnID
+                    true
+                );
+            }
+        </script>
+        <div style="text-align:center">
+            <h2>A-Z Directory Config</h2>
+            <p>If you want to create a new A-Z Directory, click 'Create New A-Z Directory'.</p>
+            <input id="btnDSSet@(UID)" class="pe-button pe-green" type="button" value="Create New A-Z Directory" onclick="callSetDataSrc@(UID)    ()" />
+            <script>if (typeof (autoSave) != "undefined") { autoSave(); }</script>
+        </div>
+    }
+    else
+    {
+        <h2>A-Z Directory Config</h2>
+        <script>
+            function addSubItem@(UID)() {
+                addItemToDataSrc('@(Model.PageItem.ID.ToString())', 'User Defined2/Component Template/AZDirectory Root/AZDirectory Item', '_AZI', 'master', '@(Model.DataSourceFolder.ID.Guid.ToString())', true)
+            }
+
+        </script>
+        <ul class="list-group">
+            @{int iCt = 0;}
+            <li class="list-group-item">
+                <b>Theme:</b>
+                <select id="selTheme@(UID)" onchange="selOnChange('hidTheme@(UID)','selTheme@(UID)')">
+                    <option value="grey">Grey</option>
+                    <option value="green">Green</option>
+                    <option value="gold">Gold</option>
+                    <option value="doctors">Doctors</option>
+                </select>
+                <div style="display:none;">
+                    <div id="hidTheme@(UID)">@Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(Model.DataSourceFolder, "Style"))</div>
+                    <script>
+                        whenAvailable("scForm", function () { jQuery('#selTheme@(UID)').val('@Model.Style'); console.log("Setting style to: @(Model.Style)"); });
+                    </script>
+                </div>
+            </li>
+            @if (Model.Directory.Count > 0)
+            {
+                foreach (HealthIS.Apps.MVC.Models.AZDirectoryItem i in Model.Directory)
+                {
+                    <li class="list-group-item">
+                        <div style="width:100%;">
+                            <div class="col-sm-6">
+                                <span style="font-weight:bold;">Link Text:</span><br />
+                                @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(i.SCItem, "Link Text"))
+                            </div>
+                            <div class="col-sm-6">
+                                <span style="font-weight:bold;">Link URL: (include <em>http://</em> if external link)</span><br />
+                                @Html.Raw(Sitecore.Web.UI.WebControls.FieldRenderer.Render(i.SCItem, "Link URL"))
+                            </div>
+                        </div>
+                        <div style="position:absolute;top:5px;right:5px;">
+                            <input class="pe-button pe-red sm" style="margin-right:2px;" type="button" value="&#120;" onclick="deleteItem('@(i.SCItem.ID)    ')" />
+                        </div>
+                        <div style="clear:both;"></div>
+                    </li>
+                    iCt++;
+                }
+            }
+            <li class="list-group-item" style="text-align:right;">
+                <input class="pe-button pe-green" type="button" value="&#43; Add Directory Item" onclick="addSubItem@(UID)    ()" />
+            </li>
+        </ul>
+    }
+}
+else
+{
+    char[] alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+    string cssClass = string.IsNullOrEmpty(Model.Style) ? "toolbar-grey" : "toolbar-" + Model.Style;
+    <div class="@(cssClass)">
+        <section class="toolbar" name="top">
+            <ul>
+                <li>
+                    <a href="#">Browse By</a>
+                    <div class="menu browse">
+                        @{
+                            List<HealthIS.Apps.MVC.Models.AZDirectoryItem> activeDirectoryItems = Model.Directory.Where(x => !String.IsNullOrEmpty(x.LinkText)).ToList();
+                        }
+                        @if (activeDirectoryItems.Count > 0)
+                        {
+                            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                            int count = 1;                            
+                            
+                            // Generate horizontal alphabetical list
+                            foreach (char c in alpha)
+                            {
+                                if (activeDirectoryItems.Any(a => char.ToUpperInvariant(a.LinkText[0]).Equals(c)))
+                                {
+                                    int indexValue = Array.IndexOf(alpha, c) + 1;
+                                    string dataValue = indexValue + "-" + indexValue;
+                                    <a id="alpha_filter" class="@cssClass" href="#" data-value="@dataValue" data-target="#link_filter">@c</a>
+                                }
+                                else
+                                {
+                                    <span class="inactive">@c</span>
+                                }
+                            }
+
+                            // Generate Index Directory
+                            foreach (HealthIS.Apps.MVC.Models.AZDirectoryItem item in activeDirectoryItems)
+                            {                                
+                                int alphaId = 0;
+                                foreach (char c in alpha)
+                                {
+                                    if (char.ToUpperInvariant(item.LinkText[0]).Equals(c))
+                                    {
+                                        alphaId = Array.IndexOf(alpha, c) + 1;                                            
+                                    }                                   
+                                }
+                                sb.Append("{specialty: {");
+                                sb.Append("id: " + count + ",");
+                                sb.Append("name: \"" + item.LinkText + "\",");
+                                sb.Append("alphaId: " + alphaId + ",");
+                                sb.Append("url: \"" + item.LinkURL + "\"");
+                                sb.Append("}},");
+                                count++;                                                             
+                            }
+                            <script>
+                                var specialties = [
+                                    @Html.Raw(sb.ToString())
+                                ];
+                            </script>
+                            
+                            
+                            /* original code                            
+                            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                                int count = 1;
+
+                                foreach (char c in alpha)
+                                {
+                                    if (Model.Directory.Any(a => char.ToUpperInvariant(a.LinkText[0]).Equals(c)))
+                                    {
+                                        int indexValue = Array.IndexOf(alpha, c) + 1;
+                                        string dataValue = indexValue + "-" + indexValue;
+                                        <a id="alpha_filter" class="@cssClass" href="#" data-value="@dataValue" data-target="#link_filter">@c</a>
+                                    }
+                                    else
+                                    {
+                                        <span class="inactive">@c</span>
+                                    }
+                                }
+                                // Generate Index Directory
+                                foreach (HealthIS.Apps.MVC.Models.AZDirectoryItem item in Model.Directory)
+                                {
+                                    int alphaId = 0;
+                                    foreach (char c in alpha)
+                                    {
+                                        if (char.ToUpperInvariant(item.LinkText[0]).Equals(c))
+                                        {
+                                            alphaId = Array.IndexOf(alpha, c) + 1;
+                                        }
+                                    }
+                                    sb.Append("{specialty: {");
+                                    sb.Append("id: " + count + ",");
+                                    sb.Append("name: \"" + item.LinkText + "\",");
+                                    sb.Append("alphaId: " + alphaId + ",");
+                                    sb.Append("url: \"" + item.LinkURL + "\"");
+                                    sb.Append("}},");
+                                    count++;
+                                }
+                                <script>
+                                    var specialties = [
+                                        @Html.Raw(sb.ToString())
+                                    ];
+                                </script>
+                             */                      
+                        }
+                        <input id="link_filter" type="hidden" value="1-26" />
+                    </div>
+                </li>
+                <li><a id="clear_filter" href="#" data-value="1-26" data-target="#link_filter">Show All</a> </li>
+            </ul>
+            <div class="search"><label for="specialty-search">Search For</label> <input id="search_box" type="search" /> </div>
+        </section>
+        <ul id="specialty_list"></ul>
+    </div>
+    // Doesn't need to call this function in Prod2
+    var field = Model.PageItem.Fields["Custom Scripts Path"];
+    if (field != null || String.IsNullOrEmpty(field.Value))
+    {
+        using (new Sitecore.SecurityModel.SecurityDisabler())
+        {
+            Model.PageItem.Editing.BeginEdit();
+            field.Value = "/resources/scripts/a-z-directory/filter.new.js";
+            Model.PageItem.Editing.EndEdit();
+        }
+    }
+}

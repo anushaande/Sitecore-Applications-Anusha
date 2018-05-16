@@ -1,0 +1,88 @@
+﻿.secondary-nav {
+    padding: 0;
+    &, > li > ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    > li {
+        > a, > span {
+            background: #f7f7f7;
+            border-bottom: 0.077em solid #dcddde;
+            color: #666;
+            cursor: pointer;
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            line-height: 15px;
+            margin-bottom: 5px;
+            overflow: hidden;
+            outline: 0;
+            padding: .75em 3em .75em 1em;
+            position: relative;
+            text-decoration: none;
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
+            -webkit-transition: background 300ms;
+            transition: background 300ms;
+            &:hover,
+            &:focus {
+                background-color: #eee;
+                border-bottom-color: #ddd;
+                color: #555;
+            }
+            &.active {
+                color: #00684d;
+            }
+        }
+        > div {
+            overflow: hidden; // expand the div to wrap the margin/padding of the elements it contains
+            padding: 0 16px;
+            > p {
+                margin: 1em 0px; // prevent jQuery jumps in IE 7
+            }
+        }
+        > ul {
+            padding-bottom: 8px;
+            > li {
+                // background: transparent url('../images/arrow.png') no-repeat 12px center;
+                font-size: 12px;
+                padding: 6px 8px 6px 30px;
+                &:first-child {
+                    background-position: 12px 14px;
+                    padding-top: 12px;
+                }
+                > a {
+                    color: #01573C;
+                    text-decoration: none;
+                    &:hover {
+                        color: #743;
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+    }
+    .accordion-label:after {
+        color: #aaa;
+        content: "\f054";
+        display: inline-block;
+        font-family: FontAwesome;
+        font-weight: normal;
+        font-style: normal;
+        position: absolute;
+        right: 14px;
+        text-decoration: inherit;
+        top: 9px;
+        -webkit-font-smoothing: antialiased;
+        speak: none;
+        -webkit-transition: all 300ms;
+        transition: all 300ms;
+    }
+    .expanded .accordion-label {
+        background-color: #eee;
+        &:after {
+            -webkit-transform: rotate(90deg);
+            transform: rotate(90deg);
+        }
+    }
+}

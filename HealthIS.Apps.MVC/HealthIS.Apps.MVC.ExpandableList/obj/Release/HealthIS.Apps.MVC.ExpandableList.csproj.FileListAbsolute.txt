@@ -1,0 +1,25 @@
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\HealthIS.Apps.MVC.ExpandableList.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\HealthIS.Apps.MVC.ExpandableList.pdb
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\System.Web.Helpers.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\System.Web.Mvc.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\System.Web.Razor.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\System.Web.Webpages.Deployment.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\System.Web.Webpages.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\System.Web.Webpages.Razor.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\System.Web.Razor.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\System.Web.Webpages.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\System.Web.Webpages.Deployment.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\System.Web.Webpages.Razor.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\System.Web.Helpers.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\System.Web.Mvc.xml
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\obj\Release\HealthIS.Apps.MVC.ExpandableList.csprojResolveAssemblyReference.cache
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\obj\Release\HealthIS.Apps.MVC.ExpandableList.dll
+C:\Users\dkpainter\Documents\Visual Studio 2012\Projects\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\obj\Release\HealthIS.Apps.MVC.ExpandableList.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\HealthIS.Apps.MVC.ExpandableList.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\HealthIS.Apps.MVC.ExpandableList.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\Microsoft.Web.Infrastructure.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\obj\Release\HealthIS.Apps.MVC.ExpandableList.csprojResolveAssemblyReference.cache
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\obj\Release\HealthIS.Apps.MVC.ExpandableList.dll
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\obj\Release\HealthIS.Apps.MVC.ExpandableList.pdb
+C:\SVN\Sources\HealthIS.Apps.MVC\HealthIS.Apps.MVC.ExpandableList\bin\HealthIS.Apps.MVC.ExpandableList.dll.config
